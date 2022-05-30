@@ -378,13 +378,20 @@ contract ERC20KPIToken is ERC20Upgradeable, IERC20KPIToken, ReentrancyGuard {
                     uint256 _denominator = _oracleFullRange * totalWeight;
                     uint256 _reimboursement = (_numerator / _denominator) >>
                         MULTIPLIER;
-                    _collateral.amount -= _reimboursement;
+                    unchecked {
+                        _collateral.amount -= _reimboursement;
+                    }
                 }
             }
         }
 
         _oracle.finalized = true;
-        if (--toBeFinalized == 0) finalized = true;
+        uint256 _toBeFinalized;
+        unchecked {
+            _toBeFinalized = --toBeFinalized;
+        }
+
+        if (_toBeFinalized == 0) finalized = true;
 
         emit Finalize(msg.sender, _result);
     }
