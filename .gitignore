@@ -13,5 +13,6 @@ yarn-error.log
 /interfaces/*.sol
 *.tgz
 .env*
+!.env.example
 
 .gas-snapshot
