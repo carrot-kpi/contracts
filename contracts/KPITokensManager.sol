@@ -30,6 +30,16 @@ contract KPITokensManager is Ownable, IKPITokensManager {
     error NonExistentTemplate();
     error InvalidIndices();
 
+    event AddTemplate(uint256 id, address template, string specification);
+    event RemoveTemplate(uint256 id);
+    event UpgradeTemplate(
+        uint256 id,
+        address newTemplate,
+        uint8 versionBump,
+        string newSpecification
+    );
+    event UpdateTemplateSepcification(uint256 id, string newSpecification);
+
     constructor(address _factory) {
         if (_factory == address(0)) revert ZeroAddressFactory();
         factory = _factory;
@@ -132,6 +142,7 @@ contract KPITokensManager is Ownable, IKPITokensManager {
             exists: true
         });
         templates.keys.push(_id);
+        emit AddTemplate(_id, _template, _specification);
     }
 
     /// @dev Removes a template from the registry. This function can only be called
@@ -148,6 +159,7 @@ contract KPITokensManager is Ownable, IKPITokensManager {
                 if (_i != _keysLength - 1)
                     templates.keys[_i] = templates.keys[_keysLength - 1];
                 templates.keys.pop();
+                emit RemoveTemplate(_id);
                 return;
             }
         revert NoKeyForTemplate();
@@ -184,6 +196,12 @@ contract KPITokensManager is Ownable, IKPITokensManager {
             _templateFromStorage.version.minor = 0;
             _templateFromStorage.version.patch = 0;
         } else revert InvalidVersionBump();
+        emit UpgradeTemplate(
+            _id,
+            _newTemplate,
+            _versionBump,
+            _newSpecification
+        );
     }
 
     /// @dev Updates a template specification. The specification is an IPFS cid
@@ -198,6 +216,7 @@ contract KPITokensManager is Ownable, IKPITokensManager {
         if (msg.sender != owner()) revert Forbidden();
         if (bytes(_newSpecification).length == 0) revert InvalidSpecification();
         storageTemplate(_id).specification = _newSpecification;
+        emit UpdateTemplateSepcification(_id, _newSpecification);
     }
 
     /// @dev Gets a template from storage.
