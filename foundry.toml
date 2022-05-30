@@ -18,9 +18,6 @@ via_ir = true
 constantOptimizer = true
 yul = true
 
-[production.optimizer_details.yulDetails]
-optimizerSteps = 'dhfoDgvulfnTUtnIf'
-
 [test]
 test = 'tests'
 optimizer = false
