@@ -100,11 +100,7 @@ contract OraclesManager is Ownable, IOraclesManager {
             _template.addrezz,
             salt(_creator, _initializationData)
         );
-        IOracle(_instance).initialize(
-            msg.sender,
-            _template,
-            _initializationData
-        );
+        IOracle(_instance).initialize(msg.sender, _id, _initializationData);
         return _instance;
     }
 
@@ -235,6 +231,13 @@ contract OraclesManager is Ownable, IOraclesManager {
         IOraclesManager.Template memory _template = templates.map[_id];
         if (!_template.exists) revert NonExistentTemplate();
         return _template;
+    }
+
+    /// @dev Used to determine whether a template with a certain id exists or not.
+    /// @param _id The id of the template that needs to be checked.
+    /// @return True if the template exists, false otherwise.
+    function exists(uint256 _id) external view override returns (bool) {
+        return storageTemplate(_id).exists;
     }
 
     /// @dev Gets the amount of all registered templates.

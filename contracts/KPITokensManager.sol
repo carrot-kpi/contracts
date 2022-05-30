@@ -225,6 +225,13 @@ contract KPITokensManager is Ownable, IKPITokensManager {
         return storageTemplate(_id);
     }
 
+    /// @dev Used to determine whether a template with a certain id exists or not.
+    /// @param _id The id of the template that needs to be checked.
+    /// @return True if the template exists, false otherwise.
+    function exists(uint256 _id) external view override returns (bool) {
+        return storageTemplate(_id).exists;
+    }
+
     /// @dev Gets the amount of all registered templates.
     /// @return The templates amount.
     function templatesAmount() external view override returns (uint256) {

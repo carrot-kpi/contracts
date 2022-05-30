@@ -11,7 +11,7 @@ import "../IOraclesManager.sol";
 interface IOracle {
     function initialize(
         address _kpiToken,
-        IOraclesManager.Template memory _template,
+        uint256 _templateId,
         bytes memory _initializationData
     ) external;
 

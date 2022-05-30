@@ -19,15 +19,16 @@ import {IReality} from "../interfaces/external/IReality.sol";
 contract ManualRealityOracle is IOracle, Initializable {
     bool public finalized;
     address public kpiToken;
+    address internal oraclesManager;
     address internal reality;
     uint256 internal realityTemplateId;
     bytes32 internal questionId;
     string internal question;
-    IOraclesManager.Template internal __template;
+    uint256 internal templateId;
 
     error Forbidden();
     error ZeroAddressKpiToken();
-    error InvalidTemplate();
+    error NonExistentTemplate();
     error ZeroAddressReality();
     error ZeroAddressArbitrator();
     error InvalidQuestion();
@@ -40,28 +41,29 @@ contract ManualRealityOracle is IOracle, Initializable {
     /// out the Reality.eth docs here: https://reality.eth.limo/app/docs/html/dapp.html#.
     /// @param _kpiToken The address of the KPI token to which the oracle must be linked to.
     /// This address is also used to know to which contract to report results back to.
-    /// @param _template The template struct representing this oracle's template.
+    /// @param _templateId The id of the template.
     /// @param _data An ABI-encoded structure forwarded by the created KPI token from the KPI token
     /// creator, containing the initialization parameters for the oracle template.
     /// In particular the structure is formed in the following way:
     /// - `address _reality`: The address of the Reality.eth contract of choice in a specific network.
     /// - `address _arbitrator`: The arbitrator for the Reality.eth question.
-    /// - `uint256 _templateId`: The template id for the Reality.eth question.
+    /// - `uint256 _realityTemplateId`: The template id for the Reality.eth question.
     /// - `string memory _question`: The question that must be submitted to Reality.eth.
     /// - `uint32 _questionTimeout`: The question timeout as described in the Reality.eth docs (linked above).
     /// - `uint32 _expiry`: The question expiry as described in the Reality.eth docs (linked above).
     function initialize(
         address _kpiToken,
-        IOraclesManager.Template calldata _template,
+        uint256 _templateId,
         bytes calldata _data
     ) external override initializer {
         if (_kpiToken == address(0)) revert ZeroAddressKpiToken();
-        if (!_template.exists) revert InvalidTemplate();
+        if (!IOraclesManager(msg.sender).exists(_templateId))
+            revert NonExistentTemplate();
 
         (
             address _reality,
             address _arbitrator,
-            uint256 _templateId,
+            uint256 _realityTemplateId,
             string memory _question,
             uint32 _questionTimeout,
             uint32 _expiry
@@ -76,13 +78,14 @@ contract ManualRealityOracle is IOracle, Initializable {
         if (_questionTimeout == 0) revert InvalidQuestionTimeout();
         if (_expiry <= block.timestamp) revert InvalidExpiry();
 
-        __template = _template;
+        oraclesManager = msg.sender;
+        templateId = _templateId;
         kpiToken = _kpiToken;
         reality = _reality;
-        realityTemplateId = _templateId;
+        realityTemplateId = _realityTemplateId;
         question = _question;
         questionId = IReality(_reality).askQuestion(
-            _templateId,
+            _realityTemplateId,
             _question,
             _arbitrator,
             _questionTimeout,
@@ -134,6 +137,6 @@ contract ManualRealityOracle is IOracle, Initializable {
         override
         returns (IOraclesManager.Template memory)
     {
-        return __template;
+        return IOraclesManager(oraclesManager).template(templateId);
     }
 }

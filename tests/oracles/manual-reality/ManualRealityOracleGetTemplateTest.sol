@@ -26,9 +26,10 @@ contract ManualRealityOracleGetTemplateTest is BaseTestSetup {
             ),
             abi.encode(_questionId)
         );
+        CHEAT_CODES.prank(address(oraclesManager));
         oracleInstance.initialize(
             address(1),
-            _template,
+            _template.id,
             abi.encode(
                 _realityAddress,
                 address(1),

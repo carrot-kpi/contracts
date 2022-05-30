@@ -60,6 +60,8 @@ interface IKPITokensManager {
 
     function template(uint256 _id) external view returns (Template memory);
 
+    function exists(uint256 _id) external view returns (bool);
+
     function templatesAmount() external view returns (uint256);
 
     function enumerate(uint256 _fromIndex, uint256 _toIndex)

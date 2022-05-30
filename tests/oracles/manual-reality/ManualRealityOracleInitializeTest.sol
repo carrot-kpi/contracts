@@ -20,9 +20,10 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         CHEAT_CODES.expectRevert(
             abi.encodeWithSignature("ZeroAddressKpiToken()")
         );
+        CHEAT_CODES.prank(address(oraclesManager));
         oracleInstance.initialize(
             address(0),
-            _template,
+            _template.id,
             abi.encode(uint256(1))
         );
     }
@@ -31,18 +32,17 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         ManualRealityOracle oracleInstance = ManualRealityOracle(
             Clones.clone(address(manualRealityOracleTemplate))
         );
-        IOraclesManager.Template memory _template = IOraclesManager.Template({
-            id: 0,
-            addrezz: address(2),
-            version: IOraclesManager.Version({major: 1, minor: 0, patch: 0}),
-            specification: "a",
-            automatable: false,
-            exists: false
-        });
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("InvalidTemplate()"));
+        uint256 _templateId = 123;
+        CHEAT_CODES.mockCall(
+            address(oraclesManager),
+            abi.encodeWithSignature("exists(uint256)", _templateId),
+            abi.encode(false)
+        );
+        CHEAT_CODES.prank(address(oraclesManager));
+        CHEAT_CODES.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
         oracleInstance.initialize(
             address(1),
-            _template,
+            _templateId,
             abi.encode(uint256(1))
         );
     }
@@ -55,9 +55,10 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         CHEAT_CODES.expectRevert(
             abi.encodeWithSignature("ZeroAddressReality()")
         );
+        CHEAT_CODES.prank(address(oraclesManager));
         oracleInstance.initialize(
             address(1),
-            _template,
+            _template.id,
             abi.encode(address(0), address(1), 0, "a", 60, block.timestamp + 60)
         );
     }
@@ -70,9 +71,10 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         CHEAT_CODES.expectRevert(
             abi.encodeWithSignature("ZeroAddressArbitrator()")
         );
+        CHEAT_CODES.prank(address(oraclesManager));
         oracleInstance.initialize(
             address(1),
-            _template,
+            _template.id,
             abi.encode(address(1), address(0), 0, "a", 60, block.timestamp + 60)
         );
     }
@@ -83,9 +85,10 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         );
         IOraclesManager.Template memory _template = oraclesManager.template(0);
         CHEAT_CODES.expectRevert(abi.encodeWithSignature("InvalidQuestion()"));
+        CHEAT_CODES.prank(address(oraclesManager));
         oracleInstance.initialize(
             address(1),
-            _template,
+            _template.id,
             abi.encode(address(1), address(1), 0, "", 60, block.timestamp + 60)
         );
     }
@@ -98,9 +101,10 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         CHEAT_CODES.expectRevert(
             abi.encodeWithSignature("InvalidQuestionTimeout()")
         );
+        CHEAT_CODES.prank(address(oraclesManager));
         oracleInstance.initialize(
             address(1),
-            _template,
+            _template.id,
             abi.encode(address(1), address(1), 0, "a", 0, block.timestamp + 60)
         );
     }
@@ -111,9 +115,10 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         );
         IOraclesManager.Template memory _template = oraclesManager.template(0);
         CHEAT_CODES.expectRevert(abi.encodeWithSignature("InvalidExpiry()"));
+        CHEAT_CODES.prank(address(oraclesManager));
         oracleInstance.initialize(
             address(1),
-            _template,
+            _template.id,
             abi.encode(address(1), address(1), 0, "a", 60, block.timestamp)
         );
     }
@@ -133,9 +138,11 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
             abi.encode(_questionId)
         );
         uint256 _openingTs = block.timestamp + 60;
+        emit log_address(address(oraclesManager));
+        CHEAT_CODES.prank(address(oraclesManager));
         oracleInstance.initialize(
             address(1),
-            _template,
+            _template.id,
             abi.encode(_realityAddress, address(1), 0, "a", 60, _openingTs)
         );
 
