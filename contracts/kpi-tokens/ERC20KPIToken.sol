@@ -74,7 +74,10 @@ contract ERC20KPIToken is ERC20Upgradeable, IERC20KPIToken, ReentrancyGuard {
         string symbol,
         uint256 supply
     );
+    event InitializeOracles(FinalizableOracle[] finalizableOracles);
+    event CollectProtocolFee(TokenAmount[] collected, address _receiver);
     event Finalize(address oracle, uint256 result);
+    event RecoverERC20(address token, uint256 amount, address _receiver);
     event Redeem(uint256 burned, RedeemedCollateral[] redeemed);
 
     /// @dev Initializes the template through the passed in data. This function is
@@ -208,6 +211,10 @@ contract ERC20KPIToken is ERC20Upgradeable, IERC20KPIToken, ReentrancyGuard {
 
         if (_oracleDatas.length > 5) revert TooManyOracles();
 
+        FinalizableOracle[]
+            memory _finalizableOracles = new FinalizableOracle[](
+                _oracleDatas.length
+            );
         for (uint16 _i = 0; _i < _oracleDatas.length; _i++) {
             OracleData memory _oracleData = _oracleDatas[_i];
             if (_oracleData.higherBound <= _oracleData.lowerBound)
@@ -219,21 +226,23 @@ contract ERC20KPIToken is ERC20Upgradeable, IERC20KPIToken, ReentrancyGuard {
                 _oracleData.templateId,
                 _oracleData.data
             );
-            finalizableOracles.push(
-                FinalizableOracle({
-                    addrezz: _instance,
-                    lowerBound: _oracleData.lowerBound,
-                    higherBound: _oracleData.higherBound,
-                    finalProgress: 0,
-                    weight: _oracleData.weight,
-                    finalized: false
-                })
-            );
+            FinalizableOracle memory _finalizableOracle = FinalizableOracle({
+                addrezz: _instance,
+                lowerBound: _oracleData.lowerBound,
+                higherBound: _oracleData.higherBound,
+                finalProgress: 0,
+                weight: _oracleData.weight,
+                finalized: false
+            });
+            _finalizableOracles[_i] = _finalizableOracle;
+            finalizableOracles.push(_finalizableOracle);
         }
 
         toBeFinalized = uint16(_oracleDatas.length);
         andRelationship = _andRelationship;
         oraclesInitialized = true;
+
+        emit InitializeOracles(_finalizableOracles);
     }
 
     /// @dev Collects the protocol fee from the collaterals backing the KPI token.
@@ -244,6 +253,7 @@ contract ERC20KPIToken is ERC20Upgradeable, IERC20KPIToken, ReentrancyGuard {
         if (!oraclesInitialized) revert NotInitialized();
         if (protocolFeeCollected) revert AlreadyInitialized();
 
+        TokenAmount[] memory _collected = new TokenAmount[](collaterals.length);
         for (uint256 _i = 0; _i < collaterals.length; _i++) {
             Collateral storage _collateral = collaterals[_i];
             uint256 _fee = calculateProtocolFee(_collateral.amount);
@@ -260,9 +270,14 @@ contract ERC20KPIToken is ERC20Upgradeable, IERC20KPIToken, ReentrancyGuard {
             unchecked {
                 _collateral.amount -= _fee;
             }
+            _collected[_i] = TokenAmount({
+                token: _collateral.token,
+                amount: _fee
+            });
         }
 
         protocolFeeCollected = true;
+        emit CollectProtocolFee(_collected, _feeReceiver);
     }
 
     /// @dev Given an input address, returns a storage pointer to the
@@ -352,6 +367,7 @@ contract ERC20KPIToken is ERC20Upgradeable, IERC20KPIToken, ReentrancyGuard {
                 for (uint256 _i = 0; _i < finalizableOracles.length; _i++)
                     finalizableOracles[_i].finalized = true;
                 toBeFinalized = 0;
+                emit Finalize(msg.sender, _result);
                 return;
             }
         } else {
@@ -410,13 +426,15 @@ contract ERC20KPIToken is ERC20Upgradeable, IERC20KPIToken, ReentrancyGuard {
                     _receiver,
                     _reimboursement
                 );
+                emit RecoverERC20(_token, _reimboursement, _receiver);
                 return;
             }
         }
-        IERC20Upgradeable(_token).safeTransfer(
-            _receiver,
-            IERC20Upgradeable(_token).balanceOf(address(this))
+        uint256 _reimboursement = IERC20Upgradeable(_token).balanceOf(
+            address(this)
         );
+        IERC20Upgradeable(_token).safeTransfer(_receiver, _reimboursement);
+        emit RecoverERC20(_token, _reimboursement, _receiver);
     }
 
     /// @dev Given a collateral amount, calculates the protocol fee as a percentage of it.
