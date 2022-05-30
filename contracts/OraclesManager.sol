@@ -29,16 +29,22 @@ contract OraclesManager is Ownable, IOraclesManager {
     error NoKeyForTemplate();
     error InvalidVersionBump();
     error InvalidIndices();
+    error AutomationNotSupported();
 
-    event AddTemplate(address template, bool automatable, string specification);
+    event AddTemplate(
+        uint256 id,
+        address template,
+        bool automatable,
+        string specification
+    );
     event RemoveTemplate(uint256 id);
-    event UpdateTemplateSpecification(uint256 id, string _specification);
     event UpgradeTemplate(
         uint256 id,
         address newTemplate,
         uint8 versionBump,
         string newSpecification
     );
+    event UpdateTemplateSpecification(uint256 id, string newSpecification);
 
     constructor(address _factory) {
         if (_factory == address(0)) revert ZeroAddressFactory();
@@ -117,6 +123,7 @@ contract OraclesManager is Ownable, IOraclesManager {
     ) external override {
         if (msg.sender != owner()) revert Forbidden();
         if (_template == address(0)) revert ZeroAddressTemplate();
+        if (_automatable) revert AutomationNotSupported();
         if (bytes(_specification).length == 0) revert InvalidSpecification();
         uint256 _id = templates.ids++;
         templates.map[_id] = IOraclesManager.Template({
@@ -128,7 +135,7 @@ contract OraclesManager is Ownable, IOraclesManager {
             exists: true
         });
         templates.keys.push(_id);
-        emit AddTemplate(_template, _automatable, _specification);
+        emit AddTemplate(_id, _template, _automatable, _specification);
     }
 
     /// @dev Removes a template from the registry. This function can only be called
