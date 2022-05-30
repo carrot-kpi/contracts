@@ -35,6 +35,9 @@ contract ManualRealityOracle is IOracle, Initializable {
     error InvalidQuestionTimeout();
     error InvalidExpiry();
 
+    event Initialize(address kpiToken, uint256 templateId, bytes data);
+    event Finalize(uint256 result);
+
     /// @dev Initializes the template through the passed in data. This function is
     /// generally invoked by the oracles manager contract, in turn invoked by a KPI
     /// token template at creation-time. For more info on some of this parameters check
@@ -92,6 +95,8 @@ contract ManualRealityOracle is IOracle, Initializable {
             _expiry,
             0
         );
+
+        emit Initialize(_kpiToken, _templateId, _data);
     }
 
     /// @dev Once the question is finalized on Reality.eth, this must be manually called to
@@ -104,10 +109,11 @@ contract ManualRealityOracle is IOracle, Initializable {
             !IReality(_reality).isFinalized(_questionId) ||
             IKPIToken(kpiToken).finalized()
         ) revert Forbidden();
-        IKPIToken(kpiToken).finalize(
-            uint256(IReality(_reality).resultFor(_questionId))
-        );
+        uint256 _result = uint256(IReality(_reality).resultFor(_questionId));
+        IKPIToken(kpiToken).finalize(_result);
         finalized = true;
+
+        emit Finalize(_result);
     }
 
     /// @dev View function returning all the most important data about the oracle, in
