@@ -329,7 +329,6 @@ contract ERC20KPIToken is ERC20Upgradeable, IERC20KPIToken, ReentrancyGuard {
             // to the creator, otherwise calculate the exact amount to give back.
             bool _andRelationship = andRelationship;
             for (uint256 _i = 0; _i < collaterals.length; _i++) {
-                // FIXME: will using a memory collateral here save gas? Below too
                 Collateral storage _collateral = collaterals[_i];
                 uint256 _reimboursement;
                 if (_andRelationship) {
