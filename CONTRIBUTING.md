@@ -75,3 +75,8 @@ in the `hardhat.config.ts` file).
 In order to use the deployment tasks it's important to add a `.env` file written
 using the `.env.example` model anyone can find at the root of the project (**BE
 CAREFUL, NEVER PUSH YOUR PERSONAL .env FILE**).
+
+### Addresses
+
+"Official" deployments and addresses are generally tracked in the
+`.addresses.json` file, even though it might be unreliable for testnets.
