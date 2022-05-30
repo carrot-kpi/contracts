@@ -29,6 +29,11 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
     error ZeroAddressFeeReceiver();
     error InvalidIndices();
 
+    event CreateToken(address token);
+    event SetKpiTokensManager(address kpiTokensManager);
+    event SetOraclesManager(address oraclesManager);
+    event SetFeeReceiver(address feeReceiver);
+
     constructor(
         address _kpiTokensManager,
         address _oraclesManager,
@@ -77,6 +82,8 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
         allowOraclesCreation[_instance] = false;
         IKPIToken(_instance).collectProtocolFees(feeReceiver);
         kpiTokens.push(_instance);
+
+        emit CreateToken(_instance);
     }
 
     /// @dev KPI tokens manager address setter. Can only be called by the contract owner.
@@ -86,6 +93,7 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
         if (_kpiTokensManager == address(0))
             revert ZeroAddressKpiTokensManager();
         kpiTokensManager = _kpiTokensManager;
+        emit SetKpiTokensManager(_kpiTokensManager);
     }
 
     /// @dev Oracles manager address setter. Can only be called by the contract owner.
@@ -94,6 +102,7 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
         if (msg.sender != owner()) revert Forbidden();
         if (_oraclesManager == address(0)) revert ZeroAddressOraclesManager();
         oraclesManager = _oraclesManager;
+        emit SetOraclesManager(_oraclesManager);
     }
 
     /// @dev Fee receiver address setter. Can only be called by the contract owner.
@@ -102,6 +111,7 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
         if (msg.sender != owner()) revert Forbidden();
         if (_feeReceiver == address(0)) revert ZeroAddressFeeReceiver();
         feeReceiver = _feeReceiver;
+        emit SetFeeReceiver(_feeReceiver);
     }
 
     /// @dev Gets the amount of all created KPI tokens.
