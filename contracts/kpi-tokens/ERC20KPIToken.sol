@@ -418,15 +418,15 @@ contract ERC20KPIToken is ERC20Upgradeable, IERC20KPIToken, ReentrancyGuard {
             if (_collateral.token == _token) {
                 uint256 _balance = IERC20Upgradeable(_collateral.token)
                     .balanceOf(address(this));
-                uint256 _reimboursement;
+                uint256 _unneededBalance;
                 unchecked {
-                    _reimboursement = _balance - _collateral.amount;
+                    _unneededBalance = _balance - _collateral.amount;
                 }
                 IERC20Upgradeable(_token).safeTransfer(
                     _receiver,
-                    _reimboursement
+                    _unneededBalance
                 );
-                emit RecoverERC20(_token, _reimboursement, _receiver);
+                emit RecoverERC20(_token, _unneededBalance, _receiver);
                 return;
             }
         }
