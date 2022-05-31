@@ -244,7 +244,7 @@ contract OraclesManager is Ownable, IOraclesManager {
     /// @param _id The id of the template that needs to be checked.
     /// @return True if the template exists, false otherwise.
     function exists(uint256 _id) external view override returns (bool) {
-        return storageTemplate(_id).exists;
+        return templates.map[_id].exists;
     }
 
     /// @dev Gets the amount of all registered templates.

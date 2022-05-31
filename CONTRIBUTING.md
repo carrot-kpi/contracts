@@ -62,19 +62,60 @@ by checking
 [this](https://github.com/conventional-changelog/commitlint/tree/master/@commitlint/config-conventional)
 out.
 
-### Deploying to testnets
+### Deploying
 
-In order to deploy the whole platform to a testnet you can either use the
-`deploy:rinkeby` command (with a `deploy:rinkeby:verify` variant that
-automatically verifies the contracts after deployment), or check out how the
-deploy command works in general by executing `npx hardhat help deploy`. The
-`--network` parameter will be a constant and specifies in which network the
-launched command will deploy the contracts (the passed network must be specified
-in the `hardhat.config.ts` file).
+In order to deploy the whole platform to a given network you can run the
+following command from the root of the project:
 
-In order to use the deployment tasks it's important to add a `.env` file written
-using the `.env.example` model anyone can find at the root of the project (**BE
-CAREFUL, NEVER PUSH YOUR PERSONAL .env FILE**).
+```
+FOUNDRY_PROFILE=production forge script --broadcast --slow --private-key PRIVATE_KEY --fork-url RPC_ENDPOINT --sig 'run(address)' ./scripts/Deploy.sol FEE_RECEIVER
+```
+
+the values to pass are:
+
+- `PRIVATE_KEY`: the private key related to the account that will perform the
+  deployment.
+- `RPC_ENDPOINT`: the RPC endpoint that will be used to broadcast transactions.
+  This will also determine the network where the deployment will happen.
+- `FEE_RECEIVER`: the address of the fee receiver. This address will collect all
+  the protocol fees.
+
+Two alternative forms of the command can be used in order for the deployment to
+be completed with either Trezor or Ledger hardware wallets (all the arguments
+remain the same as above):
+
+```
+FOUNDRY_PROFILE=production forge script --broadcast --slow --ledger --fork-url RPC_ENDPOINT --sig 'run(address)' ./scripts/Deploy.sol FEE_RECEIVER
+FOUNDRY_PROFILE=production forge script --broadcast --slow --trezor --fork-url RPC_ENDPOINT --sig 'run(address)' ./scripts/Deploy.sol FEE_RECEIVER
+```
+
+### Creating a test token
+
+In order to create a test token with the ERC20 template + Reality oracle
+template you can run the following command from the root of the project:
+
+```
+FOUNDRY_PROFILE=production forge script --broadcast --slow --private-key PRIVATE_KEY --fork-url RPC_ENDPOINT --sig 'run(address,address,uint256,uint256,address,uint256,address,address,string,uint32,uint32,string)' ./scripts/CreateManualRealityEthERC20KpiToken.sol FACTORY_ADDRESS KPI_TOKENS_MANAGER_ADDRESS COLLATERAL_TOKEN COLLATERAL_AMOUNT REALITY_ADDRESS ARBITRATOR_ADDRESS REALITY_QUESTION_TEXT REALITY_QUESTION_TIMEOUT REALITY_QUESTION_EXPIRY DESCRIPTION
+```
+
+the values to pass are:
+
+- `PRIVATE_KEY`: the private key related to the account that will perform the
+  deployment.
+- `RPC_ENDPOINT`: the RPC endpoint that will be used to broadcast transactions.
+  This will also determine the network where the deployment will happen.
+- `FACTORY_ADDRESS`: the address of the factory contract to be used.
+- `KPI_TOKENS_MANAGER_ADDRESS`: the address of the KPI tokens manager contract
+  to be used.
+- `COLLATERAL_TOKEN`: the address of the ERC20 token to be used as collateral.
+- `COLLATERAL_AMOUNT`: the amount of the ERC20 token collateral.
+- `REALITY_ADDRESS`: the address of the Reality.eth contract to be used.
+- `ARBITRATOR_ADDRESS`: the address of the arbitrator to be used.
+- `REALITY_QUESTION_TEXT`: the text of the question to be asked on Reality.
+- `REALITY_QUESTION_TIMEOUT`: the timeout of the Reality question (in seconds).
+- `REALITY_QUESTION_EXPIRY`: the expiry of the Reality question (epoch
+  timestamp).
+- `DESCRIPTION`: IPFS hash pointing to the KPI token's description.
 
 ### Addresses
 

@@ -31,6 +31,8 @@ interface CheatCodes {
 
     function addr(uint256 privateKey) external returns (address);
 
+    function getNonce(address account) external returns (uint64);
+
     function ffi(string[] calldata) external returns (bytes memory);
 
     function prank(address) external;
@@ -42,6 +44,12 @@ interface CheatCodes {
     function startPrank(address, address) external;
 
     function stopPrank() external;
+
+    function broadcast() external;
+
+    function startBroadcast() external;
+
+    function stopBroadcast() external;
 
     function deal(address who, uint256 newBalance) external;
 

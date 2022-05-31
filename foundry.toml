@@ -7,6 +7,7 @@ remappings = [
     'oz/=lib/openzeppelin-contracts/contracts/',
     'oz-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/',
     'solmate/=lib/solmate/src/',
+    'tests/=tests/'
 ]
 
 [production]
