@@ -4,12 +4,10 @@ import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 import {IERC20KPIToken} from "../../contracts/interfaces/kpi-tokens/IERC20KPIToken.sol";
 import {TokenAmount} from "../../contracts/commons/Types.sol";
 
-/**
- * @title FactoryCreateTokenTest
- * @dev FactoryCreateTokenTest contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title Factory create token test
+/// @dev Tests KPI token creation.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract FactoryCreateTokenTest is BaseTestSetup {
     function testInvalidTemplateId() external {
         CHEAT_CODES.expectRevert(

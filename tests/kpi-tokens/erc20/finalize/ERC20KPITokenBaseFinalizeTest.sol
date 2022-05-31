@@ -5,12 +5,10 @@ import {ERC20KPIToken} from "../../../../contracts/kpi-tokens/ERC20KPIToken.sol"
 import {IERC20KPIToken} from "../../../../contracts/interfaces/kpi-tokens/IERC20KPIToken.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
-/**
- * @title ERC20KPITokenBaseFinalizeTest
- * @dev ERC20KPITokenBaseFinalizeTest contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title ERC20 KPI token finalize test
+/// @dev Tests finalization in ERC20 KPI token.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract ERC20KPITokenBaseFinalizeTest is BaseTestSetup {
     function testNotInitialized() external {
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(

@@ -5,12 +5,10 @@ import {ERC20KPIToken} from "../../../contracts/kpi-tokens/ERC20KPIToken.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 import {IERC20KPIToken} from "../../../contracts/interfaces/kpi-tokens/IERC20KPIToken.sol";
 
-/**
- * @title ERC20KPITokenRedeemTest
- * @dev ERC20KPITokenRedeemTest contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title ERC20 KPI token redeem test
+/// @dev Tests redemption in ERC20 KPI token.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract ERC20KPITokenRedeemTest is BaseTestSetup {
     function testNotInitialized() external {
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(

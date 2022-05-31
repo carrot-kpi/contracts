@@ -5,12 +5,10 @@ import {OraclesManager} from "../../contracts/OraclesManager.sol";
 import {IOraclesManager} from "../../contracts/interfaces/IOraclesManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
-/**
- * @title OraclesManagerAddTemplateTest
- * @dev OraclesManagerAddTemplateTest contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title Oracles manager add template test
+/// @dev Tests template addition in oracles manager.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract OraclesManagerAddTemplateTest is BaseTestSetup {
     function testNonOwner() external {
         CHEAT_CODES.prank(address(1));

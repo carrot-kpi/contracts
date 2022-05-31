@@ -5,12 +5,10 @@ import {OraclesManager} from "../../contracts/OraclesManager.sol";
 import {IKPITokensManager} from "../../contracts/interfaces/IKPITokensManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
-/**
- * @title KpiTokensManagerRemoveTemplateTest
- * @dev KpiTokensManagerRemoveTemplateTest contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title KPI tokens manager remove template test
+/// @dev Tests template removal in KPI tokens manager.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract KpiTokensManagerRemoveTemplateTest is BaseTestSetup {
     function testNonOwner() external {
         CHEAT_CODES.prank(address(1));

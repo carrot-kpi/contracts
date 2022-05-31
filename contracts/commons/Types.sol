@@ -1,11 +1,9 @@
 pragma solidity >=0.8.0;
 
-/**
- * @title Types
- * @dev Types contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title Types
+/// @dev General collection of reusable types.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 
 struct TokenAmount {
     address token;

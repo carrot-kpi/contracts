@@ -1,11 +1,9 @@
 pragma solidity >=0.8.0;
 
-/**
- * @title KPIToken
- * @dev KPIToken contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title Reality interface
+/// @dev Interface for the Reality contract.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 interface IReality {
     function askQuestion(
         uint256 _templateId,

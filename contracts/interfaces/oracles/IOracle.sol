@@ -2,12 +2,10 @@ pragma solidity >=0.8.0;
 
 import "../IOraclesManager.sol";
 
-/**
- * @title IOracle
- * @dev IOracle contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title Oracle interface
+/// @dev Oracle interface.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 interface IOracle {
     function initialize(
         address _kpiToken,

@@ -5,12 +5,10 @@ import {KPITokensManager} from "../../contracts/KPITokensManager.sol";
 import {IKPITokensManager} from "../../contracts/interfaces/IKPITokensManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
-/**
- * @title KpiTokensManagerEnumerateTest
- * @dev KpiTokensManagerEnumerateTest contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title KPI tokens manager enumerate templates test
+/// @dev Tests templates enumeration in KPI tokens manager.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract KpiTokensManagerEnumerateTest is BaseTestSetup {
     function testNoTemplates() external {
         kpiTokensManager = new KPITokensManager(address(factory));

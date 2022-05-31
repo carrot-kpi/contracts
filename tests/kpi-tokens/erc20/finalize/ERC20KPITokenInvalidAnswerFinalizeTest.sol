@@ -4,12 +4,10 @@ import {BaseTestSetup} from "../../../commons/BaseTestSetup.sol";
 import {ERC20KPIToken} from "../../../../contracts/kpi-tokens/ERC20KPIToken.sol";
 import {IERC20KPIToken} from "../../../../contracts/interfaces/kpi-tokens/IERC20KPIToken.sol";
 
-/**
- * @title ERC20KPITokenInvalidAnswerFinalizeTest
- * @dev ERC20KPITokenInvalidAnswerFinalizeTest contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title ERC20 KPI token finalize test
+/// @dev Tests finalization in ERC20 KPI token.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract ERC20KPITokenInvalidAnswerFinalizeTest is BaseTestSetup {
     uint256 internal immutable INVALID_ANSWER =
         0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff;

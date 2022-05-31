@@ -9,12 +9,10 @@ import {IAavePool} from "../interfaces/external/IAavePool.sol";
 import {IAaveERC20KPIToken} from "../interfaces/kpi-tokens/IAaveERC20KPIToken.sol";
 import {TokenAmount} from "../commons/Types.sol";
 
-/**
- * @title AaveERC20KPIToken
- * @dev AaveERC20KPIToken contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title Aave ERC20 KPI token
+/// @dev Aave ERC20 KPI token contract.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract AaveERC20KPIToken is
     ERC20Upgradeable,
     IAaveERC20KPIToken,

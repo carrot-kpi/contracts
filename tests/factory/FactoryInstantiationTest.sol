@@ -3,12 +3,10 @@ pragma solidity 0.8.14;
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 import {KPITokensFactory} from "../../contracts/KPITokensFactory.sol";
 
-/**
- * @title FactoryInstantiationTest
- * @dev FactoryInstantiationTest contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title Factory instantiation test
+/// @dev Tests factory instantiation.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract FactoryInstantiationTest is BaseTestSetup {
     function testZeroAddressKpiTokensManager() external {
         CHEAT_CODES.expectRevert(

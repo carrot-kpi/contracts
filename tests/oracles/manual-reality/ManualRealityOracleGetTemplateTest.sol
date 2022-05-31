@@ -5,12 +5,10 @@ import {ManualRealityOracle} from "../../../contracts/oracles/ManualRealityOracl
 import {IOraclesManager} from "../../../contracts/interfaces/IOraclesManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
-/**
- * @title ManualRealityOracleGetTemplateTest
- * @dev ManualRealityOracleGetTemplateTest contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title Manual Reality oracle get template test
+/// @dev Tests template query in manual Reality oracle template.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract ManualRealityOracleGetTemplateTest is BaseTestSetup {
     function testSuccess() external {
         ManualRealityOracle oracleInstance = ManualRealityOracle(

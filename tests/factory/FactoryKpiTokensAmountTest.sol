@@ -8,12 +8,10 @@ import {KPITokensManager} from "../../contracts/KPITokensManager.sol";
 import {ManualRealityOracle} from "../../contracts/oracles/ManualRealityOracle.sol";
 import {OraclesManager} from "../../contracts/OraclesManager.sol";
 
-/**
- * @title FactoryKpiTokensAmountTest
- * @dev FactoryKpiTokensAmountTest contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title Factory KPI tokens amount test
+/// @dev Tests KPI tokens enumeration.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract FactoryKpiTokensAmountTest is BaseTestSetup {
     function testNoTemplates() external {
         factory = new KPITokensFactory(address(1), address(2), address(3));

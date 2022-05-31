@@ -4,12 +4,10 @@ import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 import {KPITokensManager} from "../../contracts/KPITokensManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
-/**
- * @title KpiTokensManagerTemplatesAmountTest
- * @dev KpiTokensManagerTemplatesAmountTest contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title KPI tokens manager templates amount test
+/// @dev Tests templates amount query in KPI tokens manager.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract KpiTokensManagerTemplatesAmountTest is BaseTestSetup {
     function testNoTemplates() external {
         kpiTokensManager = new KPITokensManager(address(factory));

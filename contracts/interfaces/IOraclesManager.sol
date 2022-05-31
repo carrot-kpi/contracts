@@ -1,11 +1,9 @@
 pragma solidity >=0.8.0;
 
-/**
- * @title IOraclesManager
- * @dev IOraclesManager contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title Oracles manager interface
+/// @dev Interface for the oracles manager contract.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 interface IOraclesManager {
     struct Version {
         uint32 major;

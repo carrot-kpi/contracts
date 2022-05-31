@@ -11,12 +11,10 @@ import {CheatCodes} from "./CheatCodes.sol";
 import {ERC20PresetMinterPauser} from "oz/token/ERC20/presets/ERC20PresetMinterPauser.sol";
 import {IERC20KPIToken} from "../../contracts/interfaces/kpi-tokens/IERC20KPIToken.sol";
 
-/**
- * @title BaseTestSetup
- * @dev BaseTestSetup contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title Base test setup
+/// @dev Test hook to set up a base test environment for each test.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 abstract contract BaseTestSetup is DSTest {
     CheatCodes internal immutable CHEAT_CODES =
         CheatCodes(address(HEVM_ADDRESS));

@@ -4,12 +4,10 @@ import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 import {OraclesManager} from "../../contracts/OraclesManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
-/**
- * @title OraclesManagerInstantiateTest
- * @dev OraclesManagerInstantiateTest contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title Oracles manager instantiate template test
+/// @dev Tests template instantiation in oracles manager.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract OraclesManagerInstantiateTest is BaseTestSetup {
     function testFailNotFromCreatedKpiToken() external {
         // FIXME: why does this fail if I uncomment stuff?

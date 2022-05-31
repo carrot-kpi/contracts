@@ -3,12 +3,10 @@ pragma solidity >=0.8.0;
 import "oz-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "./IKPIToken.sol";
 
-/**
- * @title IERC20KPIToken
- * @dev IERC20KPIToken contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title ERC20 KPI token interface
+/// @dev Interface for the ERC20 KPI token contract.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 interface IERC20KPIToken is IKPIToken, IERC20Upgradeable {
     struct OracleData {
         uint256 templateId;

@@ -1,11 +1,9 @@
 pragma solidity >=0.8.0;
 
-/**
- * @title IAavePool
- * @dev IAavePool contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title Aave pool interface
+/// @dev Interface for the Aave pool contract.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 interface IAavePool {
     struct ReserveConfigurationMap {
         uint256 data;

@@ -2,12 +2,10 @@ pragma solidity >=0.8.0;
 
 import "../IKPITokensManager.sol";
 
-/**
- * @title IKPIToken
- * @dev IKPIToken contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title KPI token interface
+/// @dev KPI token interface.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 interface IKPIToken {
     struct InitializeArguments {
         address creator;

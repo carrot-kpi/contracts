@@ -5,12 +5,10 @@ import {OraclesManager} from "../../contracts/OraclesManager.sol";
 import {IKPITokensManager} from "../../contracts/interfaces/IKPITokensManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
-/**
- * @title KpiTokensManagerGetTemplateTest
- * @dev KpiTokensManagerGetTemplateTest contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title KPI tokens manager get template test
+/// @dev Tests template query in KPI tokens manager.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract KpiTokensManagerGetTemplateTest is BaseTestSetup {
     function testNonExistentTemplate() external {
         CHEAT_CODES.expectRevert(

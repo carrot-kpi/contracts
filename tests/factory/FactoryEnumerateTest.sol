@@ -4,12 +4,10 @@ import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 import {KPITokensFactory} from "../../contracts/KPITokensFactory.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
-/**
- * @title FactoryEnumerateTest
- * @dev FactoryEnumerateTest contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title Factory enumerate test
+/// @dev Tests KPI tokens enumeration.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract FactoryEnumerateTest is BaseTestSetup {
     function testNoTemplates() external {
         factory = new KPITokensFactory(address(1), address(2), address(3));

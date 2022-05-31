@@ -5,12 +5,10 @@ import {OraclesManager} from "../../contracts/OraclesManager.sol";
 import {IOraclesManager} from "../../contracts/interfaces/IOraclesManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
-/**
- * @title OraclesManagerEnumerateTest
- * @dev OraclesManagerEnumerateTest contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title Oracles manager templates enumeration test
+/// @dev Tests template enumeration in oracles manager.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract OraclesManagerEnumerateTest is BaseTestSetup {
     function testNoTemplates() external {
         oraclesManager = new OraclesManager(

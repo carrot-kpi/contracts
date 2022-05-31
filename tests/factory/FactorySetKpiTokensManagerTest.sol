@@ -2,12 +2,10 @@ pragma solidity 0.8.14;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 
-/**
- * @title FactorySetKpiTokensManagerTest
- * @dev FactorySetKpiTokensManagerTest contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title Factory set KPI tokens manager test
+/// @dev Tests factory setter for the KPI tokens manager.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract FactorySetKpiTokensManagerTest is BaseTestSetup {
     function testNonOwner() external {
         CHEAT_CODES.prank(address(1));

@@ -1,11 +1,9 @@
 pragma solidity >=0.8.0;
 
-/**
- * @title IKPITokensFactory
- * @dev IKPITokensFactory contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title KPI tokens factory interface
+/// @dev Interface for the KPI tokens factory contract.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 interface IKPITokensFactory {
     function createToken(
         uint256 _id,

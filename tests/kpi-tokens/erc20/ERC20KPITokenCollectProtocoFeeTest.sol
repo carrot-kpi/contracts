@@ -6,12 +6,10 @@ import {IOraclesManager} from "../../../contracts/interfaces/IOraclesManager.sol
 import {Clones} from "oz/proxy/Clones.sol";
 import {IERC20KPIToken} from "../../../contracts/interfaces/kpi-tokens/IERC20KPIToken.sol";
 
-/**
- * @title ERC20KPITokenCollectProtocoFeeTest
- * @dev ERC20KPITokenCollectProtocoFeeTest contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title ERC20 KPI token collect protocol fee test
+/// @dev Tests ERC20 KPI token protocol fee collection.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
     function initializeKpiToken() internal returns (ERC20KPIToken) {
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(

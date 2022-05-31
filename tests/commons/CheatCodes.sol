@@ -1,11 +1,9 @@
 pragma solidity 0.8.14;
 
-/**
- * @title CheatCodes
- * @dev CheatCodes contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title Cheat codes
+/// @dev Interface to tap into HEVM precompiles to aid in tests development
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 interface CheatCodes {
     function warp(uint256) external;
 

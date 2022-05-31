@@ -4,12 +4,10 @@ import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 import {OraclesManager} from "../../contracts/OraclesManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
-/**
- * @title OraclesManagerPredictInstanceAddressTest
- * @dev OraclesManagerPredictInstanceAddressTest contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title Oracles manager predict template instance address test
+/// @dev Tests template instance address prediction in oracles manager.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract OraclesManagerPredictInstanceAddressTest is BaseTestSetup {
     function testSuccess() external {
         bytes memory _initializationData = abi.encodePacked(

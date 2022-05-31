@@ -7,12 +7,10 @@ import {Clones} from "oz/proxy/Clones.sol";
 import {IERC20KPIToken} from "../../../contracts/interfaces/kpi-tokens/IERC20KPIToken.sol";
 import {TokenAmount} from "../../../contracts/commons/Types.sol";
 
-/**
- * @title ERC20KPITokenGetProtocolFeesTest
- * @dev ERC20KPITokenGetProtocolFeesTest contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title ERC20 KPI token get protocol fee test test
+/// @dev Tests protocol fee query in ERC20 KPI token.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract ERC20KPITokenGetProtocolFeesTest is BaseTestSetup {
     function testTooManyCollaterals() external {
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(

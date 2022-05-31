@@ -5,12 +5,10 @@ import {KPITokensManager} from "../../contracts/KPITokensManager.sol";
 import {IKPITokensManager} from "../../contracts/interfaces/IKPITokensManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
-/**
- * @title KpiTokensManagerUpdateTemplateSpecificationTest
- * @dev KpiTokensManagerUpdateTemplateSpecificationTest contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title KPI tokens manager update template specification test
+/// @dev Tests template specification update in KPI tokens manager.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract KpiTokensManagerUpdateTemplateSpecificationTest is BaseTestSetup {
     function testNonOwner() external {
         CHEAT_CODES.prank(address(1));

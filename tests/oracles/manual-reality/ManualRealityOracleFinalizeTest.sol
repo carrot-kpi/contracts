@@ -5,12 +5,10 @@ import {ManualRealityOracle} from "../../../contracts/oracles/ManualRealityOracl
 import {IOraclesManager} from "../../../contracts/interfaces/IOraclesManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
-/**
- * @title ManualRealityOracleFinalizeTest
- * @dev ManualRealityOracleFinalizeTest contract
- * @author Federico Luzzi - <federico.luzzi@protonmail.com>
- * SPDX-License-Identifier: GPL-3.0
- */
+/// SPDX-License-Identifier: GPL-3.0-or-later
+/// @title Manual Reality oracle finalize test
+/// @dev Tests finalization in manual Reality oracle template.
+/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract ManualRealityOracleFinalizeTest is BaseTestSetup {
     function testRealityQuestionNotFinalized() external {
         ManualRealityOracle oracleInstance = ManualRealityOracle(
