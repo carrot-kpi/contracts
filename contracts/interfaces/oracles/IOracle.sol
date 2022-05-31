@@ -1,6 +1,6 @@
 pragma solidity >=0.8.0;
 
-import "../IOraclesManager.sol";
+import {IOraclesManager} from "../IOraclesManager.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Oracle interface

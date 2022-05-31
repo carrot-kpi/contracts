@@ -1,7 +1,7 @@
 pragma solidity >=0.8.0;
 
-import "oz-upgradeable/token/ERC20/IERC20Upgradeable.sol";
-import "./IKPIToken.sol";
+import {IERC20Upgradeable} from "oz-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import {IKPIToken} from "./IKPIToken.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title ERC20 KPI token interface

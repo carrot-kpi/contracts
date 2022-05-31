@@ -1,6 +1,6 @@
 pragma solidity >=0.8.0;
 
-import "../IKPITokensManager.sol";
+import {IKPITokensManager} from "../IKPITokensManager.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI token interface
