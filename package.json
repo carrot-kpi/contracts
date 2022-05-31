@@ -6,10 +6,9 @@
     "license": "GPL-3.0-or-later",
     "private": true,
     "scripts": {
-        "lint:eslint": "eslint \"test/**/*.ts\" \"tasks/**/*.ts\"",
-        "lint:prettier": "prettier -l contracts/**/*.sol && prettier -l test/**/*.js",
+        "lint:prettier": "prettier -l contracts/**/*.sol tests/**/*.sol scripts/**/*.sol",
         "lint:commit-message": "commitlint -e",
-        "lint": "yarn lint:eslint && yarn lint:prettier",
+        "lint": "yarn lint:prettier",
         "test": "FOUNDRY_PROFILE=test forge test",
         "test:gasreport": "FOUNDRY_PROFILE=test forge test --gas-report",
         "snapshot": "FOUNDRY_PROFILE=test forge snapshot",
