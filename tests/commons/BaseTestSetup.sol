@@ -59,7 +59,7 @@ abstract contract BaseTestSetup is DSTest {
 
         manualRealityOracleTemplate = new ManualRealityOracle();
         oraclesManager = new OraclesManager(
-            address(factory)/* ,
+            address(factory) /* ,
             address(0) */ // jolt jobs registry
         );
         oraclesManager.addTemplate(

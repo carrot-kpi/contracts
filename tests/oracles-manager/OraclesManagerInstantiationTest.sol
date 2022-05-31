@@ -14,10 +14,14 @@ contract OraclesManagerInstantiationTest is BaseTestSetup {
         CHEAT_CODES.expectRevert(
             abi.encodeWithSignature("ZeroAddressFactory()")
         );
-        new OraclesManager(address(0)/* , address(0) */);
+        new OraclesManager(
+            address(0) /* , address(0) */
+        );
     }
 
     function testZeroAddressJobsRegistry() external {
-        new OraclesManager(address(factory)/* , address(0) */);
+        new OraclesManager(
+            address(factory) /* , address(0) */
+        );
     }
 }
