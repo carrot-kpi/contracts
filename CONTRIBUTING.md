@@ -1,12 +1,8 @@
 # Contributing
 
-Carrot v1 contracts are developed using both Hardhat/Foundry in a hybrid project
-structure, so in order to contribute you need to first install Foundry locally.
-Check out [this link](https://getfoundry.sh/) to easily install Foundry on your
-machine.
-
-In order to install Hardhat and all the related dependencies you also need to
-run `yarn install`.
+Carrot v1 contracts are developed using Foundry, so in order to contribute you
+need to first install Foundry locally. Check out
+[this link](https://getfoundry.sh/) to easily install Foundry on your machine.
 
 Foundry manages dependencies using git submodules, so it's advised to use
 `git clone --recurse-submodules` when cloning the repo in order to have a
@@ -16,11 +12,6 @@ ready-to-go environment. If `git clone` was used without the
 install the dependencies.
 
 After having done the above, the environment should be ready to work with.
-
-A mixed Hardhat/Foundry structure is used to make it possible to use the `tasks`
-feature given by Hardhat, which is sadly not yet available on Foundry. Tasks are
-used for various reasons in the project, the most important being the deployment
-of the contracts suite on a given target network.
 
 ## Profiles
 
