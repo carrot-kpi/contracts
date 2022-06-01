@@ -2,7 +2,6 @@ pragma solidity 0.8.14;
 
 import {DSTest} from "ds-test/test.sol";
 import {ERC20KPIToken} from "../../contracts/kpi-tokens/ERC20KPIToken.sol";
-import {AaveERC20KPIToken} from "../../contracts/kpi-tokens/AaveERC20KPIToken.sol";
 import {KPITokensManager} from "../../contracts/KPITokensManager.sol";
 import {ManualRealityOracle} from "../../contracts/oracles/ManualRealityOracle.sol";
 import {OraclesManager} from "../../contracts/OraclesManager.sol";
@@ -23,15 +22,12 @@ abstract contract BaseTestSetup is DSTest {
         "QmRvoExBSESXedwqfC1cs4DGaRymnRR1wA9YGoZbqsE8Mf";
     string internal constant ERC20_KPI_TOKEN_SPECIFICATION =
         "QmXU4G418hZLL8yxXdjkTFSoH2FdSe6ELgUuSm5fHHJMMN";
-    string internal constant AAVE_ERC20_KPI_TOKEN_SPECIFICATION =
-        "QmPRwBVEPteH9qLKHdPGPPkNYuLzTv6fNACcLSHDUW3j8p";
 
     ERC20PresetMinterPauser internal firstErc20;
     ERC20PresetMinterPauser internal secondErc20;
     address internal feeReceiver;
     KPITokensFactory internal factory;
     ERC20KPIToken internal erc20KpiTokenTemplate;
-    AaveERC20KPIToken internal aaveErc20KpiTokenTemplate;
     KPITokensManager internal kpiTokensManager;
     ManualRealityOracle internal manualRealityOracleTemplate;
     OraclesManager internal oraclesManager;
@@ -44,15 +40,10 @@ abstract contract BaseTestSetup is DSTest {
         factory = new KPITokensFactory(address(1), address(1), feeReceiver);
 
         erc20KpiTokenTemplate = new ERC20KPIToken();
-        aaveErc20KpiTokenTemplate = new AaveERC20KPIToken();
         kpiTokensManager = new KPITokensManager(address(factory));
         kpiTokensManager.addTemplate(
             address(erc20KpiTokenTemplate),
             ERC20_KPI_TOKEN_SPECIFICATION
-        );
-        kpiTokensManager.addTemplate(
-            address(aaveErc20KpiTokenTemplate),
-            AAVE_ERC20_KPI_TOKEN_SPECIFICATION
         );
 
         manualRealityOracleTemplate = new ManualRealityOracle();

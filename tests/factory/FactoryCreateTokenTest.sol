@@ -18,7 +18,7 @@ contract FactoryCreateTokenTest is BaseTestSetup {
 
     function testInvalidKpiTokenTemplateInitializationData() external {
         CHEAT_CODES.expectRevert(bytes(""));
-        factory.createToken(1, "a", abi.encode(1), abi.encode(2));
+        factory.createToken(0, "a", abi.encode(1), abi.encode(2));
     }
 
     function testInvalidOracleTemplateInitializationData() external {
@@ -37,7 +37,7 @@ contract FactoryCreateTokenTest is BaseTestSetup {
         );
         CHEAT_CODES.expectRevert(bytes(""));
         factory.createToken(
-            1,
+            0,
             "a",
             _erc20KpiTokenInitializationData,
             abi.encode(2)
