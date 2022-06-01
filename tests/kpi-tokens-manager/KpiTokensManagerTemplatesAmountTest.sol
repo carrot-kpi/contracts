@@ -22,7 +22,6 @@ contract KpiTokensManagerTemplatesAmountTest is BaseTestSetup {
 
     function testMultipleTemplates() external {
         kpiTokensManager.addTemplate(address(10), "a");
-        kpiTokensManager.addTemplate(address(11), "b");
-        assertEq(kpiTokensManager.templatesAmount(), 4);
+        assertEq(kpiTokensManager.templatesAmount(), 2);
     }
 }

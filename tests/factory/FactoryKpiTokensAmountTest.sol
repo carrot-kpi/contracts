@@ -3,7 +3,6 @@ pragma solidity 0.8.14;
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 import {KPITokensFactory} from "../../contracts/KPITokensFactory.sol";
 import {ERC20KPIToken} from "../../contracts/kpi-tokens/ERC20KPIToken.sol";
-import {AaveERC20KPIToken} from "../../contracts/kpi-tokens/AaveERC20KPIToken.sol";
 import {KPITokensManager} from "../../contracts/KPITokensManager.sol";
 import {ManualRealityOracle} from "../../contracts/oracles/ManualRealityOracle.sol";
 import {OraclesManager} from "../../contracts/OraclesManager.sol";
@@ -24,10 +23,6 @@ contract FactoryKpiTokensAmountTest is BaseTestSetup {
         kpiTokensManager.addTemplate(
             address(erc20KpiTokenTemplate),
             ERC20_KPI_TOKEN_SPECIFICATION
-        );
-        kpiTokensManager.addTemplate(
-            address(aaveErc20KpiTokenTemplate),
-            AAVE_ERC20_KPI_TOKEN_SPECIFICATION
         );
 
         manualRealityOracleTemplate = new ManualRealityOracle();
