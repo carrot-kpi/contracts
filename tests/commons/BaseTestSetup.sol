@@ -1,12 +1,11 @@
 pragma solidity 0.8.15;
 
-import {DSTest} from "ds-test/test.sol";
+import {Test} from "forge-std/Test.sol";
 import {ERC20KPIToken} from "../../contracts/kpi-tokens/ERC20KPIToken.sol";
 import {KPITokensManager} from "../../contracts/KPITokensManager.sol";
 import {ManualRealityOracle} from "../../contracts/oracles/ManualRealityOracle.sol";
 import {OraclesManager} from "../../contracts/OraclesManager.sol";
 import {KPITokensFactory} from "../../contracts/KPITokensFactory.sol";
-import {CheatCodes} from "./CheatCodes.sol";
 import {ERC20PresetMinterPauser} from "oz/token/ERC20/presets/ERC20PresetMinterPauser.sol";
 import {IERC20KPIToken} from "../../contracts/interfaces/kpi-tokens/IERC20KPIToken.sol";
 
@@ -14,10 +13,7 @@ import {IERC20KPIToken} from "../../contracts/interfaces/kpi-tokens/IERC20KPITok
 /// @title Base test setup
 /// @dev Test hook to set up a base test environment for each test.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
-abstract contract BaseTestSetup is DSTest {
-    CheatCodes internal immutable CHEAT_CODES =
-        CheatCodes(address(HEVM_ADDRESS));
-
+abstract contract BaseTestSetup is Test {
     string internal constant MANUAL_REALITY_ETH_SPECIFICATION =
         "QmRvoExBSESXedwqfC1cs4DGaRymnRR1wA9YGoZbqsE8Mf";
     string internal constant ERC20_KPI_TOKEN_SPECIFICATION =
@@ -80,7 +76,7 @@ abstract contract BaseTestSetup is DSTest {
         );
 
         address _reality = address(42);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _reality,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"

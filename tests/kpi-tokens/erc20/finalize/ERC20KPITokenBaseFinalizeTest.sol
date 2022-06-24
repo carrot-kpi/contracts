@@ -14,22 +14,22 @@ contract ERC20KPITokenBaseFinalizeTest is BaseTestSetup {
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             Clones.clone(address(erc20KpiTokenTemplate))
         );
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("NotInitialized()"));
+        vm.expectRevert(abi.encodeWithSignature("NotInitialized()"));
         kpiTokenInstance.finalize(0);
     }
 
     function testInvalidCallerNotAnOracle() external {
         ERC20KPIToken kpiTokenInstance = createKpiToken("a", "b");
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("Forbidden()"));
+        vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
         kpiTokenInstance.finalize(0);
     }
 
     function testInvalidCallerAlreadyFinalizedOracle() external {
         ERC20KPIToken kpiTokenInstance = createKpiToken("a", "b");
         address oracle = kpiTokenInstance.oracles()[0];
-        CHEAT_CODES.prank(oracle);
+        vm.prank(oracle);
         kpiTokenInstance.finalize(0);
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("Forbidden()"));
+        vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
         kpiTokenInstance.finalize(0);
     }
 
@@ -49,7 +49,7 @@ contract ERC20KPITokenBaseFinalizeTest is BaseTestSetup {
         );
 
         address _reality = address(42);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _reality,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
@@ -118,7 +118,7 @@ contract ERC20KPITokenBaseFinalizeTest is BaseTestSetup {
             )[0]
         );
 
-        CHEAT_CODES.prank(kpiTokenInstance.oracles()[0]);
+        vm.prank(kpiTokenInstance.oracles()[0]);
         kpiTokenInstance.finalize(5);
 
         assertTrue(kpiTokenInstance.finalized());
@@ -152,8 +152,8 @@ contract ERC20KPITokenBaseFinalizeTest is BaseTestSetup {
         assertTrue(onChainFinalizableOracles[0].finalized);
         assertTrue(onChainFinalizableOracles[1].finalized);
 
-        CHEAT_CODES.prank(kpiTokenInstance.oracles()[1]);
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("Forbidden()"));
+        vm.prank(kpiTokenInstance.oracles()[1]);
+        vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
         kpiTokenInstance.finalize(0);
     }
 }

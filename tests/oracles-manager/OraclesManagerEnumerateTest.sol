@@ -14,7 +14,7 @@ contract OraclesManagerEnumerateTest is BaseTestSetup {
         oraclesManager = new OraclesManager(
             address(factory) /* , address(0) */
         );
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
+        vm.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
         oraclesManager.enumerate(0, 1);
     }
 
@@ -36,12 +36,12 @@ contract OraclesManagerEnumerateTest is BaseTestSetup {
     }
 
     function testInconsistentIndices() external {
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
+        vm.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
         oraclesManager.enumerate(10, 5);
     }
 
     function testOneTemplateFail() external {
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
+        vm.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
         oraclesManager.enumerate(0, 10);
     }
 }

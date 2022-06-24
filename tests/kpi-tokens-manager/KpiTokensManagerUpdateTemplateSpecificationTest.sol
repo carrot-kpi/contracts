@@ -11,20 +11,20 @@ import {Clones} from "oz/proxy/Clones.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract KpiTokensManagerUpdateTemplateSpecificationTest is BaseTestSetup {
     function testNonOwner() external {
-        CHEAT_CODES.prank(address(1));
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("Forbidden()"));
+        vm.prank(address(1));
+        vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
         kpiTokensManager.updateTemplateSpecification(0, "");
     }
 
     function testNonExistentTemplate() external {
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("NonExistentTemplate()")
         );
         kpiTokensManager.updateTemplateSpecification(3, "a");
     }
 
     function testEmptySpecification() external {
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("InvalidSpecification()")
         );
         kpiTokensManager.updateTemplateSpecification(0, "");

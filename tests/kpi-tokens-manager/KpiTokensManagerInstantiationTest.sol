@@ -9,7 +9,7 @@ import {KPITokensManager} from "../../contracts/KPITokensManager.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract KpiTokensManagerInstantiationTest is BaseTestSetup {
     function testZeroAddressFactory() external {
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("ZeroAddressFactory()")
         );
         new KPITokensManager(address(0));

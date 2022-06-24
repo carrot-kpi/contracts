@@ -34,7 +34,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralFinalizeTest2 is
         );
 
         address _reality = address(42);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _reality,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
@@ -106,7 +106,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralFinalizeTest2 is
         );
 
         address oracle = kpiTokenInstance.oracles()[0];
-        CHEAT_CODES.prank(oracle);
+        vm.prank(oracle);
         kpiTokenInstance.finalize(13 ether);
 
         (
@@ -168,7 +168,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralFinalizeTest2 is
         );
 
         address _reality = address(42);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _reality,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
@@ -240,7 +240,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralFinalizeTest2 is
         );
 
         address oracle = kpiTokenInstance.oracles()[0];
-        CHEAT_CODES.prank(oracle);
+        vm.prank(oracle);
         kpiTokenInstance.finalize(33 ether);
 
         (

@@ -11,20 +11,20 @@ import {Clones} from "oz/proxy/Clones.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract OraclesManagerUpgradeTemplateTest is BaseTestSetup {
     function testNonOwner() external {
-        CHEAT_CODES.prank(address(1));
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("Forbidden()"));
+        vm.prank(address(1));
+        vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
         oraclesManager.upgradeTemplate(0, address(1), uint8(0), "");
     }
 
     function testNonExistentTemplate() external {
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("NonExistentTemplate()")
         );
         oraclesManager.upgradeTemplate(1, address(1), uint8(0), "a");
     }
 
     function testEmptySpecification() external {
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("InvalidSpecification()")
         );
         oraclesManager.upgradeTemplate(0, address(1), uint8(0), "");
@@ -35,7 +35,7 @@ contract OraclesManagerUpgradeTemplateTest is BaseTestSetup {
         IOraclesManager.Template memory _template = oraclesManager.template(
             _templateId
         );
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("InvalidSpecification()")
         );
         oraclesManager.upgradeTemplate(
@@ -47,7 +47,7 @@ contract OraclesManagerUpgradeTemplateTest is BaseTestSetup {
     }
 
     function testInvalidVersionBump() external {
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("InvalidVersionBump()")
         );
         oraclesManager.upgradeTemplate(0, address(1), uint8(8), "a");

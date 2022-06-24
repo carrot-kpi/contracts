@@ -13,8 +13,8 @@ contract ERC20KPITokenBaseRecoverTest is BaseTestSetup {
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             Clones.clone(address(erc20KpiTokenTemplate))
         );
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("Forbidden()"));
-        CHEAT_CODES.prank(address(123));
+        vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
+        vm.prank(address(123));
         kpiTokenInstance.recoverERC20(address(33333), address(this));
     }
 }

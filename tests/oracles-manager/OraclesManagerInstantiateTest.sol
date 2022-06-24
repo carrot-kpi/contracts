@@ -11,7 +11,7 @@ import {Clones} from "oz/proxy/Clones.sol";
 contract OraclesManagerInstantiateTest is BaseTestSetup {
     function testFailNotFromCreatedKpiToken() external {
         // FIXME: why does this fail if I uncomment stuff?
-        CHEAT_CODES.expectRevert(); /* abi.encodeWithSignature("Forbidden()") */
+        vm.expectRevert(); /* abi.encodeWithSignature("Forbidden()") */
         oraclesManager.instantiate(address(this), 0, bytes(""));
     }
 
@@ -29,7 +29,7 @@ contract OraclesManagerInstantiateTest is BaseTestSetup {
             keccak256(abi.encodePacked(address(this), _initializationData)),
             address(oraclesManager)
         );
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             address(factory),
             abi.encodeWithSignature(
                 "allowOraclesCreation(address)",
@@ -43,6 +43,6 @@ contract OraclesManagerInstantiateTest is BaseTestSetup {
             _initializationData
         );
         assertEq(_instance, _predictedInstanceAddress);
-        CHEAT_CODES.clearMockedCalls();
+        vm.clearMockedCalls();
     }
 }

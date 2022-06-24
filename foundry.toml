@@ -6,6 +6,7 @@ remappings = [
     'ds-test/=lib/ds-test/src/',
     'oz/=lib/openzeppelin-contracts/contracts/',
     'oz-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/',
+    'forge-std/=lib/forge-std/src/',
     'tests/=tests/'
 ]
 

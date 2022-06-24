@@ -68,7 +68,7 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
             data: secondManualRealityEthInitializationData
         });
         address oraclesManager = address(2);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             oraclesManager,
             abi.encodeWithSignature("instantiate(address,uint256,bytes)"),
             abi.encode(address(2))
@@ -85,7 +85,7 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             Clones.clone(address(erc20KpiTokenTemplate))
         );
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("NotInitialized()"));
+        vm.expectRevert(abi.encodeWithSignature("NotInitialized()"));
         kpiTokenInstance.collectProtocolFees(address(0));
     }
 
@@ -95,7 +95,7 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
         address feeReceiver = address(42);
         kpiTokenInstance.collectProtocolFees(feeReceiver);
 
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("AlreadyInitialized()")
         );
         kpiTokenInstance.collectProtocolFees(feeReceiver);
@@ -158,7 +158,7 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
             data: secondManualRealityEthInitializationData
         });
         address oraclesManager = address(2);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             oraclesManager,
             abi.encodeWithSignature("instantiate(address,uint256,bytes)"),
             abi.encode(address(2))
@@ -168,7 +168,7 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
             abi.encode(oracleData, false)
         );
 
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("InvalidMinimumPayoutAfterFee()")
         );
         kpiTokenInstance.collectProtocolFees(address(42));
@@ -203,7 +203,7 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
         assertEq(onChainCollateral.amount, 9.97 ether);
         assertEq(onChainCollateral.minimumPayout, 1 ether);
 
-        CHEAT_CODES.clearMockedCalls();
+        vm.clearMockedCalls();
     }
 
     function testSuccessMultipleCollateral() external {
@@ -271,7 +271,7 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
             data: secondManualRealityEthInitializationData
         });
         address oraclesManager = address(2);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             oraclesManager,
             abi.encodeWithSignature("instantiate(address,uint256,bytes)"),
             abi.encode(address(2))
@@ -307,6 +307,6 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
         assertEq(onChainCollaterals[1].amount, 2.991 ether);
         assertEq(onChainCollaterals[1].minimumPayout, 2 ether);
 
-        CHEAT_CODES.clearMockedCalls();
+        vm.clearMockedCalls();
     }
 }

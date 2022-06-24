@@ -4,6 +4,7 @@ import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 import {OraclesManager} from "../../contracts/OraclesManager.sol";
 import {IKPITokensManager} from "../../contracts/interfaces/IKPITokensManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
+import "forge-std/console.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI tokens manager remove template test
@@ -11,13 +12,13 @@ import {Clones} from "oz/proxy/Clones.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract KpiTokensManagerRemoveTemplateTest is BaseTestSetup {
     function testNonOwner() external {
-        CHEAT_CODES.prank(address(1));
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("Forbidden()"));
+        vm.prank(address(1));
+        vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
         kpiTokensManager.removeTemplate(0);
     }
 
     function testNonExistentTemplate() external {
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("NonExistentTemplate()")
         );
         kpiTokensManager.removeTemplate(10);
@@ -29,9 +30,20 @@ contract KpiTokensManagerRemoveTemplateTest is BaseTestSetup {
         );
         assertTrue(_template.exists);
         kpiTokensManager.removeTemplate(0);
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("NonExistentTemplate()")
         );
         kpiTokensManager.template(0);
+    }
+
+    function testTemplateWithoutKey() external {
+        console.log("WTF 1");
+        IKPITokensManager.Template memory _template = kpiTokensManager.template(
+            0
+        );
+        assertTrue(_template.exists);
+        bytes32 _asd = vm.load(address(factory), bytes32(uint256(0)));
+        console.log("WTF 2");
+        // console2.log(_asd);
     }
 }

@@ -14,22 +14,22 @@ contract ERC20KPITokenRedeemTest is BaseTestSetup {
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             Clones.clone(address(erc20KpiTokenTemplate))
         );
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("Forbidden()"));
+        vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
         kpiTokenInstance.redeem();
     }
 
     function testNotFinalized() external {
         ERC20KPIToken kpiTokenInstance = createKpiToken("a", "b");
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("Forbidden()"));
+        vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
         kpiTokenInstance.redeem();
     }
 
     function testNoBalance() external {
         ERC20KPIToken kpiTokenInstance = createKpiToken("a", "b");
-        CHEAT_CODES.prank(kpiTokenInstance.oracles()[0]);
+        vm.prank(kpiTokenInstance.oracles()[0]);
         kpiTokenInstance.finalize(0);
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("Forbidden()"));
-        CHEAT_CODES.prank(address(12345));
+        vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
+        vm.prank(address(12345));
         kpiTokenInstance.redeem();
     }
 
@@ -51,7 +51,7 @@ contract ERC20KPITokenRedeemTest is BaseTestSetup {
         );
 
         address _reality = address(42);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _reality,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
@@ -109,7 +109,7 @@ contract ERC20KPITokenRedeemTest is BaseTestSetup {
         assertEq(kpiTokenInstance.balanceOf(holder), 1 ether);
 
         address oracle = kpiTokenInstance.oracles()[0];
-        CHEAT_CODES.prank(oracle);
+        vm.prank(oracle);
         kpiTokenInstance.finalize(0);
 
         (IERC20KPIToken.Collateral[] memory onChainCollaterals, , , , , ) = abi
@@ -128,7 +128,7 @@ contract ERC20KPITokenRedeemTest is BaseTestSetup {
         assertEq(onChainCollaterals.length, 1);
         assertEq(onChainCollaterals[0].amount, 0 ether);
 
-        CHEAT_CODES.prank(holder);
+        vm.prank(holder);
         kpiTokenInstance.redeem();
         assertEq(kpiTokenInstance.balanceOf(holder), 0);
         assertEq(firstErc20.balanceOf(holder), 0 ether);
@@ -152,7 +152,7 @@ contract ERC20KPITokenRedeemTest is BaseTestSetup {
         );
 
         address _reality = address(42);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _reality,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
@@ -210,7 +210,7 @@ contract ERC20KPITokenRedeemTest is BaseTestSetup {
         assertEq(kpiTokenInstance.balanceOf(holder), 1 ether);
 
         address oracle = kpiTokenInstance.oracles()[0];
-        CHEAT_CODES.prank(oracle);
+        vm.prank(oracle);
         kpiTokenInstance.finalize(10);
 
         (IERC20KPIToken.Collateral[] memory onChainCollaterals, , , , , ) = abi
@@ -229,7 +229,7 @@ contract ERC20KPITokenRedeemTest is BaseTestSetup {
         assertEq(onChainCollaterals.length, 1);
         assertEq(onChainCollaterals[0].amount, 0 ether);
 
-        CHEAT_CODES.prank(holder);
+        vm.prank(holder);
         kpiTokenInstance.redeem();
         assertEq(kpiTokenInstance.balanceOf(holder), 0);
         assertEq(firstErc20.balanceOf(holder), 0 ether);
@@ -253,7 +253,7 @@ contract ERC20KPITokenRedeemTest is BaseTestSetup {
         );
 
         address _reality = address(42);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _reality,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
@@ -312,7 +312,7 @@ contract ERC20KPITokenRedeemTest is BaseTestSetup {
         assertEq(kpiTokenInstance.balanceOf(address(this)), 99 ether);
 
         address oracle = kpiTokenInstance.oracles()[0];
-        CHEAT_CODES.prank(oracle);
+        vm.prank(oracle);
         kpiTokenInstance.finalize(12);
 
         (IERC20KPIToken.Collateral[] memory onChainCollaterals, , , , , ) = abi
@@ -332,7 +332,7 @@ contract ERC20KPITokenRedeemTest is BaseTestSetup {
         assertEq(onChainCollaterals[0].amount, 109.67 ether);
 
         assertEq(firstErc20.balanceOf(holder), 0 ether);
-        CHEAT_CODES.prank(holder);
+        vm.prank(holder);
         kpiTokenInstance.redeem();
 
         (onChainCollaterals, , , , , ) = abi.decode(
@@ -372,7 +372,7 @@ contract ERC20KPITokenRedeemTest is BaseTestSetup {
         );
 
         address _reality = address(42);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _reality,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
@@ -431,7 +431,7 @@ contract ERC20KPITokenRedeemTest is BaseTestSetup {
         assertEq(kpiTokenInstance.balanceOf(address(this)), 99 ether);
 
         address oracle = kpiTokenInstance.oracles()[0];
-        CHEAT_CODES.prank(oracle);
+        vm.prank(oracle);
         kpiTokenInstance.finalize(11);
 
         (IERC20KPIToken.Collateral[] memory onChainCollaterals, , , , , ) = abi
@@ -452,7 +452,7 @@ contract ERC20KPITokenRedeemTest is BaseTestSetup {
         assertEq(firstErc20.balanceOf(address(this)), 0);
 
         assertEq(firstErc20.balanceOf(holder), 0 ether);
-        CHEAT_CODES.prank(holder);
+        vm.prank(holder);
         kpiTokenInstance.redeem();
 
         (onChainCollaterals, , , , , ) = abi.decode(
@@ -493,7 +493,7 @@ contract ERC20KPITokenRedeemTest is BaseTestSetup {
         );
 
         address _reality = address(42);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _reality,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
@@ -554,7 +554,7 @@ contract ERC20KPITokenRedeemTest is BaseTestSetup {
         assertEq(kpiTokenInstance.balanceOf(address(this)), 89 ether);
 
         address oracle = kpiTokenInstance.oracles()[0];
-        CHEAT_CODES.prank(oracle);
+        vm.prank(oracle);
         kpiTokenInstance.finalize(0);
 
         (IERC20KPIToken.Collateral[] memory onChainCollaterals, , , , , ) = abi
@@ -573,12 +573,12 @@ contract ERC20KPITokenRedeemTest is BaseTestSetup {
         assertEq(onChainCollaterals.length, 1);
         assertEq(onChainCollaterals[0].amount, 0 ether);
 
-        CHEAT_CODES.prank(holder1);
+        vm.prank(holder1);
         kpiTokenInstance.redeem();
         assertEq(kpiTokenInstance.balanceOf(holder1), 0);
         assertEq(firstErc20.balanceOf(holder1), 0 ether);
 
-        CHEAT_CODES.prank(holder2);
+        vm.prank(holder2);
         kpiTokenInstance.redeem();
         assertEq(kpiTokenInstance.balanceOf(holder2), 0);
         assertEq(firstErc20.balanceOf(holder2), 0 ether);
@@ -603,7 +603,7 @@ contract ERC20KPITokenRedeemTest is BaseTestSetup {
         );
 
         address _reality = address(42);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _reality,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
@@ -664,7 +664,7 @@ contract ERC20KPITokenRedeemTest is BaseTestSetup {
         assertEq(kpiTokenInstance.balanceOf(address(this)), 89 ether);
 
         address oracle = kpiTokenInstance.oracles()[0];
-        CHEAT_CODES.prank(oracle);
+        vm.prank(oracle);
         kpiTokenInstance.finalize(10);
 
         (IERC20KPIToken.Collateral[] memory onChainCollaterals, , , , , ) = abi
@@ -683,12 +683,12 @@ contract ERC20KPITokenRedeemTest is BaseTestSetup {
         assertEq(onChainCollaterals.length, 1);
         assertEq(onChainCollaterals[0].amount, 0 ether);
 
-        CHEAT_CODES.prank(holder1);
+        vm.prank(holder1);
         kpiTokenInstance.redeem();
         assertEq(kpiTokenInstance.balanceOf(holder1), 0);
         assertEq(firstErc20.balanceOf(holder1), 0 ether);
 
-        CHEAT_CODES.prank(holder2);
+        vm.prank(holder2);
         kpiTokenInstance.redeem();
         assertEq(kpiTokenInstance.balanceOf(holder2), 0);
         assertEq(firstErc20.balanceOf(holder2), 0 ether);
@@ -713,7 +713,7 @@ contract ERC20KPITokenRedeemTest is BaseTestSetup {
         );
 
         address _reality = address(42);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _reality,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
@@ -774,7 +774,7 @@ contract ERC20KPITokenRedeemTest is BaseTestSetup {
         assertEq(kpiTokenInstance.balanceOf(address(this)), 89 ether);
 
         address oracle = kpiTokenInstance.oracles()[0];
-        CHEAT_CODES.prank(oracle);
+        vm.prank(oracle);
         kpiTokenInstance.finalize(100);
 
         (IERC20KPIToken.Collateral[] memory onChainCollaterals, , , , , ) = abi
@@ -793,13 +793,13 @@ contract ERC20KPITokenRedeemTest is BaseTestSetup {
         assertEq(onChainCollaterals.length, 1);
         assertEq(onChainCollaterals[0].amount, 109.67 ether);
 
-        CHEAT_CODES.prank(holder1);
+        vm.prank(holder1);
         kpiTokenInstance.redeem();
         assertEq(kpiTokenInstance.balanceOf(holder1), 0);
         assertEq(kpiTokenInstance.totalSupply(), 99 ether);
         assertEq(firstErc20.balanceOf(holder1), 1.0967 ether);
 
-        CHEAT_CODES.prank(holder2);
+        vm.prank(holder2);
         kpiTokenInstance.redeem();
         assertEq(kpiTokenInstance.balanceOf(holder2), 0);
         assertEq(kpiTokenInstance.totalSupply(), 89 ether);
@@ -825,7 +825,7 @@ contract ERC20KPITokenRedeemTest is BaseTestSetup {
         );
 
         address _reality = address(42);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _reality,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
@@ -886,7 +886,7 @@ contract ERC20KPITokenRedeemTest is BaseTestSetup {
         assertEq(kpiTokenInstance.balanceOf(address(this)), 89 ether);
 
         address oracle = kpiTokenInstance.oracles()[0];
-        CHEAT_CODES.prank(oracle);
+        vm.prank(oracle);
         kpiTokenInstance.finalize(11);
 
         (IERC20KPIToken.Collateral[] memory onChainCollaterals, , , , , ) = abi
@@ -906,13 +906,13 @@ contract ERC20KPITokenRedeemTest is BaseTestSetup {
         assertEq(onChainCollaterals[0].amount, 36.556666666666666667 ether);
         assertEq(firstErc20.balanceOf(address(this)), 0);
 
-        CHEAT_CODES.prank(holder1);
+        vm.prank(holder1);
         kpiTokenInstance.redeem();
         assertEq(kpiTokenInstance.balanceOf(holder1), 0);
         assertEq(kpiTokenInstance.totalSupply(), 99 ether);
         assertEq(firstErc20.balanceOf(holder1), 0.365566666666666666 ether);
 
-        CHEAT_CODES.prank(holder2);
+        vm.prank(holder2);
         kpiTokenInstance.redeem();
         assertEq(kpiTokenInstance.balanceOf(holder2), 0);
         assertEq(kpiTokenInstance.totalSupply(), 89 ether);

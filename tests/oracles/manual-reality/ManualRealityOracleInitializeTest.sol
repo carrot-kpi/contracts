@@ -15,10 +15,10 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
             Clones.clone(address(manualRealityOracleTemplate))
         );
         IOraclesManager.Template memory _template = oraclesManager.template(0);
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("ZeroAddressKpiToken()")
         );
-        CHEAT_CODES.prank(address(oraclesManager));
+        vm.prank(address(oraclesManager));
         oracleInstance.initialize(
             address(0),
             _template.id,
@@ -31,13 +31,13 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
             Clones.clone(address(manualRealityOracleTemplate))
         );
         uint256 _templateId = 123;
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             address(oraclesManager),
             abi.encodeWithSignature("exists(uint256)", _templateId),
             abi.encode(false)
         );
-        CHEAT_CODES.prank(address(oraclesManager));
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
+        vm.prank(address(oraclesManager));
+        vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
         oracleInstance.initialize(
             address(1),
             _templateId,
@@ -50,10 +50,10 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
             Clones.clone(address(manualRealityOracleTemplate))
         );
         IOraclesManager.Template memory _template = oraclesManager.template(0);
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("ZeroAddressReality()")
         );
-        CHEAT_CODES.prank(address(oraclesManager));
+        vm.prank(address(oraclesManager));
         oracleInstance.initialize(
             address(1),
             _template.id,
@@ -66,10 +66,10 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
             Clones.clone(address(manualRealityOracleTemplate))
         );
         IOraclesManager.Template memory _template = oraclesManager.template(0);
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("ZeroAddressArbitrator()")
         );
-        CHEAT_CODES.prank(address(oraclesManager));
+        vm.prank(address(oraclesManager));
         oracleInstance.initialize(
             address(1),
             _template.id,
@@ -82,8 +82,8 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
             Clones.clone(address(manualRealityOracleTemplate))
         );
         IOraclesManager.Template memory _template = oraclesManager.template(0);
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("InvalidQuestion()"));
-        CHEAT_CODES.prank(address(oraclesManager));
+        vm.expectRevert(abi.encodeWithSignature("InvalidQuestion()"));
+        vm.prank(address(oraclesManager));
         oracleInstance.initialize(
             address(1),
             _template.id,
@@ -96,10 +96,10 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
             Clones.clone(address(manualRealityOracleTemplate))
         );
         IOraclesManager.Template memory _template = oraclesManager.template(0);
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("InvalidQuestionTimeout()")
         );
-        CHEAT_CODES.prank(address(oraclesManager));
+        vm.prank(address(oraclesManager));
         oracleInstance.initialize(
             address(1),
             _template.id,
@@ -112,8 +112,8 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
             Clones.clone(address(manualRealityOracleTemplate))
         );
         IOraclesManager.Template memory _template = oraclesManager.template(0);
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("InvalidExpiry()"));
-        CHEAT_CODES.prank(address(oraclesManager));
+        vm.expectRevert(abi.encodeWithSignature("InvalidExpiry()"));
+        vm.prank(address(oraclesManager));
         oracleInstance.initialize(
             address(1),
             _template.id,
@@ -128,7 +128,7 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         IOraclesManager.Template memory _template = oraclesManager.template(0);
         address _realityAddress = address(1234);
         bytes32 _questionId = bytes32("questionId");
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _realityAddress,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
@@ -137,7 +137,7 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         );
         uint256 _openingTs = block.timestamp + 60;
         emit log_address(address(oraclesManager));
-        CHEAT_CODES.prank(address(oraclesManager));
+        vm.prank(address(oraclesManager));
         oracleInstance.initialize(
             address(1),
             _template.id,
@@ -146,17 +146,17 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
 
         assertEq(oracleInstance.template().id, _template.id);
 
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _realityAddress,
             abi.encodeWithSignature("getArbitrator(bytes32)"),
             abi.encode(address(1))
         );
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _realityAddress,
             abi.encodeWithSignature("getTimeout(bytes32)"),
             abi.encode(uint32(60))
         );
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _realityAddress,
             abi.encodeWithSignature("getOpeningTS(bytes32)"),
             abi.encode(_openingTs)
@@ -182,6 +182,6 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         assertEq(_onChainTimeout, 60);
         assertEq(_onChainOpeningTs, _openingTs);
 
-        CHEAT_CODES.clearMockedCalls();
+        vm.clearMockedCalls();
     }
 }

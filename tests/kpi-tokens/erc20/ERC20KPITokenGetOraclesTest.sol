@@ -16,7 +16,7 @@ contract ERC20KPITokenGetOraclesTest is BaseTestSetup {
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             Clones.clone(address(erc20KpiTokenTemplate))
         );
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("NotInitialized()"));
+        vm.expectRevert(abi.encodeWithSignature("NotInitialized()"));
         kpiTokenInstance.oracles();
     }
 
@@ -36,7 +36,7 @@ contract ERC20KPITokenGetOraclesTest is BaseTestSetup {
         );
 
         address _reality = address(42);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _reality,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
@@ -118,7 +118,7 @@ contract ERC20KPITokenGetOraclesTest is BaseTestSetup {
         );
 
         address _reality = address(42);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _reality,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"

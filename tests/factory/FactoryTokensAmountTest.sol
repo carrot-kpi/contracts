@@ -1,56 +1,31 @@
 pragma solidity 0.8.15;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
+import {KPITokensFactory} from "../../contracts/KPITokensFactory.sol";
+import {Clones} from "oz/proxy/Clones.sol";
 import {IERC20KPIToken} from "../../contracts/interfaces/kpi-tokens/IERC20KPIToken.sol";
-import {TokenAmount} from "../../contracts/commons/Types.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
-/// @title Factory create token test
-/// @dev Tests KPI token creation.
+/// @title KPI tokens factory tokens amount test
+/// @dev Tests tokens amount query in KPI tokens factory.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
-contract FactoryCreateTokenTest is BaseTestSetup {
-    function testInvalidTemplateId() external {
-        vm.expectRevert(
-            abi.encodeWithSignature("NonExistentTemplate()")
-        );
-        factory.createToken(10, "a", abi.encode(1), abi.encode(2));
+contract FactoryTokensAmountTest is BaseTestSetup {
+    function testNoToken() external {
+        assertEq(factory.kpiTokensAmount(), 0);
     }
 
-    function testInvalidKpiTokenTemplateInitializationData() external {
-        vm.expectRevert(bytes(""));
-        factory.createToken(0, "a", abi.encode(1), abi.encode(2));
-    }
-
-    function testInvalidOracleTemplateInitializationData() external {
+    function testOneToken() external {
         IERC20KPIToken.Collateral[]
-            memory _collaterals = new IERC20KPIToken.Collateral[](1);
-        _collaterals[0] = IERC20KPIToken.Collateral({
-            token: address(1),
-            amount: 2,
-            minimumPayout: 1
-        });
-        bytes memory _erc20KpiTokenInitializationData = abi.encode(
-            _collaterals,
-            bytes32("Test"),
-            bytes32("TST"),
-            100 ether
-        );
-        vm.expectRevert(bytes(""));
-        factory.createToken(
-            0,
-            "a",
-            _erc20KpiTokenInitializationData,
-            abi.encode(2)
-        );
-    }
-
-    function testSuccess() external {
-        IERC20KPIToken.Collateral[]
-            memory _collaterals = new IERC20KPIToken.Collateral[](1);
+            memory _collaterals = new IERC20KPIToken.Collateral[](2);
         _collaterals[0] = IERC20KPIToken.Collateral({
             token: address(firstErc20),
             amount: 2,
-            minimumPayout: 1
+            minimumPayout: 0
+        });
+        _collaterals[1] = IERC20KPIToken.Collateral({
+            token: address(secondErc20),
+            amount: 4,
+            minimumPayout: 0
         });
         bytes memory _erc20KpiTokenInitializationData = abi.encode(
             _collaterals,
@@ -71,7 +46,7 @@ contract FactoryCreateTokenTest is BaseTestSetup {
             _reality,
             address(this),
             1,
-            "question",
+            "b",
             60,
             block.timestamp + 60
         );
@@ -79,17 +54,18 @@ contract FactoryCreateTokenTest is BaseTestSetup {
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
             templateId: 0,
-            lowerBound: 0,
-            higherBound: 1,
+            lowerBound: 10,
+            higherBound: 11,
             weight: 1,
             data: _manualRealityOracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
-            false
+            true
         );
 
         firstErc20.mint(address(this), 2);
+        secondErc20.mint(address(this), 4);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
                 0,
@@ -98,16 +74,20 @@ contract FactoryCreateTokenTest is BaseTestSetup {
                 _oraclesInitializationData
             );
         firstErc20.approve(_predictedKpiTokenAddress, 2);
+        secondErc20.approve(_predictedKpiTokenAddress, 4);
 
-        assertEq(factory.kpiTokensAmount(), 0);
-        factory.createToken(
-            0,
+        factory.createToken(0,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
-        );
-
+            );
         assertEq(factory.kpiTokensAmount(), 1);
-        assertEq(factory.enumerate(0, 1)[0], _predictedKpiTokenAddress);
+    }
+
+    function testMultipleTokens() external {
+        createKpiToken("a", "b");
+        createKpiToken("c", "d");
+
+        assertEq(factory.kpiTokensAmount(), 2);
     }
 }

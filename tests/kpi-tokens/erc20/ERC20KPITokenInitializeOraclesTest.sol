@@ -42,13 +42,13 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             Clones.clone(address(erc20KpiTokenTemplate))
         );
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("NotInitialized()"));
+        vm.expectRevert(abi.encodeWithSignature("NotInitialized()"));
         kpiTokenInstance.initializeOracles(address(0), abi.encode());
     }
 
     function testZeroAddressOraclesManager() external {
         ERC20KPIToken kpiTokenInstance = initializeKpiToken();
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("ZeroAddressOraclesManager()")
         );
         kpiTokenInstance.initializeOracles(address(0), abi.encode());
@@ -75,7 +75,7 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
                 block.timestamp + 200 // expiry
             )
         });
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("AlreadyInitialized()")
         );
         kpiTokenInstance.initializeOracles(
@@ -104,7 +104,7 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
                 )
             });
         }
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("TooManyOracles()"));
+        vm.expectRevert(abi.encodeWithSignature("TooManyOracles()"));
         kpiTokenInstance.initializeOracles(
             address(oraclesManager),
             abi.encode(oracleData, true)
@@ -129,7 +129,7 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
                 block.timestamp + 200 // expiry
             )
         });
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("InvalidOracleBounds()")
         );
         kpiTokenInstance.initializeOracles(
@@ -156,7 +156,7 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
                 block.timestamp + 200 // expiry
             )
         });
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("InvalidOracleBounds()")
         );
         kpiTokenInstance.initializeOracles(
@@ -183,7 +183,7 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
                 block.timestamp + 200 // expiry
             )
         });
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("InvalidOracleWeights()")
         );
         kpiTokenInstance.initializeOracles(
@@ -212,7 +212,7 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
             data: manualRealityEthInitializationData
         });
         address oraclesManager = address(2);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             oraclesManager,
             abi.encodeWithSignature("instantiate(address,uint256,bytes)"),
             abi.encode(address(2))
@@ -252,7 +252,7 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         assertTrue(!finalizableOracle.finalized);
         assertTrue(andRelationship);
 
-        CHEAT_CODES.clearMockedCalls();
+        vm.clearMockedCalls();
     }
 
     function testSuccessNoAndSingleOracle() external {
@@ -275,7 +275,7 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
             data: manualRealityEthInitializationData
         });
         address oraclesManager = address(2);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             oraclesManager,
             abi.encodeWithSignature("instantiate(address,uint256,bytes)"),
             abi.encode(address(2))
@@ -315,7 +315,7 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         assertTrue(!finalizableOracle.finalized);
         assertTrue(!andRelationship);
 
-        CHEAT_CODES.clearMockedCalls();
+        vm.clearMockedCalls();
     }
 
     function testSuccessAndMultipleOracles() external {
@@ -353,7 +353,7 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
             data: secondManualRealityEthInitializationData
         });
         address oraclesManager = address(2);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             oraclesManager,
             abi.encodeWithSignature("instantiate(address,uint256,bytes)"),
             abi.encode(address(2))
@@ -400,7 +400,7 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
 
         assertTrue(andRelationship);
 
-        CHEAT_CODES.clearMockedCalls();
+        vm.clearMockedCalls();
     }
 
     function testSuccessNoAndMultipleOracles() external {
@@ -438,7 +438,7 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
             data: secondManualRealityEthInitializationData
         });
         address oraclesManager = address(2);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             oraclesManager,
             abi.encodeWithSignature("instantiate(address,uint256,bytes)"),
             abi.encode(address(2))
@@ -485,6 +485,6 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
 
         assertTrue(!andRelationship);
 
-        CHEAT_CODES.clearMockedCalls();
+        vm.clearMockedCalls();
     }
 }

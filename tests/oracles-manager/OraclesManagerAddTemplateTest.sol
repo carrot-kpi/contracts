@@ -11,20 +11,20 @@ import {Clones} from "oz/proxy/Clones.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract OraclesManagerAddTemplateTest is BaseTestSetup {
     function testNonOwner() external {
-        CHEAT_CODES.prank(address(1));
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("Forbidden()"));
+        vm.prank(address(1));
+        vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
         oraclesManager.addTemplate(address(2), false, "");
     }
 
     function testZeroAddressTemplate() external {
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("ZeroAddressTemplate()")
         );
         oraclesManager.addTemplate(address(0), false, "");
     }
 
     function testEmptySpecification() external {
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("InvalidSpecification()")
         );
         oraclesManager.addTemplate(address(1), false, "");

@@ -11,7 +11,7 @@ import {Clones} from "oz/proxy/Clones.sol";
 contract FactoryEnumerateTest is BaseTestSetup {
     function testNoTemplates() external {
         factory = new KPITokensFactory(address(1), address(2), address(3));
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
+        vm.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
         factory.enumerate(0, 1);
     }
 
@@ -35,12 +35,12 @@ contract FactoryEnumerateTest is BaseTestSetup {
     }
 
     function testInconsistentIndices() external {
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
+        vm.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
         factory.enumerate(10, 5);
     }
 
     function testOneTemplateFail() external {
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
+        vm.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
         factory.enumerate(0, 10);
     }
 }

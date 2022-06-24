@@ -5,7 +5,6 @@ import {ERC20KPIToken} from "../contracts/kpi-tokens/ERC20KPIToken.sol";
 import {IERC20KPIToken} from "../contracts/interfaces/kpi-tokens/IERC20KPIToken.sol";
 import {KPITokensManager} from "../contracts/KPITokensManager.sol";
 import {KPITokensFactory} from "../contracts/KPITokensFactory.sol";
-import {CheatCodes} from "tests/commons/CheatCodes.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Create manual RealityEth ERC20 KPI token
@@ -28,7 +27,7 @@ contract CreateManualRealityEthERC20KpiToken {
     event log_string(string);
     event log_address(address);
 
-    CheatCodes internal immutable CHEAT_CODES =
+    CheatCodes internal immutable vm =
         CheatCodes(address(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D));
 
     function run(
@@ -102,7 +101,7 @@ contract CreateManualRealityEthERC20KpiToken {
         emit log_string("KPI token will be deployed at address");
         emit log_address(_predictedKpiTokenAddress);
 
-        CHEAT_CODES.startBroadcast();
+        vm.startBroadcast();
         IERC20(_args.collateralToken).approve(
             _predictedKpiTokenAddress,
             _args.collateralAmount
@@ -114,6 +113,6 @@ contract CreateManualRealityEthERC20KpiToken {
             _kpiTokenInitializationData,
             _oraclesInitializationData
         );
-        CHEAT_CODES.stopBroadcast();
+        vm.stopBroadcast();
     }
 }

@@ -17,14 +17,14 @@ contract ManualRealityOracleFinalizeTest is BaseTestSetup {
         IOraclesManager.Template memory _template = oraclesManager.template(0);
         address _realityAddress = address(1234);
         bytes32 _questionId = bytes32("questionId");
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _realityAddress,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
             ),
             abi.encode(_questionId)
         );
-        CHEAT_CODES.prank(address(oraclesManager));
+        vm.prank(address(oraclesManager));
         oracleInstance.initialize(
             address(1),
             _template.id,
@@ -38,15 +38,15 @@ contract ManualRealityOracleFinalizeTest is BaseTestSetup {
             )
         );
 
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _realityAddress,
             abi.encodeWithSignature("isFinalized(bytes32)"),
             abi.encode(false)
         );
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("Forbidden()"));
+        vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
         oracleInstance.finalize();
 
-        CHEAT_CODES.clearMockedCalls();
+        vm.clearMockedCalls();
     }
 
     // FIXME: this is supposed to work, why is mocking finalize() on the kpi token not working?
@@ -57,7 +57,7 @@ contract ManualRealityOracleFinalizeTest is BaseTestSetup {
         IOraclesManager.Template memory _template = oraclesManager.template(0);
         address _realityAddress = address(1234);
         bytes32 _questionId = bytes32("questionId");
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _realityAddress,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
@@ -78,17 +78,17 @@ contract ManualRealityOracleFinalizeTest is BaseTestSetup {
             )
         );
 
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _realityAddress,
             abi.encodeWithSignature("isFinalized(bytes32)", _questionId),
             abi.encode(true)
         );
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _realityAddress,
             abi.encodeWithSignature("resultFor(bytes32)", _questionId),
             abi.encode(bytes32("1234"))
         );
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _kpiToken,
             abi.encodeWithSignature(
                 "finalize(uint256)",
@@ -100,6 +100,6 @@ contract ManualRealityOracleFinalizeTest is BaseTestSetup {
 
         assertTrue(oracleInstance.finalized());
 
-        CHEAT_CODES.clearMockedCalls();
+        vm.clearMockedCalls();
     } */
 }

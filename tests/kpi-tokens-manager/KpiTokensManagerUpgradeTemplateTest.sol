@@ -11,20 +11,20 @@ import {Clones} from "oz/proxy/Clones.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract KpiTokensManagerUpgradeTemplateTest is BaseTestSetup {
     function testNonOwner() external {
-        CHEAT_CODES.prank(address(1));
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("Forbidden()"));
+        vm.prank(address(1));
+        vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
         kpiTokensManager.upgradeTemplate(0, address(1), uint8(0), "");
     }
 
     function testNonExistentTemplate() external {
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("NonExistentTemplate()")
         );
         kpiTokensManager.upgradeTemplate(2, address(1), uint8(0), "a");
     }
 
     function testEmptySpecification() external {
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("InvalidSpecification()")
         );
         kpiTokensManager.upgradeTemplate(0, address(1), uint8(0), "");
@@ -35,7 +35,7 @@ contract KpiTokensManagerUpgradeTemplateTest is BaseTestSetup {
         IKPITokensManager.Template memory _template = kpiTokensManager.template(
             _templateId
         );
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("InvalidSpecification()")
         );
         kpiTokensManager.upgradeTemplate(
@@ -47,7 +47,7 @@ contract KpiTokensManagerUpgradeTemplateTest is BaseTestSetup {
     }
 
     function testInvalidVersionBump() external {
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("InvalidVersionBump()")
         );
         kpiTokensManager.upgradeTemplate(0, address(1), uint8(8), "a");

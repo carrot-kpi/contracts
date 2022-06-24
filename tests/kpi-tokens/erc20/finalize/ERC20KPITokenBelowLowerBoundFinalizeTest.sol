@@ -27,7 +27,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
         );
 
         address _reality = address(42);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _reality,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
@@ -82,7 +82,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
         );
 
         address oracle = kpiTokenInstance.oracles()[0];
-        CHEAT_CODES.prank(oracle);
+        vm.prank(oracle);
         kpiTokenInstance.finalize(5);
 
         (
@@ -134,7 +134,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
         );
 
         address _reality = address(42);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _reality,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
@@ -189,7 +189,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
         );
 
         address oracle = kpiTokenInstance.oracles()[0];
-        CHEAT_CODES.prank(oracle);
+        vm.prank(oracle);
         kpiTokenInstance.finalize(5);
 
         (
@@ -241,7 +241,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
         );
 
         address _reality = address(42);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _reality,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
@@ -296,7 +296,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
         );
 
         address oracle = kpiTokenInstance.oracles()[0];
-        CHEAT_CODES.prank(oracle);
+        vm.prank(oracle);
         kpiTokenInstance.finalize(5);
 
         (
@@ -348,7 +348,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
         );
 
         address _reality = address(42);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _reality,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
@@ -403,7 +403,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
         );
 
         address oracle = kpiTokenInstance.oracles()[0];
-        CHEAT_CODES.prank(oracle);
+        vm.prank(oracle);
         kpiTokenInstance.finalize(5);
 
         (
@@ -455,7 +455,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
         );
 
         address _reality = address(42);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _reality,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
@@ -525,7 +525,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
         );
 
         address oracle = kpiTokenInstance.oracles()[0];
-        CHEAT_CODES.prank(oracle);
+        vm.prank(oracle);
         kpiTokenInstance.finalize(5);
 
         (
@@ -578,7 +578,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
         );
 
         address _reality = address(42);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _reality,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
@@ -648,7 +648,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
         );
 
         address oracle = kpiTokenInstance.oracles()[0];
-        CHEAT_CODES.prank(oracle);
+        vm.prank(oracle);
         kpiTokenInstance.finalize(5);
 
         (
@@ -706,7 +706,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
         );
 
         address _reality = address(42);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _reality,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
@@ -763,7 +763,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
         );
 
         address oracle = kpiTokenInstance.oracles()[0];
-        CHEAT_CODES.prank(oracle);
+        vm.prank(oracle);
         kpiTokenInstance.finalize(5);
 
         (
@@ -824,7 +824,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
         );
 
         address _reality = address(42);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _reality,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
@@ -881,7 +881,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
         );
 
         address oracle = kpiTokenInstance.oracles()[0];
-        CHEAT_CODES.prank(oracle);
+        vm.prank(oracle);
         kpiTokenInstance.finalize(5);
 
         (
@@ -942,7 +942,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
         );
 
         address _reality = address(42);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _reality,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
@@ -999,7 +999,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
         );
 
         address oracle = kpiTokenInstance.oracles()[0];
-        CHEAT_CODES.prank(oracle);
+        vm.prank(oracle);
         kpiTokenInstance.finalize(5);
 
         (
@@ -1060,7 +1060,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
         );
 
         address _reality = address(42);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _reality,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
@@ -1117,7 +1117,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
         );
 
         address oracle = kpiTokenInstance.oracles()[0];
-        CHEAT_CODES.prank(oracle);
+        vm.prank(oracle);
         kpiTokenInstance.finalize(5);
 
         (
@@ -1178,7 +1178,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
         );
 
         address _reality = address(42);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _reality,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
@@ -1250,7 +1250,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
         );
 
         address oracle = kpiTokenInstance.oracles()[0];
-        CHEAT_CODES.prank(oracle);
+        vm.prank(oracle);
         kpiTokenInstance.finalize(5);
 
         (
@@ -1312,7 +1312,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
         );
 
         address _reality = address(42);
-        CHEAT_CODES.mockCall(
+        vm.mockCall(
             _reality,
             abi.encodeWithSignature(
                 "askQuestion(uint256,string,address,uint32,uint32,uint256)"
@@ -1384,7 +1384,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
         );
 
         address oracle = kpiTokenInstance.oracles()[0];
-        CHEAT_CODES.prank(oracle);
+        vm.prank(oracle);
         kpiTokenInstance.finalize(5);
 
         (

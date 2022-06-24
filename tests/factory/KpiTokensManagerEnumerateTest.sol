@@ -12,7 +12,7 @@ import {Clones} from "oz/proxy/Clones.sol";
 contract KpiTokensManagerEnumerateTest is BaseTestSetup {
     function testNoTemplates() external {
         kpiTokensManager = new KPITokensManager(address(factory));
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
+        vm.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
         kpiTokensManager.enumerate(0, 1);
     }
 
@@ -34,12 +34,12 @@ contract KpiTokensManagerEnumerateTest is BaseTestSetup {
     }
 
     function testInconsistentIndices() external {
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
+        vm.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
         kpiTokensManager.enumerate(10, 5);
     }
 
     function testOneTemplateFail() external {
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
+        vm.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
         kpiTokensManager.enumerate(0, 10);
     }
 }

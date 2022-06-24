@@ -26,7 +26,7 @@ contract ERC20KPITokenGetProtocolFeesTest is BaseTestSetup {
                 minimumPayout: i - 1
             });
 
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("TooManyCollaterals()")
         );
         kpiTokenInstance.protocolFee(abi.encode(collaterals));
@@ -40,7 +40,7 @@ contract ERC20KPITokenGetProtocolFeesTest is BaseTestSetup {
         TokenAmount[] memory collaterals = new TokenAmount[](1);
         collaterals[0] = TokenAmount({token: address(firstErc20), amount: 0});
 
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("InvalidCollateral()")
         );
         kpiTokenInstance.protocolFee(abi.encode(collaterals));
@@ -54,7 +54,7 @@ contract ERC20KPITokenGetProtocolFeesTest is BaseTestSetup {
         TokenAmount[] memory collaterals = new TokenAmount[](1);
         collaterals[0] = TokenAmount({token: address(0), amount: 1});
 
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("InvalidCollateral()")
         );
         kpiTokenInstance.protocolFee(abi.encode(collaterals));
@@ -75,7 +75,7 @@ contract ERC20KPITokenGetProtocolFeesTest is BaseTestSetup {
             amount: 10 ether
         });
 
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("DuplicatedCollateral()")
         );
         kpiTokenInstance.protocolFee(abi.encode(collaterals));

@@ -15,7 +15,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             Clones.clone(address(erc20KpiTokenTemplate))
         );
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("InvalidCreator()"));
+        vm.expectRevert(abi.encodeWithSignature("InvalidCreator()"));
         kpiTokenInstance.initialize(
             address(0),
             address(0),
@@ -29,7 +29,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             Clones.clone(address(erc20KpiTokenTemplate))
         );
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("InvalidKpiTokensManager()")
         );
         kpiTokenInstance.initialize(
@@ -45,7 +45,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             Clones.clone(address(erc20KpiTokenTemplate))
         );
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("InvalidDescription()")
         );
         kpiTokenInstance.initialize(
@@ -61,7 +61,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             Clones.clone(address(erc20KpiTokenTemplate))
         );
-        CHEAT_CODES.expectRevert();
+        vm.expectRevert();
         kpiTokenInstance.initialize(
             address(1),
             address(1),
@@ -85,7 +85,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
                 minimumPayout: 0
             });
 
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("TooManyCollaterals()")
         );
         kpiTokenInstance.initialize(
@@ -111,7 +111,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
                 minimumPayout: 0
             });
 
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("InvalidName()"));
+        vm.expectRevert(abi.encodeWithSignature("InvalidName()"));
         kpiTokenInstance.initialize(
             address(1),
             address(1),
@@ -135,7 +135,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
                 minimumPayout: 0
             });
 
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("InvalidSymbol()"));
+        vm.expectRevert(abi.encodeWithSignature("InvalidSymbol()"));
         kpiTokenInstance.initialize(
             address(1),
             address(1),
@@ -159,7 +159,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
                 minimumPayout: 0
             });
 
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("InvalidTotalSupply()")
         );
         kpiTokenInstance.initialize(
@@ -189,7 +189,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
             minimumPayout: 0
         });
 
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("DuplicatedCollateral()")
         );
         kpiTokenInstance.initialize(
@@ -214,7 +214,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
             minimumPayout: 0
         });
 
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("InvalidCollateral()")
         );
         kpiTokenInstance.initialize(
@@ -239,7 +239,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
             minimumPayout: 0
         });
 
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("InvalidCollateral()")
         );
         kpiTokenInstance.initialize(
@@ -264,7 +264,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
             minimumPayout: 1
         });
 
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("InvalidCollateral()")
         );
         kpiTokenInstance.initialize(
@@ -289,7 +289,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
             minimumPayout: 10
         });
 
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("InvalidCollateral()")
         );
         kpiTokenInstance.initialize(
