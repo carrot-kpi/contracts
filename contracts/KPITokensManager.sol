@@ -30,15 +30,15 @@ contract KPITokensManager is Ownable, IKPITokensManager {
     error NonExistentTemplate();
     error InvalidIndices();
 
-    event AddTemplate(uint256 id, address template, string specification);
-    event RemoveTemplate(uint256 id);
+    event AddTemplate(uint256 indexed id, address template, string specification);
+    event RemoveTemplate(uint256 indexed id);
     event UpgradeTemplate(
-        uint256 id,
+        uint256 indexed id,
         address newTemplate,
         uint8 versionBump,
         string newSpecification
     );
-    event UpdateTemplateSepcification(uint256 id, string newSpecification);
+    event UpdateTemplateSpecification(uint256 indexed id, string newSpecification);
 
     constructor(address _factory) {
         if (_factory == address(0)) revert ZeroAddressFactory();
@@ -216,7 +216,7 @@ contract KPITokensManager is Ownable, IKPITokensManager {
         if (msg.sender != owner()) revert Forbidden();
         if (bytes(_newSpecification).length == 0) revert InvalidSpecification();
         storageTemplate(_id).specification = _newSpecification;
-        emit UpdateTemplateSepcification(_id, _newSpecification);
+        emit UpdateTemplateSpecification(_id, _newSpecification);
     }
 
     /// @dev Gets a template from storage.

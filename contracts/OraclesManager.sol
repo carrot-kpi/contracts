@@ -32,19 +32,19 @@ contract OraclesManager is Ownable, IOraclesManager {
     error AutomationNotSupported();
 
     event AddTemplate(
-        uint256 id,
+        uint256 indexed id,
         address template,
         bool automatable,
         string specification
     );
-    event RemoveTemplate(uint256 id);
+    event RemoveTemplate(uint256 indexed id);
     event UpgradeTemplate(
-        uint256 id,
+        uint256 indexed id,
         address newTemplate,
         uint8 versionBump,
         string newSpecification
     );
-    event UpdateTemplateSpecification(uint256 id, string newSpecification);
+    event UpdateTemplateSpecification(uint256 indexed id, string newSpecification);
 
     constructor(address _factory) {
         if (_factory == address(0)) revert ZeroAddressFactory();

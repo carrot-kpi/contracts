@@ -35,7 +35,7 @@ contract ManualRealityOracle is IOracle, Initializable {
     error InvalidQuestionTimeout();
     error InvalidExpiry();
 
-    event Initialize(address kpiToken, uint256 templateId, bytes data);
+    event Initialize(address indexed kpiToken, uint256 indexed templateId, bytes data);
     event Finalize(uint256 result);
 
     /// @dev Initializes the template through the passed in data. This function is

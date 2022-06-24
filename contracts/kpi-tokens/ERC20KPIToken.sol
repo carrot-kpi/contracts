@@ -67,7 +67,7 @@ contract ERC20KPIToken is ERC20Upgradeable, IERC20KPIToken, ReentrancyGuard {
     error DuplicatedCollateral();
 
     event Initialize(
-        address creator,
+        address indexed creator,
         string description,
         Collateral[] collaterals,
         string name,
@@ -76,9 +76,9 @@ contract ERC20KPIToken is ERC20Upgradeable, IERC20KPIToken, ReentrancyGuard {
     );
     event InitializeOracles(FinalizableOracle[] finalizableOracles);
     event CollectProtocolFee(TokenAmount[] collected, address _receiver);
-    event Finalize(address oracle, uint256 result);
-    event RecoverERC20(address token, uint256 amount, address _receiver);
-    event Redeem(uint256 burned, RedeemedCollateral[] redeemed);
+    event Finalize(address indexed oracle, uint256 result);
+    event RecoverERC20(address token, uint256 amount, address indexed _receiver);
+    event Redeem(address indexed account, uint256 burned, RedeemedCollateral[] redeemed);
 
     /// @dev Initializes the template through the passed in data. This function is
     /// generally invoked by the factory,
@@ -482,7 +482,7 @@ contract ERC20KPIToken is ERC20Upgradeable, IERC20KPIToken, ReentrancyGuard {
             });
         }
         _burn(msg.sender, _kpiTokenBalance);
-        emit Redeem(_kpiTokenBalance, _redeemedCollaterals);
+        emit Redeem(msg.sender, _kpiTokenBalance, _redeemedCollaterals);
     }
 
     /// @dev Given ABI-encoded data about the collaterals a user intends to use
