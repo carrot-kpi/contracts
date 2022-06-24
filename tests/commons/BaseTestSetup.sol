@@ -1,4 +1,4 @@
-pragma solidity 0.8.14;
+pragma solidity 0.8.15;
 
 import {DSTest} from "ds-test/test.sol";
 import {ERC20KPIToken} from "../../contracts/kpi-tokens/ERC20KPIToken.sol";
