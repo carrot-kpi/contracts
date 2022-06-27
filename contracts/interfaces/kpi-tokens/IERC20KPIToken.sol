@@ -35,4 +35,8 @@ interface IERC20KPIToken is IKPIToken, IERC20Upgradeable {
         address token;
         uint256 amount;
     }
+
+    function registerRedemption() external;
+
+    function redeemCollateral(address _token) external;
 }

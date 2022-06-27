@@ -36,13 +36,15 @@ contract ERC20KPIToken is ERC20Upgradeable, IERC20KPIToken, ReentrancyGuard {
     bool internal andRelationship;
     uint16 internal toBeFinalized;
     address public creator;
+    address internal kpiTokensManager;
     Collateral[] internal collaterals;
     FinalizableOracle[] internal finalizableOracles;
     string public description;
-    address internal kpiTokensManager;
     uint256 internal kpiTokenTemplateId;
     uint256 internal initialSupply;
     uint256 internal totalWeight;
+    mapping(address => uint256) internal registeredBurn;
+    mapping(address => uint256) internal finalCollateralAmount;
 
     error Forbidden();
     error InconsistentWeights();
@@ -65,6 +67,7 @@ contract ERC20KPIToken is ERC20Upgradeable, IERC20KPIToken, ReentrancyGuard {
     error ZeroAddressOraclesManager();
     error InvalidMinimumPayoutAfterFee();
     error DuplicatedCollateral();
+    error NoRedemptionPossible();
 
     event Initialize(
         address indexed creator,
@@ -77,8 +80,22 @@ contract ERC20KPIToken is ERC20Upgradeable, IERC20KPIToken, ReentrancyGuard {
     event InitializeOracles(FinalizableOracle[] finalizableOracles);
     event CollectProtocolFee(TokenAmount[] collected, address _receiver);
     event Finalize(address indexed oracle, uint256 result);
-    event RecoverERC20(address token, uint256 amount, address indexed _receiver);
-    event Redeem(address indexed account, uint256 burned, RedeemedCollateral[] redeemed);
+    event RecoverERC20(
+        address token,
+        uint256 amount,
+        address indexed _receiver
+    );
+    event Redeem(
+        address indexed account,
+        uint256 burned,
+        RedeemedCollateral[] redeemed
+    );
+    event RegisterRedemption(address indexed account, uint256 burned);
+    event RedeemToken(
+        address indexed account,
+        address collateral,
+        uint256 amount
+    );
 
     /// @dev Initializes the template through the passed in data. This function is
     /// generally invoked by the factory,
@@ -268,7 +285,7 @@ contract ERC20KPIToken is ERC20Upgradeable, IERC20KPIToken, ReentrancyGuard {
             if (_amountMinusFees <= _collateral.minimumPayout)
                 revert InvalidMinimumPayoutAfterFee();
             unchecked {
-                _collateral.amount -= _fee;
+                _collateral.amount = _amountMinusFees;
             }
             _collected[_i] = TokenAmount({
                 token: _collateral.token,
@@ -406,7 +423,13 @@ contract ERC20KPIToken is ERC20Upgradeable, IERC20KPIToken, ReentrancyGuard {
             _toBeFinalized = --toBeFinalized;
         }
 
-        if (_toBeFinalized == 0) finalized = true;
+        if (_toBeFinalized == 0) {
+            finalized = true;
+            for (uint8 _i = 0; _i < collaterals.length; _i++) {
+                Collateral memory _collateral = collaterals[_i];
+                finalCollateralAmount[_collateral.token] = _collateral.amount;
+            }
+        }
 
         emit Finalize(msg.sender, _result);
     }
@@ -462,14 +485,15 @@ contract ERC20KPIToken is ERC20Upgradeable, IERC20KPIToken, ReentrancyGuard {
             memory _redeemedCollaterals = new RedeemedCollateral[](
                 collaterals.length
             );
-        uint256 _totalSupply = totalSupply();
+        uint256 _initialSupply = initialSupply;
         for (uint8 _i = 0; _i < collaterals.length; _i++) {
             Collateral storage _collateral = collaterals[_i];
             uint256 _redeemableAmount;
             unchecked {
                 _redeemableAmount =
-                    (_collateral.amount * _kpiTokenBalance) /
-                    _totalSupply;
+                    (finalCollateralAmount[_collateral.token] *
+                        _kpiTokenBalance) /
+                    _initialSupply;
                 _collateral.amount -= _redeemableAmount;
             }
             IERC20Upgradeable(_collateral.token).safeTransfer(
@@ -483,6 +507,49 @@ contract ERC20KPIToken is ERC20Upgradeable, IERC20KPIToken, ReentrancyGuard {
         }
         _burn(msg.sender, _kpiTokenBalance);
         emit Redeem(msg.sender, _kpiTokenBalance, _redeemedCollaterals);
+    }
+
+    /// @dev Only callable by KPI token holders, lets them register their redemption
+    /// by burning the KPI tokens they have. Using this function, any collateral gained
+    /// by the KPI token resolution must be explicitly requested by the user through
+    /// the `redeemToken` function.
+    function registerRedemption() external override {
+        if (!finalized) revert Forbidden();
+        uint256 _kpiTokenBalance = balanceOf(msg.sender);
+        if (_kpiTokenBalance == 0) revert Forbidden();
+        _burn(msg.sender, _kpiTokenBalance);
+        registeredBurn[msg.sender] = _kpiTokenBalance;
+        emit RegisterRedemption(msg.sender, _kpiTokenBalance);
+    }
+
+    /// @dev Only callable by KPI token holders that have previously explicitly burned their
+    /// KPI tokens through the `registerRedemption` function, this redeems the collateral
+    /// token specified as input in the function. The function reverts if either an invalid
+    /// collateral is specified or if zero of the given collateral can be redeemed.
+    function redeemCollateral(address _token) external override {
+        if (!finalized) revert Forbidden();
+        uint256 _burned = registeredBurn[msg.sender];
+        if (_burned == 0) revert Forbidden();
+        for (uint8 _i = 0; _i < collaterals.length; _i++) {
+            Collateral storage _collateral = collaterals[_i];
+            if (_collateral.token == _token) {
+                uint256 _redeemableAmount;
+                unchecked {
+                    _redeemableAmount =
+                        (finalCollateralAmount[_collateral.token] * _burned) /
+                        initialSupply;
+                    if (_redeemableAmount == 0) revert NoRedemptionPossible();
+                    _collateral.amount -= _redeemableAmount;
+                }
+                IERC20Upgradeable(_token).safeTransfer(
+                    msg.sender,
+                    _redeemableAmount
+                );
+                emit RedeemToken(msg.sender, _token, _redeemableAmount);
+                return;
+            }
+        }
+        revert InvalidCollateral();
     }
 
     /// @dev Given ABI-encoded data about the collaterals a user intends to use
