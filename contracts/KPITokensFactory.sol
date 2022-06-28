@@ -87,8 +87,11 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
 
     /// @dev KPI tokens manager address setter. Can only be called by the contract owner.
     /// @param _kpiTokensManager The new KPI tokens manager address.
-    function setKpiTokensManager(address _kpiTokensManager) external {
-        if (msg.sender != owner()) revert Forbidden();
+    function setKpiTokensManager(address _kpiTokensManager)
+        external
+        override
+        onlyOwner
+    {
         if (_kpiTokensManager == address(0))
             revert ZeroAddressKpiTokensManager();
         kpiTokensManager = _kpiTokensManager;
@@ -97,8 +100,11 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
 
     /// @dev Oracles manager address setter. Can only be called by the contract owner.
     /// @param _oraclesManager The new oracles manager address.
-    function setOraclesManager(address _oraclesManager) external {
-        if (msg.sender != owner()) revert Forbidden();
+    function setOraclesManager(address _oraclesManager)
+        external
+        override
+        onlyOwner
+    {
         if (_oraclesManager == address(0)) revert ZeroAddressOraclesManager();
         oraclesManager = _oraclesManager;
         emit SetOraclesManager(_oraclesManager);
@@ -106,8 +112,7 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
 
     /// @dev Fee receiver address setter. Can only be called by the contract owner.
     /// @param _feeReceiver The new fee receiver address.
-    function setFeeReceiver(address _feeReceiver) external {
-        if (msg.sender != owner()) revert Forbidden();
+    function setFeeReceiver(address _feeReceiver) external override onlyOwner {
         if (_feeReceiver == address(0)) revert ZeroAddressFeeReceiver();
         feeReceiver = _feeReceiver;
         emit SetFeeReceiver(_feeReceiver);

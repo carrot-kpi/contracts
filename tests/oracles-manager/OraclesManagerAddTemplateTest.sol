@@ -12,7 +12,7 @@ import {Clones} from "oz/proxy/Clones.sol";
 contract OraclesManagerAddTemplateTest is BaseTestSetup {
     function testNonOwner() external {
         vm.prank(address(1));
-        vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
+        vm.expectRevert("Ownable: caller is not the owner");
         oraclesManager.addTemplate(address(2), false, "");
     }
 

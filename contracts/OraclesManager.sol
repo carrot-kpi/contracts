@@ -123,8 +123,7 @@ contract OraclesManager is Ownable, IOraclesManager {
         address _template,
         bool _automatable,
         string calldata _specification
-    ) external override {
-        if (msg.sender != owner()) revert Forbidden();
+    ) external override onlyOwner {
         if (_template == address(0)) revert ZeroAddressTemplate();
         if (_automatable) revert AutomationNotSupported();
         if (bytes(_specification).length == 0) revert InvalidSpecification();
@@ -145,8 +144,7 @@ contract OraclesManager is Ownable, IOraclesManager {
     /// @dev Removes a template from the registry. This function can only be called
     /// by the contract owner (governance).
     /// @param _id The id of the template that must be removed.
-    function removeTemplate(uint256 _id) external override {
-        if (msg.sender != owner()) revert Forbidden();
+    function removeTemplate(uint256 _id) external override onlyOwner {
         uint256 _index = templates.index[_id];
         if (_index == 0) revert NonExistentTemplate();
         unchecked {
@@ -173,8 +171,7 @@ contract OraclesManager is Ownable, IOraclesManager {
     function updateTemplateSpecification(
         uint256 _id,
         string calldata _newSpecification
-    ) external override {
-        if (msg.sender != owner()) revert Forbidden();
+    ) external override onlyOwner {
         if (bytes(_newSpecification).length == 0) revert InvalidSpecification();
         storageTemplate(_id).specification = _newSpecification;
         emit UpdateTemplateSpecification(_id, _newSpecification);
@@ -190,8 +187,7 @@ contract OraclesManager is Ownable, IOraclesManager {
         address _newTemplate,
         uint8 _versionBump,
         string calldata _newSpecification
-    ) external override {
-        if (msg.sender != owner()) revert Forbidden();
+    ) external override onlyOwner {
         if (bytes(_newSpecification).length == 0) revert InvalidSpecification();
         Template storage _templateFromStorage = storageTemplate(_id);
         if (

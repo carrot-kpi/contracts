@@ -11,7 +11,7 @@ import {Clones} from "oz/proxy/Clones.sol";
 contract KpiTokensManagerAddTemplateTest is BaseTestSetup {
     function testNonOwner() external {
         vm.prank(address(1));
-        vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
+        vm.expectRevert("Ownable: caller is not the owner");
         kpiTokensManager.addTemplate(address(2), "");
     }
 

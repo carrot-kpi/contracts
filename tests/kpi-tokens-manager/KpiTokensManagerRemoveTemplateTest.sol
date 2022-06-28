@@ -16,7 +16,7 @@ contract KpiTokensManagerRemoveTemplateTest is BaseTestSetup {
 
     function testNonOwner() external {
         vm.prank(address(1));
-        vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
+        vm.expectRevert("Ownable: caller is not the owner");
         kpiTokensManager.removeTemplate(1);
     }
 

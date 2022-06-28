@@ -9,7 +9,7 @@ import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 contract FactorySetOraclesManagerTest is BaseTestSetup {
     function testNonOwner() external {
         vm.prank(address(1));
-        vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
+        vm.expectRevert("Ownable: caller is not the owner");
         factory.setOraclesManager(address(2));
     }
 

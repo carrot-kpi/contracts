@@ -16,6 +16,8 @@ interface IKPITokensFactory {
 
     function setKpiTokensManager(address _kpiTokensManager) external;
 
+    function setOraclesManager(address _oraclesManager) external;
+
     function setFeeReceiver(address _feeReceiver) external;
 
     function kpiTokensAmount() external view returns (uint256);
