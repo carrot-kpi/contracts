@@ -24,7 +24,7 @@ contract OraclesManagerPredictInstanceAddressTest is BaseTestSetup {
             _predicatedAddress,
             oraclesManager.predictInstanceAddress(
                 address(this),
-                0,
+                1,
                 _initializationData
             )
         );

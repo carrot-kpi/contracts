@@ -18,7 +18,7 @@ contract KpiTokensManagerGetTemplateTest is BaseTestSetup {
     }
 
     function testSuccess() external {
-        uint256 _templateId = 0;
+        uint256 _templateId = 1;
         IKPITokensManager.Template memory _template = kpiTokensManager.template(
             _templateId
         );

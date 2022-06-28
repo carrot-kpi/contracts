@@ -33,7 +33,7 @@ contract KpiTokensManagerAddTemplateTest is BaseTestSetup {
         string memory _specification = "test";
         address _templateAddress = address(1);
         kpiTokensManager.addTemplate(_templateAddress, _specification);
-        uint256 _addedTemplateId = kpiTokensManager.templatesAmount() - 1;
+        uint256 _addedTemplateId = kpiTokensManager.templatesAmount();
         IKPITokensManager.Template memory _template = kpiTokensManager.template(
             _addedTemplateId
         );

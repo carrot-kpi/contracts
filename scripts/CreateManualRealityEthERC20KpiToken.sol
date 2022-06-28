@@ -72,7 +72,7 @@ contract CreateManualRealityEthERC20KpiToken {
         IERC20KPIToken.OracleData[]
             memory _oraclesData = new IERC20KPIToken.OracleData[](1);
         _oraclesData[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 0,
             higherBound: 1,
             weight: 1,
@@ -93,7 +93,7 @@ contract CreateManualRealityEthERC20KpiToken {
         address _predictedKpiTokenAddress = _args
             .kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 _args.description,
                 _kpiTokenInitializationData,
                 _oraclesInitializationData
@@ -108,7 +108,7 @@ contract CreateManualRealityEthERC20KpiToken {
         );
 
         _args.factory.createToken(
-            0,
+            1,
             _args.description,
             _kpiTokenInitializationData,
             _oraclesInitializationData

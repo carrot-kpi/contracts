@@ -14,7 +14,7 @@ contract ManualRealityOracleFinalizeTest is BaseTestSetup {
         ManualRealityOracle oracleInstance = ManualRealityOracle(
             Clones.clone(address(manualRealityOracleTemplate))
         );
-        IOraclesManager.Template memory _template = oraclesManager.template(0);
+        IOraclesManager.Template memory _template = oraclesManager.template(1);
         address _realityAddress = address(1234);
         bytes32 _questionId = bytes32("questionId");
         vm.mockCall(
@@ -54,7 +54,7 @@ contract ManualRealityOracleFinalizeTest is BaseTestSetup {
         ManualRealityOracle oracleInstance = ManualRealityOracle(
             Clones.clone(address(manualRealityOracleTemplate))
         );
-        IOraclesManager.Template memory _template = oraclesManager.template(0);
+        IOraclesManager.Template memory _template = oraclesManager.template(1);
         address _realityAddress = address(1234);
         bytes32 _questionId = bytes32("questionId");
         vm.mockCall(

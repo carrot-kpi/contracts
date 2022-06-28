@@ -48,7 +48,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 10,
             higherBound: 11,
             weight: 1,
@@ -62,7 +62,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         firstErc20.mint(address(this), 2);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -70,7 +70,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         firstErc20.approve(_predictedKpiTokenAddress, 2);
 
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
@@ -129,7 +129,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 10,
             higherBound: 11,
             weight: 1,
@@ -143,7 +143,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         firstErc20.mint(address(this), 2);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -151,7 +151,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         firstErc20.approve(_predictedKpiTokenAddress, 2);
 
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
@@ -210,7 +210,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 10,
             higherBound: 11,
             weight: 1,
@@ -224,7 +224,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         firstErc20.mint(address(this), 2);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -232,7 +232,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         firstErc20.approve(_predictedKpiTokenAddress, 2);
 
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
@@ -291,7 +291,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 10,
             higherBound: 11,
             weight: 1,
@@ -305,7 +305,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         firstErc20.mint(address(this), 2);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -313,7 +313,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         firstErc20.approve(_predictedKpiTokenAddress, 2);
 
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
@@ -380,14 +380,14 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](2);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 10,
             higherBound: 11,
             weight: 1,
             data: _firstManualRealityOracleInitializationData
         });
         _oracleDatas[1] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 20,
             higherBound: 26,
             weight: 1,
@@ -401,7 +401,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         firstErc20.mint(address(this), 2);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -409,7 +409,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         firstErc20.approve(_predictedKpiTokenAddress, 2);
 
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
@@ -476,14 +476,14 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](2);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 10,
             higherBound: 11,
             weight: 1,
             data: _firstManualRealityOracleInitializationData
         });
         _oracleDatas[1] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 20,
             higherBound: 26,
             weight: 1,
@@ -497,7 +497,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         firstErc20.mint(address(this), 2);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -505,7 +505,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         firstErc20.approve(_predictedKpiTokenAddress, 2);
 
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
@@ -569,7 +569,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 10,
             higherBound: 11,
             weight: 1,
@@ -584,7 +584,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         secondErc20.mint(address(this), 3 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -593,7 +593,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         secondErc20.approve(_predictedKpiTokenAddress, 3 ether);
 
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
@@ -659,7 +659,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 10,
             higherBound: 11,
             weight: 1,
@@ -674,7 +674,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         secondErc20.mint(address(this), 32 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -683,7 +683,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         secondErc20.approve(_predictedKpiTokenAddress, 32 ether);
 
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
@@ -749,7 +749,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 10,
             higherBound: 11,
             weight: 1,
@@ -764,7 +764,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         secondErc20.mint(address(this), 4.5 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -773,7 +773,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         secondErc20.approve(_predictedKpiTokenAddress, 4.5 ether);
 
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
@@ -839,7 +839,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 10,
             higherBound: 11,
             weight: 1,
@@ -854,7 +854,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         secondErc20.mint(address(this), 20 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -863,7 +863,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         secondErc20.approve(_predictedKpiTokenAddress, 20 ether);
 
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
@@ -937,14 +937,14 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](2);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 10,
             higherBound: 11,
             weight: 1,
             data: _firstManualRealityOracleInitializationData
         });
         _oracleDatas[1] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 20,
             higherBound: 26,
             weight: 1,
@@ -959,7 +959,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         secondErc20.mint(address(this), 23.2 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -968,7 +968,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         secondErc20.approve(_predictedKpiTokenAddress, 23.2 ether);
 
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
@@ -1042,14 +1042,14 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](2);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 10,
             higherBound: 11,
             weight: 1,
             data: _firstManualRealityOracleInitializationData
         });
         _oracleDatas[1] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 20,
             higherBound: 26,
             weight: 1,
@@ -1064,7 +1064,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         secondErc20.mint(address(this), 290.2 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -1073,7 +1073,7 @@ contract ERC20KPITokenInvalidAnswerRecoverTest is BaseTestSetup {
         secondErc20.approve(_predictedKpiTokenAddress, 290.2 ether);
 
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData

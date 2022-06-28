@@ -13,25 +13,25 @@ contract OraclesManagerUpgradeTemplateTest is BaseTestSetup {
     function testNonOwner() external {
         vm.prank(address(1));
         vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
-        oraclesManager.upgradeTemplate(0, address(1), uint8(0), "");
+        oraclesManager.upgradeTemplate(1, address(1), uint8(0), "");
     }
 
     function testNonExistentTemplate() external {
         vm.expectRevert(
             abi.encodeWithSignature("NonExistentTemplate()")
         );
-        oraclesManager.upgradeTemplate(1, address(1), uint8(0), "a");
+        oraclesManager.upgradeTemplate(0, address(1), uint8(0), "a");
     }
 
     function testEmptySpecification() external {
         vm.expectRevert(
             abi.encodeWithSignature("InvalidSpecification()")
         );
-        oraclesManager.upgradeTemplate(0, address(1), uint8(0), "");
+        oraclesManager.upgradeTemplate(1, address(1), uint8(0), "");
     }
 
     function testSameSpecification() external {
-        uint256 _templateId = 0;
+        uint256 _templateId = 1;
         IOraclesManager.Template memory _template = oraclesManager.template(
             _templateId
         );
@@ -50,11 +50,11 @@ contract OraclesManagerUpgradeTemplateTest is BaseTestSetup {
         vm.expectRevert(
             abi.encodeWithSignature("InvalidVersionBump()")
         );
-        oraclesManager.upgradeTemplate(0, address(1), uint8(8), "a");
+        oraclesManager.upgradeTemplate(1, address(1), uint8(8), "a");
     }
 
     function testSuccessPatchBump() external {
-        uint256 _templateId = 0;
+        uint256 _templateId = 1;
         IOraclesManager.Template memory _template = oraclesManager.template(
             _templateId
         );
@@ -80,7 +80,7 @@ contract OraclesManagerUpgradeTemplateTest is BaseTestSetup {
     }
 
     function testSuccessMinorBump() external {
-        uint256 _templateId = 0;
+        uint256 _templateId = 1;
         IOraclesManager.Template memory _template = oraclesManager.template(
             _templateId
         );
@@ -106,7 +106,7 @@ contract OraclesManagerUpgradeTemplateTest is BaseTestSetup {
     }
 
     function testSuccessMajorBump() external {
-        uint256 _templateId = 0;
+        uint256 _templateId = 1;
         IOraclesManager.Template memory _template = oraclesManager.template(
             _templateId
         );

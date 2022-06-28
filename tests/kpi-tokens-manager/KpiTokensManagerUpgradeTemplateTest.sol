@@ -13,7 +13,7 @@ contract KpiTokensManagerUpgradeTemplateTest is BaseTestSetup {
     function testNonOwner() external {
         vm.prank(address(1));
         vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
-        kpiTokensManager.upgradeTemplate(0, address(1), uint8(0), "");
+        kpiTokensManager.upgradeTemplate(1, address(1), uint8(0), "");
     }
 
     function testNonExistentTemplate() external {
@@ -27,11 +27,11 @@ contract KpiTokensManagerUpgradeTemplateTest is BaseTestSetup {
         vm.expectRevert(
             abi.encodeWithSignature("InvalidSpecification()")
         );
-        kpiTokensManager.upgradeTemplate(0, address(1), uint8(0), "");
+        kpiTokensManager.upgradeTemplate(1, address(1), uint8(0), "");
     }
 
     function testSameSpecification() external {
-        uint256 _templateId = 0;
+        uint256 _templateId = 1;
         IKPITokensManager.Template memory _template = kpiTokensManager.template(
             _templateId
         );
@@ -50,11 +50,11 @@ contract KpiTokensManagerUpgradeTemplateTest is BaseTestSetup {
         vm.expectRevert(
             abi.encodeWithSignature("InvalidVersionBump()")
         );
-        kpiTokensManager.upgradeTemplate(0, address(1), uint8(8), "a");
+        kpiTokensManager.upgradeTemplate(1, address(1), uint8(8), "a");
     }
 
     function testSuccessPatchBump() external {
-        uint256 _templateId = 0;
+        uint256 _templateId = 1;
         IKPITokensManager.Template memory _template = kpiTokensManager.template(
             _templateId
         );
@@ -80,7 +80,7 @@ contract KpiTokensManagerUpgradeTemplateTest is BaseTestSetup {
     }
 
     function testSuccessMinorBump() external {
-        uint256 _templateId = 0;
+        uint256 _templateId = 1;
         IKPITokensManager.Template memory _template = kpiTokensManager.template(
             _templateId
         );
@@ -106,7 +106,7 @@ contract KpiTokensManagerUpgradeTemplateTest is BaseTestSetup {
     }
 
     function testSuccessMajorBump() external {
-        uint256 _templateId = 0;
+        uint256 _templateId = 1;
         IKPITokensManager.Template memory _template = kpiTokensManager.template(
             _templateId
         );

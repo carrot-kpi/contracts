@@ -13,7 +13,7 @@ contract OraclesManagerRemoveTemplateTest is BaseTestSetup {
     function testNonOwner() external {
         vm.prank(address(1));
         vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
-        oraclesManager.removeTemplate(0);
+        oraclesManager.removeTemplate(1);
     }
 
     function testNonExistentTemplate() external {
@@ -24,12 +24,12 @@ contract OraclesManagerRemoveTemplateTest is BaseTestSetup {
     }
 
     function testSuccess() external {
-        IOraclesManager.Template memory _template = oraclesManager.template(0);
+        IOraclesManager.Template memory _template = oraclesManager.template(1);
         assertTrue(_template.exists);
-        oraclesManager.removeTemplate(0);
+        oraclesManager.removeTemplate(1);
         vm.expectRevert(
             abi.encodeWithSignature("NonExistentTemplate()")
         );
-        oraclesManager.template(0);
+        oraclesManager.template(1);
     }
 }

@@ -62,7 +62,7 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory oracleData = new IERC20KPIToken.OracleData[](1);
         oracleData[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 0,
             higherBound: 1,
             weight: 1,
@@ -90,7 +90,7 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
             memory oracleData = new IERC20KPIToken.OracleData[](6);
         for (uint8 i = 0; i < 6; i++) {
             oracleData[i] = IERC20KPIToken.OracleData({
-                templateId: 0,
+                templateId: 1,
                 lowerBound: 0,
                 higherBound: 0,
                 weight: 1,
@@ -116,7 +116,7 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory oracleData = new IERC20KPIToken.OracleData[](1);
         oracleData[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 0,
             higherBound: 0,
             weight: 1,
@@ -143,7 +143,7 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory oracleData = new IERC20KPIToken.OracleData[](1);
         oracleData[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 1,
             higherBound: 0,
             weight: 1,
@@ -170,7 +170,7 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory oracleData = new IERC20KPIToken.OracleData[](1);
         oracleData[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 0,
             higherBound: 1,
             weight: 0,
@@ -205,7 +205,7 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
             block.timestamp + 200 // expiry
         );
         oracleData[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 0,
             higherBound: 1,
             weight: 1,
@@ -268,7 +268,7 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
             block.timestamp + 200 // expiry
         );
         oracleData[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 0,
             higherBound: 1,
             weight: 1,
@@ -339,14 +339,14 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
             block.timestamp + 300 // expiry
         );
         oracleData[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 0,
             higherBound: 1,
             weight: 1,
             data: firstManualRealityEthInitializationData
         });
         oracleData[1] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 5 ether,
             higherBound: 10 ether,
             weight: 3,
@@ -424,14 +424,14 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
             block.timestamp + 300 // expiry
         );
         oracleData[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 0,
             higherBound: 1,
             weight: 1,
             data: firstManualRealityEthInitializationData
         });
         oracleData[1] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 5 ether,
             higherBound: 10 ether,
             weight: 3,

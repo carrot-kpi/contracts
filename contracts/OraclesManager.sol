@@ -125,7 +125,7 @@ contract OraclesManager is Ownable, IOraclesManager {
         if (_template == address(0)) revert ZeroAddressTemplate();
         if (_automatable) revert AutomationNotSupported();
         if (bytes(_specification).length == 0) revert InvalidSpecification();
-        uint256 _id = templates.ids++;
+        uint256 _id = ++templates.ids;
         templates.map[_id] = IOraclesManager.Template({
             id: _id,
             addrezz: _template,

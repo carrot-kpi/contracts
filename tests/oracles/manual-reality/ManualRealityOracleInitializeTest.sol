@@ -14,7 +14,7 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         ManualRealityOracle oracleInstance = ManualRealityOracle(
             Clones.clone(address(manualRealityOracleTemplate))
         );
-        IOraclesManager.Template memory _template = oraclesManager.template(0);
+        IOraclesManager.Template memory _template = oraclesManager.template(1);
         vm.expectRevert(
             abi.encodeWithSignature("ZeroAddressKpiToken()")
         );
@@ -49,7 +49,7 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         ManualRealityOracle oracleInstance = ManualRealityOracle(
             Clones.clone(address(manualRealityOracleTemplate))
         );
-        IOraclesManager.Template memory _template = oraclesManager.template(0);
+        IOraclesManager.Template memory _template = oraclesManager.template(1);
         vm.expectRevert(
             abi.encodeWithSignature("ZeroAddressReality()")
         );
@@ -65,7 +65,7 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         ManualRealityOracle oracleInstance = ManualRealityOracle(
             Clones.clone(address(manualRealityOracleTemplate))
         );
-        IOraclesManager.Template memory _template = oraclesManager.template(0);
+        IOraclesManager.Template memory _template = oraclesManager.template(1);
         vm.expectRevert(
             abi.encodeWithSignature("ZeroAddressArbitrator()")
         );
@@ -81,7 +81,7 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         ManualRealityOracle oracleInstance = ManualRealityOracle(
             Clones.clone(address(manualRealityOracleTemplate))
         );
-        IOraclesManager.Template memory _template = oraclesManager.template(0);
+        IOraclesManager.Template memory _template = oraclesManager.template(1);
         vm.expectRevert(abi.encodeWithSignature("InvalidQuestion()"));
         vm.prank(address(oraclesManager));
         oracleInstance.initialize(
@@ -95,7 +95,7 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         ManualRealityOracle oracleInstance = ManualRealityOracle(
             Clones.clone(address(manualRealityOracleTemplate))
         );
-        IOraclesManager.Template memory _template = oraclesManager.template(0);
+        IOraclesManager.Template memory _template = oraclesManager.template(1);
         vm.expectRevert(
             abi.encodeWithSignature("InvalidQuestionTimeout()")
         );
@@ -111,7 +111,7 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         ManualRealityOracle oracleInstance = ManualRealityOracle(
             Clones.clone(address(manualRealityOracleTemplate))
         );
-        IOraclesManager.Template memory _template = oraclesManager.template(0);
+        IOraclesManager.Template memory _template = oraclesManager.template(1);
         vm.expectRevert(abi.encodeWithSignature("InvalidExpiry()"));
         vm.prank(address(oraclesManager));
         oracleInstance.initialize(
@@ -125,7 +125,7 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         ManualRealityOracle oracleInstance = ManualRealityOracle(
             Clones.clone(address(manualRealityOracleTemplate))
         );
-        IOraclesManager.Template memory _template = oraclesManager.template(0);
+        IOraclesManager.Template memory _template = oraclesManager.template(1);
         address _realityAddress = address(1234);
         bytes32 _questionId = bytes32("questionId");
         vm.mockCall(

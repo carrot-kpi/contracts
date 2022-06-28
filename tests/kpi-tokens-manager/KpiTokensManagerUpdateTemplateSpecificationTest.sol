@@ -33,7 +33,7 @@ contract KpiTokensManagerUpdateTemplateSpecificationTest is BaseTestSetup {
     function testSuccess() external {
         string memory _oldSpecification = "a";
         kpiTokensManager.addTemplate(address(2), _oldSpecification);
-        uint256 _templateId = kpiTokensManager.templatesAmount() - 1;
+        uint256 _templateId = kpiTokensManager.templatesAmount();
         IKPITokensManager.Template memory _template = kpiTokensManager.template(
             _templateId
         );

@@ -43,7 +43,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 10 ether,
             higherBound: 43 ether,
             weight: 1,
@@ -57,7 +57,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         firstErc20.mint(address(this), 20 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -65,7 +65,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         firstErc20.approve(_predictedKpiTokenAddress, 20 ether);
 
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
@@ -130,14 +130,14 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](2);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 12 ether,
             higherBound: 72 ether,
             weight: 1,
             data: _firstManualRealityOracleInitializationData
         });
         _oracleDatas[1] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 102 ether,
             higherBound: 430 ether,
             weight: 1,
@@ -151,7 +151,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         firstErc20.mint(address(this), 20 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -159,7 +159,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         firstErc20.approve(_predictedKpiTokenAddress, 20 ether);
 
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
@@ -216,7 +216,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 10 ether,
             higherBound: 43 ether,
             weight: 1,
@@ -230,7 +230,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         firstErc20.mint(address(this), 20 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -238,7 +238,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         firstErc20.approve(_predictedKpiTokenAddress, 20 ether);
 
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
@@ -303,14 +303,14 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](2);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 12 ether,
             higherBound: 72 ether,
             weight: 1,
             data: _firstManualRealityOracleInitializationData
         });
         _oracleDatas[1] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 102 ether,
             higherBound: 430 ether,
             weight: 1,
@@ -324,7 +324,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         firstErc20.mint(address(this), 20 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -332,7 +332,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         firstErc20.approve(_predictedKpiTokenAddress, 20 ether);
 
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
@@ -396,7 +396,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 10 ether,
             higherBound: 43 ether,
             weight: 1,
@@ -411,7 +411,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         secondErc20.mint(address(this), 35 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -420,7 +420,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         secondErc20.approve(_predictedKpiTokenAddress, 35 ether);
 
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
@@ -494,14 +494,14 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](2);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 12 ether,
             higherBound: 72 ether,
             weight: 1,
             data: _firstManualRealityOracleInitializationData
         });
         _oracleDatas[1] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 102 ether,
             higherBound: 430 ether,
             weight: 1,
@@ -516,7 +516,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         secondErc20.mint(address(this), 20.23 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -525,7 +525,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         secondErc20.approve(_predictedKpiTokenAddress, 20.23 ether);
 
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
@@ -591,7 +591,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 10 ether,
             higherBound: 43 ether,
             weight: 1,
@@ -606,7 +606,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         secondErc20.mint(address(this), 29 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -615,7 +615,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         secondErc20.approve(_predictedKpiTokenAddress, 29 ether);
 
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
@@ -689,14 +689,14 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](2);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 12 ether,
             higherBound: 72 ether,
             weight: 1,
             data: _firstManualRealityOracleInitializationData
         });
         _oracleDatas[1] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 102 ether,
             higherBound: 430 ether,
             weight: 1,
@@ -711,7 +711,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         secondErc20.mint(address(this), 12.65 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -720,7 +720,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         secondErc20.approve(_predictedKpiTokenAddress, 12.65 ether);
 
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData

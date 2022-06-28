@@ -34,7 +34,7 @@ contract OraclesManagerAddTemplateTest is BaseTestSetup {
         string memory _specification = "test";
         address _templateAddress = address(1);
         oraclesManager.addTemplate(_templateAddress, false, _specification);
-        uint256 _addedTemplateId = oraclesManager.templatesAmount() - 1;
+        uint256 _addedTemplateId = oraclesManager.templatesAmount();
         IOraclesManager.Template memory _template = oraclesManager.template(
             _addedTemplateId
         );

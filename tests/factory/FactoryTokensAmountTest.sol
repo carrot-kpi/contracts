@@ -53,7 +53,7 @@ contract FactoryTokensAmountTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 10,
             higherBound: 11,
             weight: 1,
@@ -68,7 +68,7 @@ contract FactoryTokensAmountTest is BaseTestSetup {
         secondErc20.mint(address(this), 4);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -76,7 +76,7 @@ contract FactoryTokensAmountTest is BaseTestSetup {
         firstErc20.approve(_predictedKpiTokenAddress, 2);
         secondErc20.approve(_predictedKpiTokenAddress, 4);
 
-        factory.createToken(0,
+        factory.createToken(1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData

@@ -14,11 +14,11 @@ contract OraclesManagerGetTemplateTest is BaseTestSetup {
         vm.expectRevert(
             abi.encodeWithSignature("NonExistentTemplate()")
         );
-        oraclesManager.template(1);
+        oraclesManager.template(0);
     }
 
     function testSuccess() external {
-        uint256 _templateId = 0;
+        uint256 _templateId = 1;
         IOraclesManager.Template memory _template = oraclesManager.template(
             _templateId
         );

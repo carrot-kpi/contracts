@@ -19,7 +19,7 @@ contract OraclesManagerInstantiateTest is BaseTestSetup {
         bytes memory _initializationData = abi.encode(
             address(2), // fake reality.eth address
             address(this), // arbitrator
-            0, // template id
+            1, // template id
             "a", // question
             200, // question timeout
             block.timestamp + 200 // expiry
@@ -39,7 +39,7 @@ contract OraclesManagerInstantiateTest is BaseTestSetup {
         );
         address _instance = oraclesManager.instantiate(
             address(this),
-            0,
+            1,
             _initializationData
         );
         assertEq(_instance, _predictedInstanceAddress);

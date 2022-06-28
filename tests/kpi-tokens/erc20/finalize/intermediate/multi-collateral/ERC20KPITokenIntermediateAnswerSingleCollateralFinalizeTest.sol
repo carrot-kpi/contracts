@@ -47,7 +47,7 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralFinalizeTest is
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 10,
             higherBound: 12,
             weight: 1,
@@ -61,7 +61,7 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralFinalizeTest is
         firstErc20.mint(address(this), 2);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -69,7 +69,7 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralFinalizeTest is
         firstErc20.approve(_predictedKpiTokenAddress, 2);
 
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
@@ -154,7 +154,7 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralFinalizeTest is
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 10 ether,
             higherBound: 20 ether,
             weight: 1,
@@ -168,7 +168,7 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralFinalizeTest is
         firstErc20.mint(address(this), 10 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -176,7 +176,7 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralFinalizeTest is
         firstErc20.approve(_predictedKpiTokenAddress, 10 ether);
 
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
@@ -261,7 +261,7 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralFinalizeTest is
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 40 ether,
             higherBound: 50 ether,
             weight: 1,
@@ -275,7 +275,7 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralFinalizeTest is
         firstErc20.mint(address(this), 2 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -283,7 +283,7 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralFinalizeTest is
         firstErc20.approve(_predictedKpiTokenAddress, 2 ether);
 
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
@@ -368,7 +368,7 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralFinalizeTest is
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 102 ether,
             higherBound: 286 ether,
             weight: 1,
@@ -382,7 +382,7 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralFinalizeTest is
         firstErc20.mint(address(this), 45 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -390,7 +390,7 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralFinalizeTest is
         firstErc20.approve(_predictedKpiTokenAddress, 45 ether);
 
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
@@ -486,14 +486,14 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralFinalizeTest is
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](2);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 10 ether,
             higherBound: 14 ether,
             weight: 1,
             data: _firstManualRealityOracleInitializationData
         });
         _oracleDatas[1] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 20 ether,
             higherBound: 26 ether,
             weight: 1,
@@ -507,7 +507,7 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralFinalizeTest is
         firstErc20.mint(address(this), 2 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -515,7 +515,7 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralFinalizeTest is
         firstErc20.approve(_predictedKpiTokenAddress, 2 ether);
 
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
@@ -609,14 +609,14 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralFinalizeTest is
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](2);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 10 ether,
             higherBound: 43 ether,
             weight: 1,
             data: _firstManualRealityOracleInitializationData
         });
         _oracleDatas[1] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 200 ether,
             higherBound: 2607 ether,
             weight: 2,
@@ -630,7 +630,7 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralFinalizeTest is
         firstErc20.mint(address(this), 2 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -638,7 +638,7 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralFinalizeTest is
         firstErc20.approve(_predictedKpiTokenAddress, 2 ether);
 
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData

@@ -17,23 +17,19 @@ contract OraclesManagerUpdateTemplateSpecificationTest is BaseTestSetup {
     }
 
     function testNonExistentTemplate() external {
-        vm.expectRevert(
-            abi.encodeWithSignature("NonExistentTemplate()")
-        );
-        oraclesManager.updateTemplateSpecification(1, "a");
+        vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
+        oraclesManager.updateTemplateSpecification(0, "a");
     }
 
     function testEmptySpecification() external {
-        vm.expectRevert(
-            abi.encodeWithSignature("InvalidSpecification()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("InvalidSpecification()"));
         oraclesManager.updateTemplateSpecification(0, "");
     }
 
     function testSuccess() external {
         string memory _oldSpecification = "a";
         oraclesManager.addTemplate(address(2), false, _oldSpecification);
-        uint256 _templateId = oraclesManager.templatesAmount() - 1;
+        uint256 _templateId = oraclesManager.templatesAmount();
         IOraclesManager.Template memory _template = oraclesManager.template(
             _templateId
         );

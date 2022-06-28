@@ -18,7 +18,7 @@ contract FactoryCreateTokenTest is BaseTestSetup {
 
     function testInvalidKpiTokenTemplateInitializationData() external {
         vm.expectRevert(bytes(""));
-        factory.createToken(0, "a", abi.encode(1), abi.encode(2));
+        factory.createToken(1, "a", abi.encode(1), abi.encode(2));
     }
 
     function testInvalidOracleTemplateInitializationData() external {
@@ -37,7 +37,7 @@ contract FactoryCreateTokenTest is BaseTestSetup {
         );
         vm.expectRevert(bytes(""));
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             abi.encode(2)
@@ -78,7 +78,7 @@ contract FactoryCreateTokenTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 0,
             higherBound: 1,
             weight: 1,
@@ -92,7 +92,7 @@ contract FactoryCreateTokenTest is BaseTestSetup {
         firstErc20.mint(address(this), 2);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
-                0,
+                1,
                 "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
@@ -101,7 +101,7 @@ contract FactoryCreateTokenTest is BaseTestSetup {
 
         assertEq(factory.kpiTokensAmount(), 0);
         factory.createToken(
-            0,
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData

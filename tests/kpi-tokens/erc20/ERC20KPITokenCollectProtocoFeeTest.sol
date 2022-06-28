@@ -54,14 +54,14 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
             block.timestamp + 300 // expiry
         );
         oracleData[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 0,
             higherBound: 1,
             weight: 1,
             data: firstManualRealityEthInitializationData
         });
         oracleData[1] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 5 ether,
             higherBound: 10 ether,
             weight: 3,
@@ -144,14 +144,14 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
             block.timestamp + 300 // expiry
         );
         oracleData[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 0,
             higherBound: 1,
             weight: 1,
             data: firstManualRealityEthInitializationData
         });
         oracleData[1] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 5 ether,
             higherBound: 10 ether,
             weight: 3,
@@ -257,14 +257,14 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
             block.timestamp + 300 // expiry
         );
         oracleData[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 0,
             higherBound: 1,
             weight: 1,
             data: firstManualRealityEthInitializationData
         });
         oracleData[1] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 5 ether,
             higherBound: 10 ether,
             weight: 3,

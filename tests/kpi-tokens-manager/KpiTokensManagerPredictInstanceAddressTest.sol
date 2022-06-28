@@ -35,7 +35,7 @@ contract KpiTokensManagerPredictInstanceAddressTest is BaseTestSetup {
         assertEq(
             _predictedAddress,
             kpiTokensManager.predictInstanceAddress(
-                0,
+                1,
                 _description,
                 _initializationData,
                 _oraclesInitializationData

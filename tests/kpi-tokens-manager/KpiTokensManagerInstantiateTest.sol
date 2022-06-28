@@ -53,7 +53,7 @@ contract KpiTokensManagerInstantiateTest is BaseTestSetup {
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
+            templateId: 1,
             lowerBound: 0,
             higherBound: 1,
             weight: 1,
@@ -78,7 +78,7 @@ contract KpiTokensManagerInstantiateTest is BaseTestSetup {
 
         vm.prank(address(factory));
         address _instance = kpiTokensManager.instantiate(
-            0,
+            1,
             _description,
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
