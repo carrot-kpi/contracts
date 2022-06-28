@@ -9,7 +9,7 @@ import {IERC20KPIToken} from "../../../../contracts/interfaces/kpi-tokens/IERC20
 /// @dev Tests finalization in ERC20 KPI token.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract ERC20KPITokenInvalidAnswerFinalizeTest is BaseTestSetup {
-    uint256 internal immutable INVALID_ANSWER =
+    uint256 internal constant INVALID_ANSWER =
         0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff;
 
     function testInvalidAnswerAndRelationshipSingleOracleZeroMinimumPayout()

@@ -26,9 +26,9 @@ import {TokenAmount} from "../commons/Types.sol";
 contract ERC20KPIToken is ERC20Upgradeable, IERC20KPIToken, ReentrancyGuard {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
-    uint256 internal immutable INVALID_ANSWER =
+    uint256 internal constant INVALID_ANSWER =
         0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff;
-    uint256 internal immutable MULTIPLIER = 64;
+    uint256 internal constant MULTIPLIER = 64;
 
     bool internal oraclesInitialized;
     bool internal protocolFeeCollected;

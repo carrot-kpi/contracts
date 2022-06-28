@@ -16,7 +16,7 @@ contract Deploy {
     event log_address(address);
     event log_uint(uint256);
 
-    CheatCodes internal immutable vm =
+    CheatCodes internal constant vm =
         CheatCodes(address(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D));
     string internal constant ERC20_KPI_TOKEN_SPECIFICATION =
         "QmXU4G418hZLL8yxXdjkTFSoH2FdSe6ELgUuSm5fHHJMMN";
