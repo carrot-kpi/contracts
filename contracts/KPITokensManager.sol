@@ -17,7 +17,7 @@ import {IKPITokensManager} from "./interfaces/IKPITokensManager.sol";
 /// governance contract must be the owner of the KPI tokens manager.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract KPITokensManager is Ownable, IKPITokensManager {
-    address public factory;
+    address public immutable factory;
     EnumerableTemplateSet private templates;
 
     error ZeroAddressFactory();

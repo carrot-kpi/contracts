@@ -18,7 +18,7 @@ import {IKPITokensFactory} from "./interfaces/IKPITokensFactory.sol";
 /// governance contract must be the owner of the oracles manager.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract OraclesManager is Ownable, IOraclesManager {
-    address public factory;
+    address public immutable factory;
     EnumerableTemplateSet private templates;
 
     error NonExistentTemplate();
