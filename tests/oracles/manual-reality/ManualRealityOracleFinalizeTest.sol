@@ -2,6 +2,7 @@ pragma solidity 0.8.15;
 
 import {BaseTestSetup} from "../../commons/BaseTestSetup.sol";
 import {ManualRealityOracle} from "../../../contracts/oracles/ManualRealityOracle.sol";
+import {ERC20KPIToken} from "../../../contracts/kpi-tokens/ERC20KPIToken.sol";
 import {IOraclesManager} from "../../../contracts/interfaces/IOraclesManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
@@ -50,57 +51,29 @@ contract ManualRealityOracleFinalizeTest is BaseTestSetup {
         vm.clearMockedCalls();
     }
 
-    // FIXME: this is supposed to work, why is mocking finalize() on the kpi token not working?
-    /* function testSuccess() external {
-        ManualRealityOracle oracleInstance = ManualRealityOracle(
-            Clones.clone(address(manualRealityOracleTemplate))
-        );
-        IOraclesManager.Template memory _template = oraclesManager.template(1);
-        address _realityAddress = address(1234);
-        bytes32 _questionId = bytes32("questionId");
-        vm.mockCall(
-            _realityAddress,
-            abi.encodeWithSignature(
-                "askQuestion(uint256,string,address,uint32,uint32,uint256)"
-            ),
-            abi.encode(_questionId)
-        );
-        address _kpiToken = address(1234567);
-        oracleInstance.initialize(
-            _kpiToken,
-            _template,
-            abi.encode(
-                _realityAddress,
-                address(1),
-                0,
-                "a",
-                60,
-                block.timestamp + 60
-            )
+    function testSuccess() external {
+        ERC20KPIToken _kpiToken = createKpiToken("a", "b");
+
+        ManualRealityOracle _oracleInstance = ManualRealityOracle(
+            _kpiToken.oracles()[0]
         );
 
         vm.mockCall(
-            _realityAddress,
-            abi.encodeWithSignature("isFinalized(bytes32)", _questionId),
-            abi.encode(true)
-        );
-        vm.mockCall(
-            _realityAddress,
-            abi.encodeWithSignature("resultFor(bytes32)", _questionId),
+            address(42),
+            abi.encodeWithSignature("resultFor(bytes32)"),
             abi.encode(bytes32("1234"))
         );
         vm.mockCall(
-            _kpiToken,
+            address(_kpiToken),
             abi.encodeWithSignature(
                 "finalize(uint256)",
                 uint256(bytes32("1234"))
             ),
             abi.encode()
         );
-        oracleInstance.finalize();
 
-        assertTrue(oracleInstance.finalized());
+        _oracleInstance.finalize();
 
-        vm.clearMockedCalls();
-    } */
+        assertTrue(_oracleInstance.finalized());
+    }
 }
