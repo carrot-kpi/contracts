@@ -33,7 +33,7 @@ contract KpiTokensManagerUpdateTemplateSpecificationTest is BaseTestSetup {
         IKPITokensManager.Template memory _template = kpiTokensManager.template(
             _templateId
         );
-        assertTrue(_template.exists);
+        assertEq(_template.id, _templateId);
         assertEq(_template.specification, _oldSpecification);
         string memory _newSpecification = "b";
         kpiTokensManager.updateTemplateSpecification(
@@ -41,7 +41,7 @@ contract KpiTokensManagerUpdateTemplateSpecificationTest is BaseTestSetup {
             _newSpecification
         );
         _template = kpiTokensManager.template(_templateId);
-        assertTrue(_template.exists);
+        assertEq(_template.id, _templateId);
         assertEq(_template.specification, _newSpecification);
     }
 }

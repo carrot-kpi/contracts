@@ -26,6 +26,5 @@ contract KpiTokensManagerGetTemplateTest is BaseTestSetup {
         assertEq(_template.version.minor, 0);
         assertEq(_template.version.patch, 0);
         assertEq(_template.specification, ERC20_KPI_TOKEN_SPECIFICATION);
-        assertTrue(_template.exists);
     }
 }

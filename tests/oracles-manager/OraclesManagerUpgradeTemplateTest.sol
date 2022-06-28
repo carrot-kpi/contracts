@@ -50,7 +50,7 @@ contract OraclesManagerUpgradeTemplateTest is BaseTestSetup {
         IOraclesManager.Template memory _template = oraclesManager.template(
             _templateId
         );
-        assertTrue(_template.exists);
+        assertEq(_template.id, _templateId);
         assertEq(_template.version.major, 1);
         assertEq(_template.version.minor, 0);
         assertEq(_template.version.patch, 0);
@@ -63,7 +63,7 @@ contract OraclesManagerUpgradeTemplateTest is BaseTestSetup {
             _newSpecification
         );
         _template = oraclesManager.template(_templateId);
-        assertTrue(_template.exists);
+        assertEq(_template.id, _templateId);
         assertEq(_template.addrezz, _newAddress);
         assertEq(_template.specification, _newSpecification);
         assertEq(_template.version.major, 1);
@@ -76,7 +76,7 @@ contract OraclesManagerUpgradeTemplateTest is BaseTestSetup {
         IOraclesManager.Template memory _template = oraclesManager.template(
             _templateId
         );
-        assertTrue(_template.exists);
+        assertEq(_template.id, _templateId);
         assertEq(_template.version.major, 1);
         assertEq(_template.version.minor, 0);
         assertEq(_template.version.patch, 0);
@@ -89,7 +89,7 @@ contract OraclesManagerUpgradeTemplateTest is BaseTestSetup {
             _newSpecification
         );
         _template = oraclesManager.template(_templateId);
-        assertTrue(_template.exists);
+        assertEq(_template.id, _templateId);
         assertEq(_template.addrezz, _newAddress);
         assertEq(_template.specification, _newSpecification);
         assertEq(_template.version.major, 1);
@@ -102,7 +102,7 @@ contract OraclesManagerUpgradeTemplateTest is BaseTestSetup {
         IOraclesManager.Template memory _template = oraclesManager.template(
             _templateId
         );
-        assertTrue(_template.exists);
+        assertEq(_template.id, _templateId);
         assertEq(_template.version.major, 1);
         assertEq(_template.version.minor, 0);
         assertEq(_template.version.patch, 0);
@@ -115,7 +115,7 @@ contract OraclesManagerUpgradeTemplateTest is BaseTestSetup {
             _newSpecification
         );
         _template = oraclesManager.template(_templateId);
-        assertTrue(_template.exists);
+        assertEq(_template.id, _templateId);
         assertEq(_template.addrezz, _newAddress);
         assertEq(_template.specification, _newSpecification);
         assertEq(_template.version.major, 2);

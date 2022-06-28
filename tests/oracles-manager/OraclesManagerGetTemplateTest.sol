@@ -27,6 +27,5 @@ contract OraclesManagerGetTemplateTest is BaseTestSetup {
         assertEq(_template.version.patch, 0);
         assertEq(_template.specification, MANUAL_REALITY_ETH_SPECIFICATION);
         assertTrue(!_template.automatable);
-        assertTrue(_template.exists);
     }
 }

@@ -16,7 +16,6 @@ interface IKPITokensManager {
         address addrezz;
         Version version;
         string specification;
-        bool exists;
     }
 
     struct EnumerableTemplateSet {

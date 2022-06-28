@@ -40,6 +40,6 @@ contract OraclesManagerAddTemplateTest is BaseTestSetup {
         assertEq(_template.version.patch, 0);
         assertEq(_template.specification, _specification);
         assertTrue(!_template.automatable);
-        assertTrue(_template.exists);
+        assertEq(_template.id, _addedTemplateId);
     }
 }

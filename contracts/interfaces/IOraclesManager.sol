@@ -17,7 +17,6 @@ interface IOraclesManager {
         Version version;
         string specification;
         bool automatable;
-        bool exists;
     }
 
     struct EnumerableTemplateSet {

@@ -33,7 +33,7 @@ contract OraclesManagerUpdateTemplateSpecificationTest is BaseTestSetup {
         IOraclesManager.Template memory _template = oraclesManager.template(
             _templateId
         );
-        assertTrue(_template.exists);
+        assertEq(_template.id, _templateId);
         assertEq(_template.specification, _oldSpecification);
         string memory _newSpecification = "b";
         oraclesManager.updateTemplateSpecification(
@@ -41,7 +41,7 @@ contract OraclesManagerUpdateTemplateSpecificationTest is BaseTestSetup {
             _newSpecification
         );
         _template = oraclesManager.template(_templateId);
-        assertTrue(_template.exists);
+        assertEq(_template.id, _templateId);
         assertEq(_template.specification, _newSpecification);
     }
 }

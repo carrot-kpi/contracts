@@ -151,8 +151,7 @@ contract KPITokensManager is Ownable, IKPITokensManager {
             id: _id,
             addrezz: _template,
             version: IKPITokensManager.Version({major: 1, minor: 0, patch: 0}),
-            specification: _specification,
-            exists: true
+            specification: _specification
         });
         templates.keys.push(_id);
         emit AddTemplate(_id, _template, _specification);
@@ -165,7 +164,7 @@ contract KPITokensManager is Ownable, IKPITokensManager {
         if (msg.sender != owner()) revert Forbidden();
         IKPITokensManager.Template
             storage _templateFromStorage = storageTemplate(_id);
-        delete _templateFromStorage.exists;
+        delete templates.map[_id];
         uint256 _keysLength = templates.keys.length;
         for (uint256 _i = 0; _i < _keysLength; _i++)
             if (templates.keys[_i] == _id) {
@@ -240,8 +239,9 @@ contract KPITokensManager is Ownable, IKPITokensManager {
         view
         returns (IKPITokensManager.Template storage)
     {
+        if (_id == 0) revert NonExistentTemplate();
         IKPITokensManager.Template storage _template = templates.map[_id];
-        if (!_template.exists) revert NonExistentTemplate();
+        if (_template.id == 0) revert NonExistentTemplate();
         return _template;
     }
 
@@ -261,7 +261,8 @@ contract KPITokensManager is Ownable, IKPITokensManager {
     /// @param _id The id of the template that needs to be checked.
     /// @return True if the template exists, false otherwise.
     function exists(uint256 _id) external view override returns (bool) {
-        return templates.map[_id].exists;
+        if (_id == 0) return false;
+        return templates.map[_id].id == _id;
     }
 
     /// @dev Gets the amount of all registered templates.

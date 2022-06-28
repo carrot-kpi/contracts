@@ -44,7 +44,10 @@ contract OraclesManager is Ownable, IOraclesManager {
         uint8 versionBump,
         string newSpecification
     );
-    event UpdateTemplateSpecification(uint256 indexed id, string newSpecification);
+    event UpdateTemplateSpecification(
+        uint256 indexed id,
+        string newSpecification
+    );
 
     constructor(address _factory) {
         if (_factory == address(0)) revert ZeroAddressFactory();
@@ -131,8 +134,7 @@ contract OraclesManager is Ownable, IOraclesManager {
             addrezz: _template,
             version: IOraclesManager.Version({major: 1, minor: 0, patch: 0}),
             specification: _specification,
-            automatable: _automatable,
-            exists: true
+            automatable: _automatable
         });
         templates.keys.push(_id);
         emit AddTemplate(_id, _template, _automatable, _specification);
@@ -146,7 +148,7 @@ contract OraclesManager is Ownable, IOraclesManager {
         IOraclesManager.Template storage _templateFromStorage = storageTemplate(
             _id
         );
-        delete _templateFromStorage.exists;
+        delete templates.map[_id];
         uint256 _keysLength = templates.keys.length;
         for (uint256 _i = 0; _i < _keysLength; _i++)
             if (templates.keys[_i] == _id) {
@@ -221,8 +223,9 @@ contract OraclesManager is Ownable, IOraclesManager {
         view
         returns (IOraclesManager.Template storage)
     {
+        if (_id == 0) revert NonExistentTemplate();
         IOraclesManager.Template storage _template = templates.map[_id];
-        if (!_template.exists) revert NonExistentTemplate();
+        if (_template.id == 0) revert NonExistentTemplate();
         return _template;
     }
 
@@ -235,16 +238,15 @@ contract OraclesManager is Ownable, IOraclesManager {
         override
         returns (IOraclesManager.Template memory)
     {
-        IOraclesManager.Template memory _template = templates.map[_id];
-        if (!_template.exists) revert NonExistentTemplate();
-        return _template;
+        return storageTemplate(_id);
     }
 
     /// @dev Used to determine whether a template with a certain id exists or not.
     /// @param _id The id of the template that needs to be checked.
     /// @return True if the template exists, false otherwise.
     function exists(uint256 _id) external view override returns (bool) {
-        return templates.map[_id].exists;
+        if (_id == 0) return false;
+        return templates.map[_id].id == _id;
     }
 
     /// @dev Gets the amount of all registered templates.

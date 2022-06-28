@@ -29,7 +29,7 @@ contract KpiTokensManagerRemoveTemplateTest is BaseTestSetup {
         IKPITokensManager.Template memory _template = kpiTokensManager.template(
             1
         );
-        assertTrue(_template.exists);
+        assertEq(_template.id, 1);
         kpiTokensManager.removeTemplate(1);
         vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
         kpiTokensManager.template(1);
@@ -39,7 +39,7 @@ contract KpiTokensManagerRemoveTemplateTest is BaseTestSetup {
         IKPITokensManager.Template memory _template = kpiTokensManager.template(
             1
         );
-        assertTrue(_template.exists);
+        assertEq(_template.id, 1);
 
         // forcefully delete key item in the keys array
         // (should never happen, just for test purposes)
