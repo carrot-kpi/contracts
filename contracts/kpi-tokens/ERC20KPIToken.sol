@@ -386,7 +386,7 @@ contract ERC20KPIToken is
             unchecked {
                 _oracleFullRange = _oracle.higherBound - _oracle.lowerBound;
                 _finalOracleProgress = _result >= _oracle.higherBound
-                    ? _oracle.higherBound
+                    ? _oracleFullRange
                     : _result - _oracle.lowerBound;
             }
             _oracle.finalProgress = _finalOracleProgress;
