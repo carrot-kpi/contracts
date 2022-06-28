@@ -349,8 +349,6 @@ contract ERC20KPIToken is
         if (!oraclesInitialized) revert NotInitialized();
 
         FinalizableOracle storage _oracle = finalizableOracle(msg.sender);
-        if (_finalized() || _oracle.finalized) revert Forbidden();
-
         if (_result <= _oracle.lowerBound || _result == INVALID_ANSWER) {
             // if oracles are in an 'and' relationship and at least one gives a
             // negative result, give back all the collateral minus the minimum payout
