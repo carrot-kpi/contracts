@@ -7,14 +7,6 @@ import {IKPITokensManager} from "../IKPITokensManager.sol";
 /// @dev KPI token interface.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 interface IKPIToken {
-    struct InitializeArguments {
-        address creator;
-        address kpiTokensManager;
-        uint256 kpiTokenTemplateId;
-        string description;
-        bytes data;
-    }
-
     function initialize(
         address _creator,
         address _kpiTokensManager,

@@ -121,24 +121,16 @@ contract ERC20KPIToken is ERC20Upgradeable, IERC20KPIToken, ReentrancyGuard {
         string calldata _description,
         bytes calldata _data
     ) external override initializer {
-        InitializeArguments memory _args = InitializeArguments({
-            creator: _creator,
-            kpiTokensManager: _kpiTokensManager,
-            kpiTokenTemplateId: _kpiTokenTemplateId,
-            description: _description,
-            data: _data
-        });
-
         if (_creator == address(0)) revert InvalidCreator();
         if (_kpiTokensManager == address(0)) revert InvalidKpiTokensManager();
-        if (bytes(_args.description).length == 0) revert InvalidDescription();
+        if (bytes(_description).length == 0) revert InvalidDescription();
 
         (
             Collateral[] memory _collaterals,
             string memory _erc20Name,
             string memory _erc20Symbol,
             uint256 _erc20Supply
-        ) = abi.decode(_args.data, (Collateral[], string, string, uint256));
+        ) = abi.decode(_data, (Collateral[], string, string, uint256));
 
         uint256 _inputCollateralsLength = _collaterals.length;
         if (_inputCollateralsLength > 5) revert TooManyCollaterals();
@@ -157,7 +149,7 @@ contract ERC20KPIToken is ERC20Upgradeable, IERC20KPIToken, ReentrancyGuard {
                 if (_collateral.token == _collaterals[_j].token)
                     revert DuplicatedCollateral();
             IERC20Upgradeable(_collateral.token).safeTransferFrom(
-                _args.creator,
+                _creator,
                 address(this),
                 _collateral.amount
             );
@@ -165,17 +157,17 @@ contract ERC20KPIToken is ERC20Upgradeable, IERC20KPIToken, ReentrancyGuard {
         }
 
         __ERC20_init(_erc20Name, _erc20Symbol);
-        _mint(_args.creator, _erc20Supply);
+        _mint(_creator, _erc20Supply);
 
         initialSupply = _erc20Supply;
-        creator = _args.creator;
-        description = _args.description;
-        kpiTokensManager = _args.kpiTokensManager;
-        kpiTokenTemplateId = _args.kpiTokenTemplateId;
+        creator = _creator;
+        description = _description;
+        kpiTokensManager = _kpiTokensManager;
+        kpiTokenTemplateId = _kpiTokenTemplateId;
 
         emit Initialize(
-            _args.creator,
-            _args.description,
+            _creator,
+            _description,
             collaterals,
             _erc20Name,
             _erc20Symbol,
