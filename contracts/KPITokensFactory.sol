@@ -1,10 +1,8 @@
 pragma solidity 0.8.15;
 
 import {Ownable} from "oz/access/Ownable.sol";
-import {Clones} from "oz/proxy/Clones.sol";
 import {IKPITokensFactory} from "./interfaces/IKPITokensFactory.sol";
 import {IKPITokensManager} from "./interfaces/IKPITokensManager.sol";
-import {IOraclesManager} from "./interfaces/IOraclesManager.sol";
 import {IKPIToken} from "./interfaces/kpi-tokens/IKPIToken.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
