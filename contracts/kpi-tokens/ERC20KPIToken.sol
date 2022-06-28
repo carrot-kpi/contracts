@@ -50,11 +50,7 @@ contract ERC20KPIToken is
     mapping(address => uint256) internal finalCollateralAmount;
 
     error Forbidden();
-    error InconsistentWeights();
-    error InconsistentCollaterals();
     error InvalidCollateral();
-    error NoFunding();
-    error InconsistentArrayLengths();
     error InvalidOracleBounds();
     error InvalidOracleWeights();
     error AlreadyInitialized();
