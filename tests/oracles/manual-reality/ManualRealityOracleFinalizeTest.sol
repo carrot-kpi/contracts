@@ -40,10 +40,11 @@ contract ManualRealityOracleFinalizeTest is BaseTestSetup {
 
         vm.mockCall(
             _realityAddress,
-            abi.encodeWithSignature("isFinalized(bytes32)"),
-            abi.encode(false)
+            abi.encodeWithSignature("resultFor(bytes32)"),
+            abi.encode("")
         );
-        vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
+
+        vm.expectRevert();
         oracleInstance.finalize();
 
         vm.clearMockedCalls();
