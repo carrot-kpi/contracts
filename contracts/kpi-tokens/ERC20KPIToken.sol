@@ -36,7 +36,6 @@ contract ERC20KPIToken is
 
     bool internal oraclesInitialized;
     bool internal protocolFeeCollected;
-    bool public finalized;
     bool internal andRelationship;
     uint16 internal toBeFinalized;
     address public creator;
@@ -350,7 +349,7 @@ contract ERC20KPIToken is
         if (!oraclesInitialized) revert NotInitialized();
 
         FinalizableOracle storage _oracle = finalizableOracle(msg.sender);
-        if (finalized || _oracle.finalized) revert Forbidden();
+        if (_finalized() || _oracle.finalized) revert Forbidden();
 
         if (_result <= _oracle.lowerBound || _result == INVALID_ANSWER) {
             // if oracles are in an 'and' relationship and at least one gives a
@@ -377,7 +376,6 @@ contract ERC20KPIToken is
                 }
             }
             if (_andRelationship) {
-                finalized = true;
                 for (uint256 _i = 0; _i < finalizableOracles.length; _i++)
                     finalizableOracles[_i].finalized = true;
                 toBeFinalized = 0;
@@ -420,8 +418,7 @@ contract ERC20KPIToken is
             _toBeFinalized = --toBeFinalized;
         }
 
-        if (_toBeFinalized == 0) {
-            finalized = true;
+        if (_finalized()) {
             for (uint8 _i = 0; _i < collaterals.length; _i++) {
                 Collateral memory _collateral = collaterals[_i];
                 finalCollateralAmount[_collateral.token] = _collateral.amount;
@@ -475,7 +472,7 @@ contract ERC20KPIToken is
     /// compared to the total supply and left collateral amount. If the KPI token
     /// has expired worthless, this simply burns the user's KPI tokens.
     function redeem() external override nonReentrant {
-        if (!finalized) revert Forbidden();
+        if (!_finalized()) revert Forbidden();
         uint256 _kpiTokenBalance = balanceOf(msg.sender);
         if (_kpiTokenBalance == 0) revert Forbidden();
         RedeemedCollateral[]
@@ -511,7 +508,7 @@ contract ERC20KPIToken is
     /// by the KPI token resolution must be explicitly requested by the user through
     /// the `redeemToken` function.
     function registerRedemption() external override {
-        if (!finalized) revert Forbidden();
+        if (!_finalized()) revert Forbidden();
         uint256 _kpiTokenBalance = balanceOf(msg.sender);
         if (_kpiTokenBalance == 0) revert Forbidden();
         _burn(msg.sender, _kpiTokenBalance);
@@ -524,7 +521,7 @@ contract ERC20KPIToken is
     /// token specified as input in the function. The function reverts if either an invalid
     /// collateral is specified or if zero of the given collateral can be redeemed.
     function redeemCollateral(address _token) external override {
-        if (!finalized) revert Forbidden();
+        if (!_finalized()) revert Forbidden();
         uint256 _burned = registeredBurn[msg.sender];
         if (_burned == 0) revert Forbidden();
         for (uint8 _i = 0; _i < collaterals.length; _i++) {
@@ -578,6 +575,18 @@ contract ERC20KPIToken is
         }
 
         return abi.encode(_fees);
+    }
+
+    /// @dev View function to check if the KPI token is finalized.
+    /// @return Whether the token is finalized or not.
+    function _finalized() private view returns (bool) {
+        return toBeFinalized == 0;
+    }
+
+    /// @dev View function to check if the KPI token is finalized.
+    /// @return Whether the token is finalized or not.
+    function finalized() external view override returns (bool) {
+        return _finalized();
     }
 
     /// @dev View function to query all the oracles associated with the KPI token at once.
