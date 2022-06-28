@@ -17,16 +17,12 @@ contract OraclesManagerAddTemplateTest is BaseTestSetup {
     }
 
     function testZeroAddressTemplate() external {
-        vm.expectRevert(
-            abi.encodeWithSignature("ZeroAddressTemplate()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("ZeroAddressTemplate()"));
         oraclesManager.addTemplate(address(0), false, "");
     }
 
     function testEmptySpecification() external {
-        vm.expectRevert(
-            abi.encodeWithSignature("InvalidSpecification()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("InvalidSpecification()"));
         oraclesManager.addTemplate(address(1), false, "");
     }
 

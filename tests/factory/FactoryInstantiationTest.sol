@@ -16,16 +16,12 @@ contract FactoryInstantiationTest is BaseTestSetup {
     }
 
     function testZeroAddressOraclesManager() external {
-        vm.expectRevert(
-            abi.encodeWithSignature("ZeroAddressOraclesManager()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("ZeroAddressOraclesManager()"));
         new KPITokensFactory(address(1), address(0), address(2));
     }
 
     function testZeroAddressFeeReceiver() external {
-        vm.expectRevert(
-            abi.encodeWithSignature("ZeroAddressFeeReceiver()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("ZeroAddressFeeReceiver()"));
         new KPITokensFactory(address(1), address(2), address(0));
     }
 

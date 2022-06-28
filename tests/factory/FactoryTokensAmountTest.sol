@@ -76,11 +76,12 @@ contract FactoryTokensAmountTest is BaseTestSetup {
         firstErc20.approve(_predictedKpiTokenAddress, 2);
         secondErc20.approve(_predictedKpiTokenAddress, 4);
 
-        factory.createToken(1,
+        factory.createToken(
+            1,
             "a",
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
-            );
+        );
         assertEq(factory.kpiTokensAmount(), 1);
     }
 

@@ -17,16 +17,12 @@ contract OraclesManagerUpgradeTemplateTest is BaseTestSetup {
     }
 
     function testNonExistentTemplate() external {
-        vm.expectRevert(
-            abi.encodeWithSignature("NonExistentTemplate()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
         oraclesManager.upgradeTemplate(0, address(1), uint8(0), "a");
     }
 
     function testEmptySpecification() external {
-        vm.expectRevert(
-            abi.encodeWithSignature("InvalidSpecification()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("InvalidSpecification()"));
         oraclesManager.upgradeTemplate(1, address(1), uint8(0), "");
     }
 
@@ -35,9 +31,7 @@ contract OraclesManagerUpgradeTemplateTest is BaseTestSetup {
         IOraclesManager.Template memory _template = oraclesManager.template(
             _templateId
         );
-        vm.expectRevert(
-            abi.encodeWithSignature("InvalidSpecification()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("InvalidSpecification()"));
         oraclesManager.upgradeTemplate(
             _templateId,
             address(1),
@@ -47,9 +41,7 @@ contract OraclesManagerUpgradeTemplateTest is BaseTestSetup {
     }
 
     function testInvalidVersionBump() external {
-        vm.expectRevert(
-            abi.encodeWithSignature("InvalidVersionBump()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("InvalidVersionBump()"));
         oraclesManager.upgradeTemplate(1, address(1), uint8(8), "a");
     }
 

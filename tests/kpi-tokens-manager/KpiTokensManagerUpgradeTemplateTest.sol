@@ -17,16 +17,12 @@ contract KpiTokensManagerUpgradeTemplateTest is BaseTestSetup {
     }
 
     function testNonExistentTemplate() external {
-        vm.expectRevert(
-            abi.encodeWithSignature("NonExistentTemplate()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
         kpiTokensManager.upgradeTemplate(2, address(1), uint8(0), "a");
     }
 
     function testEmptySpecification() external {
-        vm.expectRevert(
-            abi.encodeWithSignature("InvalidSpecification()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("InvalidSpecification()"));
         kpiTokensManager.upgradeTemplate(1, address(1), uint8(0), "");
     }
 
@@ -35,9 +31,7 @@ contract KpiTokensManagerUpgradeTemplateTest is BaseTestSetup {
         IKPITokensManager.Template memory _template = kpiTokensManager.template(
             _templateId
         );
-        vm.expectRevert(
-            abi.encodeWithSignature("InvalidSpecification()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("InvalidSpecification()"));
         kpiTokensManager.upgradeTemplate(
             _templateId,
             address(1),
@@ -47,9 +41,7 @@ contract KpiTokensManagerUpgradeTemplateTest is BaseTestSetup {
     }
 
     function testInvalidVersionBump() external {
-        vm.expectRevert(
-            abi.encodeWithSignature("InvalidVersionBump()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("InvalidVersionBump()"));
         kpiTokensManager.upgradeTemplate(1, address(1), uint8(8), "a");
     }
 

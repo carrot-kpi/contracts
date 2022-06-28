@@ -11,9 +11,7 @@ import {Clones} from "oz/proxy/Clones.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract OraclesManagerGetTemplateTest is BaseTestSetup {
     function testNonExistentTemplate() external {
-        vm.expectRevert(
-            abi.encodeWithSignature("NonExistentTemplate()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
         oraclesManager.template(0);
     }
 

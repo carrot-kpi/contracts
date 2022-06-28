@@ -16,16 +16,12 @@ contract KpiTokensManagerAddTemplateTest is BaseTestSetup {
     }
 
     function testZeroAddressTemplate() external {
-        vm.expectRevert(
-            abi.encodeWithSignature("ZeroAddressTemplate()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("ZeroAddressTemplate()"));
         kpiTokensManager.addTemplate(address(0), "");
     }
 
     function testEmptySpecification() external {
-        vm.expectRevert(
-            abi.encodeWithSignature("InvalidSpecification()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("InvalidSpecification()"));
         kpiTokensManager.addTemplate(address(1), "");
     }
 

@@ -14,9 +14,7 @@ contract FactorySetFeeReceiverTest is BaseTestSetup {
     }
 
     function testZeroAddressFeeReceiver() external {
-        vm.expectRevert(
-            abi.encodeWithSignature("ZeroAddressFeeReceiver()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("ZeroAddressFeeReceiver()"));
         factory.setFeeReceiver(address(0));
     }
 

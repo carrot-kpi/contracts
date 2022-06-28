@@ -17,16 +17,12 @@ contract KpiTokensManagerUpdateTemplateSpecificationTest is BaseTestSetup {
     }
 
     function testNonExistentTemplate() external {
-        vm.expectRevert(
-            abi.encodeWithSignature("NonExistentTemplate()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
         kpiTokensManager.updateTemplateSpecification(3, "a");
     }
 
     function testEmptySpecification() external {
-        vm.expectRevert(
-            abi.encodeWithSignature("InvalidSpecification()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("InvalidSpecification()"));
         kpiTokensManager.updateTemplateSpecification(0, "");
     }
 

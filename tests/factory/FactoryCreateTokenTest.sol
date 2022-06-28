@@ -10,9 +10,7 @@ import {TokenAmount} from "../../contracts/commons/Types.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract FactoryCreateTokenTest is BaseTestSetup {
     function testInvalidTemplateId() external {
-        vm.expectRevert(
-            abi.encodeWithSignature("NonExistentTemplate()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
         factory.createToken(10, "a", abi.encode(1), abi.encode(2));
     }
 

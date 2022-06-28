@@ -14,9 +14,7 @@ contract FactorySetOraclesManagerTest is BaseTestSetup {
     }
 
     function testZeroAddressManager() external {
-        vm.expectRevert(
-            abi.encodeWithSignature("ZeroAddressOraclesManager()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("ZeroAddressOraclesManager()"));
         factory.setOraclesManager(address(0));
     }
 
