@@ -19,7 +19,7 @@ import {IKPITokensFactory} from "./interfaces/IKPITokensFactory.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract OraclesManager is Ownable, IOraclesManager {
     address public factory;
-    IOraclesManager.EnumerableTemplateSet private templates;
+    EnumerableTemplateSet private templates;
 
     error NonExistentTemplate();
     error ZeroAddressFactory();
@@ -104,7 +104,7 @@ contract OraclesManager is Ownable, IOraclesManager {
     ) external override returns (address) {
         if (!IKPITokensFactory(factory).allowOraclesCreation(msg.sender))
             revert Forbidden();
-        IOraclesManager.Template storage _template = storageTemplate(_id);
+        Template storage _template = storageTemplate(_id);
         address _instance = Clones.cloneDeterministic(
             _template.addrezz,
             salt(_creator, _initializationData)
@@ -129,14 +129,16 @@ contract OraclesManager is Ownable, IOraclesManager {
         if (_automatable) revert AutomationNotSupported();
         if (bytes(_specification).length == 0) revert InvalidSpecification();
         uint256 _id = ++templates.ids;
-        templates.map[_id] = IOraclesManager.Template({
-            id: _id,
-            addrezz: _template,
-            version: IOraclesManager.Version({major: 1, minor: 0, patch: 0}),
-            specification: _specification,
-            automatable: _automatable
-        });
-        templates.keys.push(_id);
+        templates.values.push(
+            Template({
+                id: _id,
+                addrezz: _template,
+                version: Version({major: 1, minor: 0, patch: 0}),
+                specification: _specification,
+                automatable: false
+            })
+        );
+        templates.index[_id] = templates.values.length;
         emit AddTemplate(_id, _template, _automatable, _specification);
     }
 
@@ -145,20 +147,22 @@ contract OraclesManager is Ownable, IOraclesManager {
     /// @param _id The id of the template that must be removed.
     function removeTemplate(uint256 _id) external override {
         if (msg.sender != owner()) revert Forbidden();
-        IOraclesManager.Template storage _templateFromStorage = storageTemplate(
-            _id
-        );
-        delete templates.map[_id];
-        uint256 _keysLength = templates.keys.length;
-        for (uint256 _i = 0; _i < _keysLength; _i++)
-            if (templates.keys[_i] == _id) {
-                if (_i != _keysLength - 1)
-                    templates.keys[_i] = templates.keys[_keysLength - 1];
-                templates.keys.pop();
-                emit RemoveTemplate(_id);
-                return;
-            }
-        revert NoKeyForTemplate();
+        uint256 _index = templates.index[_id];
+        if (_index == 0) revert NonExistentTemplate();
+        unchecked {
+            _index--;
+        }
+        Template storage _lastTemplate = templates.values[
+            templates.values.length - 1
+        ];
+        if (_lastTemplate.id != _id) {
+            templates.values[_index] = _lastTemplate;
+            templates.index[_lastTemplate.id] = _index;
+        } else {
+            delete templates.index[_id];
+        }
+        templates.values.pop();
+        emit RemoveTemplate(_id);
     }
 
     /// @dev Updates a template specification. The specification is an IPFS cid
@@ -189,9 +193,7 @@ contract OraclesManager is Ownable, IOraclesManager {
     ) external override {
         if (msg.sender != owner()) revert Forbidden();
         if (bytes(_newSpecification).length == 0) revert InvalidSpecification();
-        IOraclesManager.Template storage _templateFromStorage = storageTemplate(
-            _id
-        );
+        Template storage _templateFromStorage = storageTemplate(_id);
         if (
             keccak256(bytes(_templateFromStorage.specification)) ==
             keccak256(bytes(_newSpecification))
@@ -221,11 +223,12 @@ contract OraclesManager is Ownable, IOraclesManager {
     function storageTemplate(uint256 _id)
         internal
         view
-        returns (IOraclesManager.Template storage)
+        returns (Template storage)
     {
         if (_id == 0) revert NonExistentTemplate();
-        IOraclesManager.Template storage _template = templates.map[_id];
-        if (_template.id == 0) revert NonExistentTemplate();
+        uint256 _index = templates.index[_id];
+        if (_index == 0) revert NonExistentTemplate();
+        Template storage _template = templates.values[_index - 1];
         return _template;
     }
 
@@ -236,7 +239,7 @@ contract OraclesManager is Ownable, IOraclesManager {
         external
         view
         override
-        returns (IOraclesManager.Template memory)
+        returns (Template memory)
     {
         return storageTemplate(_id);
     }
@@ -246,13 +249,15 @@ contract OraclesManager is Ownable, IOraclesManager {
     /// @return True if the template exists, false otherwise.
     function exists(uint256 _id) external view override returns (bool) {
         if (_id == 0) return false;
-        return templates.map[_id].id == _id;
+        uint256 _index = templates.index[_id];
+        if (_index == 0) return false;
+        return templates.values[_index - 1].id == _id;
     }
 
     /// @dev Gets the amount of all registered templates.
     /// @return The templates amount.
     function templatesAmount() external view override returns (uint256) {
-        return templates.keys.length;
+        return templates.values.length;
     }
 
     /// @dev Gets a templates slice based on indexes.
@@ -263,15 +268,14 @@ contract OraclesManager is Ownable, IOraclesManager {
         external
         view
         override
-        returns (IOraclesManager.Template[] memory)
+        returns (Template[] memory)
     {
-        if (_toIndex > templates.keys.length || _fromIndex > _toIndex)
+        if (_toIndex > templates.values.length || _fromIndex > _toIndex)
             revert InvalidIndices();
         uint256 _range = _toIndex - _fromIndex;
-        IOraclesManager.Template[]
-            memory _templates = new IOraclesManager.Template[](_range);
+        Template[] memory _templates = new Template[](_range);
         for (uint256 _i = 0; _i < _range; _i++)
-            _templates[_i] = templates.map[templates.keys[_fromIndex + _i]];
+            _templates[_i] = templates.values[_fromIndex + _i];
         return _templates;
     }
 }

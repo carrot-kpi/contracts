@@ -34,22 +34,4 @@ contract KpiTokensManagerRemoveTemplateTest is BaseTestSetup {
         vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
         kpiTokensManager.template(1);
     }
-
-    function testTemplateWithoutKey() external {
-        IKPITokensManager.Template memory _template = kpiTokensManager.template(
-            1
-        );
-        assertEq(_template.id, 1);
-
-        // forcefully delete key item in the keys array
-        // (should never happen, just for test purposes)
-        vm.store(
-            address(kpiTokensManager),
-            keccak256(abi.encode(uint256(4))),
-            bytes32(uint256(0))
-        );
-
-        vm.expectRevert(abi.encodeWithSignature("NoKeyForTemplate()"));
-        kpiTokensManager.removeTemplate(1);
-    }
 }

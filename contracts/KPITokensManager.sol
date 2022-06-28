@@ -18,7 +18,7 @@ import {IKPITokensManager} from "./interfaces/IKPITokensManager.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract KPITokensManager is Ownable, IKPITokensManager {
     address public factory;
-    IKPITokensManager.EnumerableTemplateSet private templates;
+    EnumerableTemplateSet private templates;
 
     error ZeroAddressFactory();
     error Forbidden();
@@ -147,13 +147,15 @@ contract KPITokensManager is Ownable, IKPITokensManager {
         if (_template == address(0)) revert ZeroAddressTemplate();
         if (bytes(_specification).length == 0) revert InvalidSpecification();
         uint256 _id = ++templates.ids;
-        templates.map[_id] = IKPITokensManager.Template({
-            id: _id,
-            addrezz: _template,
-            version: IKPITokensManager.Version({major: 1, minor: 0, patch: 0}),
-            specification: _specification
-        });
-        templates.keys.push(_id);
+        templates.values.push(
+            Template({
+                id: _id,
+                addrezz: _template,
+                version: Version({major: 1, minor: 0, patch: 0}),
+                specification: _specification
+            })
+        );
+        templates.index[_id] = templates.values.length;
         emit AddTemplate(_id, _template, _specification);
     }
 
@@ -162,19 +164,22 @@ contract KPITokensManager is Ownable, IKPITokensManager {
     /// @param _id The id of the template that must be removed.
     function removeTemplate(uint256 _id) external override {
         if (msg.sender != owner()) revert Forbidden();
-        IKPITokensManager.Template
-            storage _templateFromStorage = storageTemplate(_id);
-        delete templates.map[_id];
-        uint256 _keysLength = templates.keys.length;
-        for (uint256 _i = 0; _i < _keysLength; _i++)
-            if (templates.keys[_i] == _id) {
-                if (_i != _keysLength - 1)
-                    templates.keys[_i] = templates.keys[_keysLength - 1];
-                templates.keys.pop();
-                emit RemoveTemplate(_id);
-                return;
-            }
-        revert NoKeyForTemplate();
+        uint256 _index = templates.index[_id];
+        if (_index == 0) revert NonExistentTemplate();
+        unchecked {
+            _index--;
+        }
+        Template storage _lastTemplate = templates.values[
+            templates.values.length - 1
+        ];
+        if (_lastTemplate.id != _id) {
+            templates.values[_index] = _lastTemplate;
+            templates.index[_lastTemplate.id] = _index;
+        } else {
+            delete templates.index[_id];
+        }
+        templates.values.pop();
+        emit RemoveTemplate(_id);
     }
 
     /// @dev Upgrades a template. This function can only be called by the contract owner (governance).
@@ -191,8 +196,7 @@ contract KPITokensManager is Ownable, IKPITokensManager {
         if (msg.sender != owner()) revert Forbidden();
         if (_newTemplate == address(0)) revert ZeroAddressTemplate();
         if (bytes(_newSpecification).length == 0) revert InvalidSpecification();
-        IKPITokensManager.Template
-            storage _templateFromStorage = storageTemplate(_id);
+        Template storage _templateFromStorage = storageTemplate(_id);
         if (
             keccak256(bytes(_templateFromStorage.specification)) ==
             keccak256(bytes(_newSpecification))
@@ -237,11 +241,12 @@ contract KPITokensManager is Ownable, IKPITokensManager {
     function storageTemplate(uint256 _id)
         internal
         view
-        returns (IKPITokensManager.Template storage)
+        returns (Template storage)
     {
         if (_id == 0) revert NonExistentTemplate();
-        IKPITokensManager.Template storage _template = templates.map[_id];
-        if (_template.id == 0) revert NonExistentTemplate();
+        uint256 _index = templates.index[_id];
+        if (_index == 0) revert NonExistentTemplate();
+        Template storage _template = templates.values[_index - 1];
         return _template;
     }
 
@@ -252,7 +257,7 @@ contract KPITokensManager is Ownable, IKPITokensManager {
         external
         view
         override
-        returns (IKPITokensManager.Template memory)
+        returns (Template memory)
     {
         return storageTemplate(_id);
     }
@@ -262,13 +267,15 @@ contract KPITokensManager is Ownable, IKPITokensManager {
     /// @return True if the template exists, false otherwise.
     function exists(uint256 _id) external view override returns (bool) {
         if (_id == 0) return false;
-        return templates.map[_id].id == _id;
+        uint256 _index = templates.index[_id];
+        if (_index == 0) return false;
+        return templates.values[_index - 1].id == _id;
     }
 
     /// @dev Gets the amount of all registered templates.
     /// @return The templates amount.
     function templatesAmount() external view override returns (uint256) {
-        return templates.keys.length;
+        return templates.values.length;
     }
 
     /// @dev Gets a templates slice based on indexes.
@@ -279,15 +286,14 @@ contract KPITokensManager is Ownable, IKPITokensManager {
         external
         view
         override
-        returns (IKPITokensManager.Template[] memory)
+        returns (Template[] memory)
     {
-        if (_toIndex > templates.keys.length || _fromIndex > _toIndex)
+        if (_toIndex > templates.values.length || _fromIndex > _toIndex)
             revert InvalidIndices();
         uint256 _range = _toIndex - _fromIndex;
-        IKPITokensManager.Template[]
-            memory _templates = new IKPITokensManager.Template[](_range);
+        Template[] memory _templates = new Template[](_range);
         for (uint256 _i = 0; _i < _range; _i++)
-            _templates[_i] = templates.map[templates.keys[_fromIndex + _i]];
+            _templates[_i] = templates.values[_fromIndex + _i];
         return _templates;
     }
 }

@@ -28,20 +28,4 @@ contract OraclesManagerRemoveTemplateTest is BaseTestSetup {
         vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
         oraclesManager.template(1);
     }
-
-    function testTemplateWithoutKey() external {
-        IOraclesManager.Template memory _template = oraclesManager.template(1);
-        assertEq(_template.id, 1);
-
-        // forcefully delete key item in the keys array
-        // (should never happen, just for test purposes)
-        vm.store(
-            address(oraclesManager),
-            keccak256(abi.encode(uint256(4))),
-            bytes32(uint256(0))
-        );
-
-        vm.expectRevert(abi.encodeWithSignature("NoKeyForTemplate()"));
-        oraclesManager.removeTemplate(1);
-    }
 }
