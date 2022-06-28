@@ -2,7 +2,7 @@ pragma solidity 0.8.15;
 
 import {IERC20Upgradeable, ERC20Upgradeable} from "oz-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import {SafeERC20Upgradeable} from "oz-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
-import {ReentrancyGuard} from "oz/security/ReentrancyGuard.sol";
+import {ReentrancyGuardUpgradeable} from "oz-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import {IOraclesManager} from "../interfaces/IOraclesManager.sol";
 import {IKPITokensManager} from "../interfaces/IKPITokensManager.sol";
 import {IERC20KPIToken} from "../interfaces/kpi-tokens/IERC20KPIToken.sol";
@@ -23,7 +23,11 @@ import {TokenAmount} from "../commons/Types.sol";
 /// KPIs are reached or not), weighted KPIs and multiple detached resolution or all-in-one
 /// reaching of KPIs (explained more in details later).
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
-contract ERC20KPIToken is ERC20Upgradeable, IERC20KPIToken, ReentrancyGuard {
+contract ERC20KPIToken is
+    ERC20Upgradeable,
+    IERC20KPIToken,
+    ReentrancyGuardUpgradeable
+{
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     uint256 internal constant INVALID_ANSWER =
@@ -156,6 +160,7 @@ contract ERC20KPIToken is ERC20Upgradeable, IERC20KPIToken, ReentrancyGuard {
             collaterals.push(_collateral);
         }
 
+        __ReentrancyGuard_init();
         __ERC20_init(_erc20Name, _erc20Symbol);
         _mint(_creator, _erc20Supply);
 
