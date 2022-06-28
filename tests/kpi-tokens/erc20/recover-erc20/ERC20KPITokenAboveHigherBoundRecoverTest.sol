@@ -57,6 +57,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         firstErc20.mint(address(this), 20 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -151,6 +152,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         firstErc20.mint(address(this), 20 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -230,6 +232,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         firstErc20.mint(address(this), 20 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -324,6 +327,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         firstErc20.mint(address(this), 20 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -411,6 +415,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         secondErc20.mint(address(this), 35 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -516,6 +521,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         secondErc20.mint(address(this), 20.23 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -606,6 +612,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         secondErc20.mint(address(this), 29 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -711,6 +718,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         secondErc20.mint(address(this), 12.65 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,

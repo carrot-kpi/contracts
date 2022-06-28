@@ -61,6 +61,7 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralFinalizeTest is
         firstErc20.mint(address(this), 2);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -168,6 +169,7 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralFinalizeTest is
         firstErc20.mint(address(this), 10 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -275,6 +277,7 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralFinalizeTest is
         firstErc20.mint(address(this), 2 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -382,6 +385,7 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralFinalizeTest is
         firstErc20.mint(address(this), 45 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -507,6 +511,7 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralFinalizeTest is
         firstErc20.mint(address(this), 2 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -630,6 +635,7 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralFinalizeTest is
         firstErc20.mint(address(this), 2 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,

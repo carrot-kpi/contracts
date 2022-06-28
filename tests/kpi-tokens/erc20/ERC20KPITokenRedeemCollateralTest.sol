@@ -83,6 +83,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         firstErc20.mint(address(this), 110 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -187,6 +188,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         firstErc20.mint(address(this), 110 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -291,6 +293,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         firstErc20.mint(address(this), 110 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -398,6 +401,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         firstErc20.mint(address(this), 22 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -521,6 +525,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         firstErc20.mint(address(this), 110 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -637,6 +642,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         firstErc20.mint(address(this), 110 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -753,6 +759,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         firstErc20.mint(address(this), 110 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -869,6 +876,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         firstErc20.mint(address(this), 110 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -988,6 +996,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         firstErc20.mint(address(this), 110 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,

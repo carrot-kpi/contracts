@@ -67,6 +67,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralFinalizeTest1 is
         secondErc20.mint(address(this), 3 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -185,6 +186,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralFinalizeTest1 is
         secondErc20.mint(address(this), 102 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -303,6 +305,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralFinalizeTest1 is
         secondErc20.mint(address(this), 4 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -421,6 +424,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralFinalizeTest1 is
         secondErc20.mint(address(this), 821 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,

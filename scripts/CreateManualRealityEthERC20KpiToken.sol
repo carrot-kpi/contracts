@@ -93,6 +93,7 @@ contract CreateManualRealityEthERC20KpiToken {
         address _predictedKpiTokenAddress = _args
             .kpiTokensManager
             .predictInstanceAddress(
+                msg.sender,
                 1,
                 _args.description,
                 _kpiTokenInitializationData,

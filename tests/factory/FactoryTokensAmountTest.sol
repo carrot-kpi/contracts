@@ -68,6 +68,7 @@ contract FactoryTokensAmountTest is BaseTestSetup {
         secondErc20.mint(address(this), 4);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,

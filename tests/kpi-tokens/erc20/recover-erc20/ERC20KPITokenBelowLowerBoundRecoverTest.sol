@@ -59,6 +59,7 @@ contract ERC20KPITokenBelowLowerBoundRecoverTest is BaseTestSetup {
         firstErc20.mint(address(this), 2);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -140,6 +141,7 @@ contract ERC20KPITokenBelowLowerBoundRecoverTest is BaseTestSetup {
         firstErc20.mint(address(this), 2);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -221,6 +223,7 @@ contract ERC20KPITokenBelowLowerBoundRecoverTest is BaseTestSetup {
         firstErc20.mint(address(this), 2);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -302,6 +305,7 @@ contract ERC20KPITokenBelowLowerBoundRecoverTest is BaseTestSetup {
         firstErc20.mint(address(this), 2);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -398,6 +402,7 @@ contract ERC20KPITokenBelowLowerBoundRecoverTest is BaseTestSetup {
         firstErc20.mint(address(this), 2);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -494,6 +499,7 @@ contract ERC20KPITokenBelowLowerBoundRecoverTest is BaseTestSetup {
         firstErc20.mint(address(this), 2);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -581,6 +587,7 @@ contract ERC20KPITokenBelowLowerBoundRecoverTest is BaseTestSetup {
         secondErc20.mint(address(this), 4);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -671,6 +678,7 @@ contract ERC20KPITokenBelowLowerBoundRecoverTest is BaseTestSetup {
         secondErc20.mint(address(this), 7 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -761,6 +769,7 @@ contract ERC20KPITokenBelowLowerBoundRecoverTest is BaseTestSetup {
         secondErc20.mint(address(this), 1 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -851,6 +860,7 @@ contract ERC20KPITokenBelowLowerBoundRecoverTest is BaseTestSetup {
         secondErc20.mint(address(this), 3.5 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -956,6 +966,7 @@ contract ERC20KPITokenBelowLowerBoundRecoverTest is BaseTestSetup {
         secondErc20.mint(address(this), 23 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -1061,6 +1072,7 @@ contract ERC20KPITokenBelowLowerBoundRecoverTest is BaseTestSetup {
         secondErc20.mint(address(this), 40 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,

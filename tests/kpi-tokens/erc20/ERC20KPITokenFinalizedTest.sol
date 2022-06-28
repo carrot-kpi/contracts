@@ -60,6 +60,7 @@ contract ERC20KPITokenFinalizedTest is BaseTestSetup {
         firstErc20.mint(address(this), 2);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "d",
                 _erc20KpiTokenInitializationData,
@@ -125,6 +126,7 @@ contract ERC20KPITokenFinalizedTest is BaseTestSetup {
         firstErc20.mint(address(this), 2);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "d",
                 _erc20KpiTokenInitializationData,
@@ -208,6 +210,7 @@ contract ERC20KPITokenFinalizedTest is BaseTestSetup {
         firstErc20.mint(address(this), 2);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "d",
                 _erc20KpiTokenInitializationData,
@@ -288,6 +291,7 @@ contract ERC20KPITokenFinalizedTest is BaseTestSetup {
         firstErc20.mint(address(this), 2);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "d",
                 _erc20KpiTokenInitializationData,
@@ -371,6 +375,7 @@ contract ERC20KPITokenFinalizedTest is BaseTestSetup {
         firstErc20.mint(address(this), 2);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "d",
                 _erc20KpiTokenInitializationData,

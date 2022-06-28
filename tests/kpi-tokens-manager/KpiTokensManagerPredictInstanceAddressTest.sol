@@ -25,6 +25,7 @@ contract KpiTokensManagerPredictInstanceAddressTest is BaseTestSetup {
             address(erc20KpiTokenTemplate),
             keccak256(
                 abi.encodePacked(
+                    address(this),
                     _description,
                     _initializationData,
                     _oraclesInitializationData
@@ -35,6 +36,7 @@ contract KpiTokensManagerPredictInstanceAddressTest is BaseTestSetup {
         assertEq(
             _predictedAddress,
             kpiTokensManager.predictInstanceAddress(
+                address(this),
                 1,
                 _description,
                 _initializationData,

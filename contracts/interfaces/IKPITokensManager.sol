@@ -26,6 +26,7 @@ interface IKPITokensManager {
     }
 
     function predictInstanceAddress(
+        address _creator,
         uint256 _id,
         string memory _description,
         bytes memory _initializationData,
@@ -33,6 +34,7 @@ interface IKPITokensManager {
     ) external view returns (address);
 
     function instantiate(
+        address _creator,
         uint256 _id,
         string memory _description,
         bytes memory _initializationData,

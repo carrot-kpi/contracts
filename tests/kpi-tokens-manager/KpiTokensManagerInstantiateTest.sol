@@ -68,6 +68,7 @@ contract KpiTokensManagerInstantiateTest is BaseTestSetup {
             address(erc20KpiTokenTemplate),
             keccak256(
                 abi.encodePacked(
+                    address(this),
                     _description,
                     _erc20KpiTokenInitializationData,
                     _oraclesInitializationData
@@ -78,6 +79,7 @@ contract KpiTokensManagerInstantiateTest is BaseTestSetup {
 
         vm.prank(address(factory));
         address _instance = kpiTokensManager.instantiate(
+            address(this),
             1,
             _description,
             _erc20KpiTokenInitializationData,

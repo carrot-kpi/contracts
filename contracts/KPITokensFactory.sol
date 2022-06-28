@@ -60,6 +60,7 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
         bytes calldata _oraclesInitializationData
     ) external override {
         address _instance = IKPITokensManager(kpiTokensManager).instantiate(
+            msg.sender,
             _id,
             _description,
             _initializationData,

@@ -67,6 +67,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
         secondErc20.mint(address(this), 3 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -157,6 +158,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
         secondErc20.mint(address(this), 102 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -247,6 +249,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
         secondErc20.mint(address(this), 4 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -337,6 +340,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
         secondErc20.mint(address(this), 821 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -448,6 +452,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
         secondErc20.mint(address(this), 4 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,
@@ -553,6 +558,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
         secondErc20.mint(address(this), 26 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 "a",
                 _erc20KpiTokenInitializationData,

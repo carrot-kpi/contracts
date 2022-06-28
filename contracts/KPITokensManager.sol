@@ -61,6 +61,7 @@ contract KPITokensManager is Ownable, IKPITokensManager {
     /// the linked oracles.
     /// @return The salt value.
     function salt(
+        address _creator,
         string calldata _description,
         bytes calldata _initializationData,
         bytes calldata _oraclesInitializationData
@@ -68,6 +69,7 @@ contract KPITokensManager is Ownable, IKPITokensManager {
         return
             keccak256(
                 abi.encodePacked(
+                    _creator,
                     _description,
                     _initializationData,
                     _oraclesInitializationData
@@ -84,6 +86,7 @@ contract KPITokensManager is Ownable, IKPITokensManager {
     /// @return The address at which the template with the given input
     /// parameters will be instantiated.
     function predictInstanceAddress(
+        address _creator,
         uint256 _id,
         string calldata _description,
         bytes calldata _initializationData,
@@ -93,6 +96,7 @@ contract KPITokensManager is Ownable, IKPITokensManager {
             Clones.predictDeterministicAddress(
                 storageTemplate(_id).addrezz,
                 salt(
+                    _creator,
                     _description,
                     _initializationData,
                     _oraclesInitializationData
@@ -111,6 +115,7 @@ contract KPITokensManager is Ownable, IKPITokensManager {
     /// @return The address at which the template with the given input
     /// parameters has been instantiated.
     function instantiate(
+        address _creator,
         uint256 _id,
         string calldata _description,
         bytes calldata _initializationData,
@@ -121,6 +126,7 @@ contract KPITokensManager is Ownable, IKPITokensManager {
             Clones.cloneDeterministic(
                 storageTemplate(_id).addrezz,
                 salt(
+                    _creator,
                     _description,
                     _initializationData,
                     _oraclesInitializationData

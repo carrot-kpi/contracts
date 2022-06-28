@@ -108,6 +108,7 @@ abstract contract BaseTestSetup is Test {
         firstErc20.mint(address(this), 2);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
+                address(this),
                 1,
                 _description,
                 _erc20KpiTokenInitializationData,
