@@ -81,8 +81,6 @@ contract OraclesManager is Ownable, IOraclesManager {
     ) external view override returns (address) {
         return
             Clones.predictDeterministicAddress(
-                // FIXME: getting a memory template
-                // suffices in this case, will it result in gas savings?
                 storageTemplate(_id).addrezz,
                 salt(_creator, _initializationData),
                 address(this)
