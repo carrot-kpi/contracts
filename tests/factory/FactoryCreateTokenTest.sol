@@ -11,12 +11,24 @@ import {TokenAmount} from "../../contracts/commons/Types.sol";
 contract FactoryCreateTokenTest is BaseTestSetup {
     function testInvalidTemplateId() external {
         vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
-        factory.createToken(10, "a", abi.encode(1), abi.encode(2));
+        factory.createToken(
+            10,
+            "a",
+            block.timestamp + 60,
+            abi.encode(1),
+            abi.encode(2)
+        );
     }
 
     function testInvalidKpiTokenTemplateInitializationData() external {
         vm.expectRevert(bytes(""));
-        factory.createToken(1, "a", abi.encode(1), abi.encode(2));
+        factory.createToken(
+            1,
+            "a",
+            block.timestamp + 60,
+            abi.encode(1),
+            abi.encode(2)
+        );
     }
 
     function testInvalidOracleTemplateInitializationData() external {
@@ -37,6 +49,7 @@ contract FactoryCreateTokenTest is BaseTestSetup {
         factory.createToken(
             1,
             "a",
+            block.timestamp + 60,
             _erc20KpiTokenInitializationData,
             abi.encode(2)
         );
@@ -102,6 +115,7 @@ contract FactoryCreateTokenTest is BaseTestSetup {
         factory.createToken(
             1,
             "a",
+            block.timestamp + 60,
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
         );

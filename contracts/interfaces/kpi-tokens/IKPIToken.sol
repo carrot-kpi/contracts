@@ -12,6 +12,7 @@ interface IKPIToken {
         address _kpiTokensManager,
         uint256 _kpiTokenTemplateId,
         string memory _description,
+        uint256 _expiration,
         bytes memory _data
     ) external;
 
@@ -34,6 +35,10 @@ interface IKPIToken {
     function description() external view returns (string memory);
 
     function finalized() external view returns (bool);
+
+    function expiration() external view returns (uint256);
+
+    function expired() external view returns (bool);
 
     function protocolFee(bytes memory _data)
         external

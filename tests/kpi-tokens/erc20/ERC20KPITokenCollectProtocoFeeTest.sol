@@ -32,6 +32,7 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
             address(kpiTokensManager),
             10,
             "a",
+            block.timestamp + 60,
             abi.encode(collaterals, "Token", "TKN", 100 ether)
         );
 
@@ -95,9 +96,7 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
         address feeReceiver = address(42);
         kpiTokenInstance.collectProtocolFees(feeReceiver);
 
-        vm.expectRevert(
-            abi.encodeWithSignature("AlreadyInitialized()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("AlreadyInitialized()"));
         kpiTokenInstance.collectProtocolFees(feeReceiver);
     }
 
@@ -122,6 +121,7 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
             address(kpiTokensManager),
             10,
             "a",
+            block.timestamp + 60,
             abi.encode(collaterals, "Token", "TKN", 100 ether)
         );
 
@@ -235,6 +235,7 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
             address(kpiTokensManager),
             10,
             "a",
+            block.timestamp + 60,
             abi.encode(collaterals, "Token", "TKN", 100 ether)
         );
 

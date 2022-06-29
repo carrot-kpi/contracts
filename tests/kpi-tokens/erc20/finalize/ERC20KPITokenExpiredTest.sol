@@ -1,32 +1,24 @@
 pragma solidity 0.8.15;
 
-import {BaseTestSetup} from "../../commons/BaseTestSetup.sol";
-import {ERC20KPIToken} from "../../../contracts/kpi-tokens/ERC20KPIToken.sol";
-import {IOraclesManager} from "../../../contracts/interfaces/IOraclesManager.sol";
-import {Clones} from "oz/proxy/Clones.sol";
-import {IERC20KPIToken} from "../../../contracts/interfaces/kpi-tokens/IERC20KPIToken.sol";
-import {TokenAmount} from "../../../contracts/commons/Types.sol";
+import {BaseTestSetup} from "../../../commons/BaseTestSetup.sol";
+import {ERC20KPIToken} from "../../../../contracts/kpi-tokens/ERC20KPIToken.sol";
+import {IERC20KPIToken} from "../../../../contracts/interfaces/kpi-tokens/IERC20KPIToken.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
-/// @title ERC20 KPI token get oracles test enumerate test
-/// @dev Tests oracles query in ERC20 KPI token.
+/// @title ERC20 KPI token finalize test
+/// @dev Tests finalization in ERC20 KPI token.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
-contract ERC20KPITokenGetOraclesTest is BaseTestSetup {
-    function testNotInitialized() external {
-        ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
-            Clones.clone(address(erc20KpiTokenTemplate))
-        );
-        vm.expectRevert(abi.encodeWithSignature("NotInitialized()"));
-        kpiTokenInstance.oracles();
-    }
+contract ERC20KPITokenExpiredTest is BaseTestSetup {
+    uint256 internal constant INVALID_ANSWER =
+        0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff;
 
-    function testSingleOracle() external {
+    function testSingleOracleExpired() external {
         IERC20KPIToken.Collateral[]
             memory _collaterals = new IERC20KPIToken.Collateral[](1);
         _collaterals[0] = IERC20KPIToken.Collateral({
             token: address(firstErc20),
             amount: 2,
-            minimumPayout: 1
+            minimumPayout: 0
         });
         bytes memory _erc20KpiTokenInitializationData = abi.encode(
             _collaterals,
@@ -47,7 +39,7 @@ contract ERC20KPITokenGetOraclesTest is BaseTestSetup {
             _reality,
             address(this),
             1,
-            "a",
+            "b",
             60,
             block.timestamp + 60
         );
@@ -55,14 +47,14 @@ contract ERC20KPITokenGetOraclesTest is BaseTestSetup {
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
             templateId: 1,
-            lowerBound: 0,
-            higherBound: 1,
+            lowerBound: 10,
+            higherBound: 11,
             weight: 1,
             data: _manualRealityOracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
-            false
+            true
         );
 
         firstErc20.mint(address(this), 2);
@@ -70,47 +62,44 @@ contract ERC20KPITokenGetOraclesTest is BaseTestSetup {
             .predictInstanceAddress(
                 address(this),
                 1,
-                "d",
+                "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );
         firstErc20.approve(_predictedKpiTokenAddress, 2);
 
+        uint256 _expiration = block.timestamp + 60;
         factory.createToken(
             1,
-            "d",
-            block.timestamp + 60,
+            "a",
+            _expiration,
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
         );
 
         uint256 kpiTokensAmount = factory.kpiTokensAmount();
-        ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
+        ERC20KPIToken _kpiTokenInstance = ERC20KPIToken(
             factory.enumerate(
                 kpiTokensAmount > 0 ? kpiTokensAmount - 1 : kpiTokensAmount,
                 kpiTokensAmount > 0 ? kpiTokensAmount : 1
             )[0]
         );
 
-        address[] memory oracles = kpiTokenInstance.oracles();
-        assertEq(oracles.length, 1);
-        assertEq(
-            oracles[0],
-            oraclesManager.predictInstanceAddress(
-                address(this),
-                1,
-                _manualRealityOracleInitializationData
-            )
-        );
+        vm.warp(_expiration);
+        assertTrue(_kpiTokenInstance.expired());
+
+        address _oracle = _kpiTokenInstance.oracles()[0];
+        vm.prank(_oracle);
+        _kpiTokenInstance.finalize(INVALID_ANSWER);
     }
 
-    function testMultipleOracle() external {
+    function testMultipleOraclesExpired() external {
         IERC20KPIToken.Collateral[]
             memory _collaterals = new IERC20KPIToken.Collateral[](1);
         _collaterals[0] = IERC20KPIToken.Collateral({
             token: address(firstErc20),
             amount: 2,
-            minimumPayout: 1
+            minimumPayout: 0
         });
         bytes memory _erc20KpiTokenInitializationData = abi.encode(
             _collaterals,
@@ -127,15 +116,7 @@ contract ERC20KPITokenGetOraclesTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _firstManualRealityOracleInitializationData = abi.encode(
-            _reality,
-            address(this),
-            1,
-            "a",
-            60,
-            block.timestamp + 60
-        );
-        bytes memory _secondManualRealityOracleInitializationData = abi.encode(
+        bytes memory _manualRealityOracleInitializationData1 = abi.encode(
             _reality,
             address(this),
             1,
@@ -143,25 +124,33 @@ contract ERC20KPITokenGetOraclesTest is BaseTestSetup {
             60,
             block.timestamp + 60
         );
+        bytes memory _manualRealityOracleInitializationData2 = abi.encode(
+            _reality,
+            address(this),
+            1,
+            "c",
+            60,
+            block.timestamp + 60
+        );
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](2);
         _oracleDatas[0] = IERC20KPIToken.OracleData({
             templateId: 1,
-            lowerBound: 0,
-            higherBound: 1,
+            lowerBound: 10,
+            higherBound: 11,
             weight: 1,
-            data: _firstManualRealityOracleInitializationData
+            data: _manualRealityOracleInitializationData1
         });
         _oracleDatas[1] = IERC20KPIToken.OracleData({
             templateId: 1,
-            lowerBound: 0,
-            higherBound: 1,
+            lowerBound: 10,
+            higherBound: 12,
             weight: 1,
-            data: _secondManualRealityOracleInitializationData
+            data: _manualRealityOracleInitializationData2
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
-            false
+            true
         );
 
         firstErc20.mint(address(this), 2);
@@ -169,45 +158,34 @@ contract ERC20KPITokenGetOraclesTest is BaseTestSetup {
             .predictInstanceAddress(
                 address(this),
                 1,
-                "d",
+                "a",
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );
         firstErc20.approve(_predictedKpiTokenAddress, 2);
 
+        uint256 _expiration = block.timestamp + 60;
         factory.createToken(
             1,
-            "d",
-            block.timestamp + 60,
+            "a",
+            _expiration,
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
         );
 
         uint256 kpiTokensAmount = factory.kpiTokensAmount();
-        ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
+        ERC20KPIToken _kpiTokenInstance = ERC20KPIToken(
             factory.enumerate(
                 kpiTokensAmount > 0 ? kpiTokensAmount - 1 : kpiTokensAmount,
                 kpiTokensAmount > 0 ? kpiTokensAmount : 1
             )[0]
         );
 
-        address[] memory oracles = kpiTokenInstance.oracles();
-        assertEq(oracles.length, 2);
-        assertEq(
-            oracles[0],
-            oraclesManager.predictInstanceAddress(
-                address(this),
-                1,
-                _firstManualRealityOracleInitializationData
-            )
-        );
-        assertEq(
-            oracles[1],
-            oraclesManager.predictInstanceAddress(
-                address(this),
-                1,
-                _secondManualRealityOracleInitializationData
-            )
-        );
+        vm.warp(_expiration);
+        assertTrue(_kpiTokenInstance.expired());
+
+        address _oracle = _kpiTokenInstance.oracles()[1];
+        vm.prank(_oracle);
+        _kpiTokenInstance.finalize(12);
     }
 }

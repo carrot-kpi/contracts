@@ -36,4 +36,17 @@ contract ERC20KPITokenRegisterRedemptionTest is BaseTestSetup {
         _kpiToken.registerRedemption();
         assertEq(_kpiToken.balanceOf(address(this)), 0 ether);
     }
+
+    function testExpired() external {
+        ERC20KPIToken _kpiToken = createKpiToken("a", "b");
+        assertEq(_kpiToken.balanceOf(address(this)), 100 ether);
+
+        vm.warp(_kpiToken.expiration());
+
+        vm.prank(_kpiToken.oracles()[0]);
+        _kpiToken.finalize(0);
+
+        _kpiToken.registerRedemption();
+        assertEq(_kpiToken.balanceOf(address(this)), 0 ether);
+    }
 }

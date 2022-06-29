@@ -8,6 +8,7 @@ interface IKPITokensFactory {
     function createToken(
         uint256 _id,
         string memory _description,
+        uint256 _expiration,
         bytes memory _initializationData,
         bytes memory _oraclesInitializationData
     ) external;

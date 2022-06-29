@@ -43,6 +43,7 @@ contract ERC20KPIToken is
     Collateral[] internal collaterals;
     FinalizableOracle[] internal finalizableOracles;
     string public description;
+    uint256 public expiration;
     uint256 internal kpiTokenTemplateId;
     uint256 internal initialSupply;
     uint256 internal totalWeight;
@@ -53,6 +54,7 @@ contract ERC20KPIToken is
     error InvalidCollateral();
     error InvalidOracleBounds();
     error InvalidOracleWeights();
+    error InvalidExpiration();
     error AlreadyInitialized();
     error NotInitialized();
     error InvalidDescription();
@@ -67,14 +69,13 @@ contract ERC20KPIToken is
     error InvalidMinimumPayoutAfterFee();
     error DuplicatedCollateral();
     error NoRedemptionPossible();
+    error Expired();
 
     event Initialize(
         address indexed creator,
         string description,
-        Collateral[] collaterals,
-        string name,
-        string symbol,
-        uint256 supply
+        uint256 expiration,
+        bytes data
     );
     event InitializeOracles(FinalizableOracle[] finalizableOracles);
     event CollectProtocolFee(TokenAmount[] collected, address _receiver);
@@ -118,11 +119,13 @@ contract ERC20KPIToken is
         address _kpiTokensManager,
         uint256 _kpiTokenTemplateId,
         string calldata _description,
+        uint256 _expiration,
         bytes calldata _data
     ) external override initializer {
         if (_creator == address(0)) revert InvalidCreator();
         if (_kpiTokensManager == address(0)) revert InvalidKpiTokensManager();
         if (bytes(_description).length == 0) revert InvalidDescription();
+        if (_expiration <= block.timestamp) revert InvalidExpiration();
 
         (
             Collateral[] memory _collaterals,
@@ -131,13 +134,31 @@ contract ERC20KPIToken is
             uint256 _erc20Supply
         ) = abi.decode(_data, (Collateral[], string, string, uint256));
 
-        uint256 _inputCollateralsLength = _collaterals.length;
-        if (_inputCollateralsLength > 5) revert TooManyCollaterals();
+        if (_collaterals.length > 5) revert TooManyCollaterals();
         if (bytes(_erc20Name).length == 0) revert InvalidName();
         if (bytes(_erc20Symbol).length == 0) revert InvalidSymbol();
         if (_erc20Supply == 0) revert InvalidTotalSupply();
 
-        for (uint8 _i = 0; _i < _inputCollateralsLength; _i++) {
+        takeCollaterals(_creator, _collaterals);
+
+        __ReentrancyGuard_init();
+        __ERC20_init(_erc20Name, _erc20Symbol);
+        _mint(_creator, _erc20Supply);
+
+        initialSupply = _erc20Supply;
+        creator = _creator;
+        description = _description;
+        expiration = _expiration;
+        kpiTokensManager = _kpiTokensManager;
+        kpiTokenTemplateId = _kpiTokenTemplateId;
+
+        emit Initialize(_creator, _description, _expiration, _data);
+    }
+
+    function takeCollaterals(address _creator, Collateral[] memory _collaterals)
+        internal
+    {
+        for (uint8 _i = 0; _i < _collaterals.length; _i++) {
             Collateral memory _collateral = _collaterals[_i];
             if (
                 _collateral.token == address(0) ||
@@ -154,25 +175,6 @@ contract ERC20KPIToken is
             );
             collaterals.push(_collateral);
         }
-
-        __ReentrancyGuard_init();
-        __ERC20_init(_erc20Name, _erc20Symbol);
-        _mint(_creator, _erc20Supply);
-
-        initialSupply = _erc20Supply;
-        creator = _creator;
-        description = _description;
-        kpiTokensManager = _kpiTokensManager;
-        kpiTokenTemplateId = _kpiTokenTemplateId;
-
-        emit Initialize(
-            _creator,
-            _description,
-            collaterals,
-            _erc20Name,
-            _erc20Symbol,
-            _erc20Supply
-        );
     }
 
     /// @dev Initializes the oracles tied to this KPI token (both the actual oracle
@@ -345,30 +347,17 @@ contract ERC20KPIToken is
         if (!oraclesInitialized) revert NotInitialized();
 
         FinalizableOracle storage _oracle = finalizableOracle(msg.sender);
+        if (_isExpired()) {
+            _oracle.finalized = true;
+            return;
+        }
+
         if (_result <= _oracle.lowerBound || _result == INVALID_ANSWER) {
             // if oracles are in an 'and' relationship and at least one gives a
             // negative result, give back all the collateral minus the minimum payout
             // to the creator, otherwise calculate the exact amount to give back.
             bool _andRelationship = andRelationship;
-            for (uint256 _i = 0; _i < collaterals.length; _i++) {
-                Collateral storage _collateral = collaterals[_i];
-                uint256 _reimboursement;
-                if (_andRelationship) {
-                    unchecked {
-                        _reimboursement =
-                            _collateral.amount -
-                            _collateral.minimumPayout;
-                    }
-                } else {
-                    uint256 _numerator = ((_collateral.amount -
-                        _collateral.minimumPayout) * _oracle.weight) <<
-                        MULTIPLIER;
-                    _reimboursement = (_numerator / totalWeight) >> MULTIPLIER;
-                }
-                unchecked {
-                    _collateral.amount -= _reimboursement;
-                }
-            }
+            handleLowOrInvalidResult(_oracle, _andRelationship);
             if (_andRelationship) {
                 for (uint256 _i = 0; _i < finalizableOracles.length; _i++)
                     finalizableOracles[_i].finalized = true;
@@ -377,42 +366,15 @@ contract ERC20KPIToken is
                 return;
             }
         } else {
-            uint256 _oracleFullRange;
-            uint256 _finalOracleProgress;
-            unchecked {
-                _oracleFullRange = _oracle.higherBound - _oracle.lowerBound;
-                _finalOracleProgress = _result >= _oracle.higherBound
-                    ? _oracleFullRange
-                    : _result - _oracle.lowerBound;
-            }
-            _oracle.finalProgress = _finalOracleProgress;
-            // transfer the unnecessary collateral back to the KPI creator
-            // if the condition wasn't fully satisfied
-            if (_finalOracleProgress < _oracleFullRange) {
-                for (uint8 _i = 0; _i < collaterals.length; _i++) {
-                    Collateral storage _collateral = collaterals[_i];
-                    uint256 _numerator = ((_collateral.amount -
-                        _collateral.minimumPayout) *
-                        _oracle.weight *
-                        (_oracleFullRange - _finalOracleProgress)) <<
-                        MULTIPLIER;
-                    uint256 _denominator = _oracleFullRange * totalWeight;
-                    uint256 _reimboursement = (_numerator / _denominator) >>
-                        MULTIPLIER;
-                    unchecked {
-                        _collateral.amount -= _reimboursement;
-                    }
-                }
-            }
+            handleIntermediateOrOverHigherBoundResult(_oracle, _result);
         }
 
         _oracle.finalized = true;
-        uint256 _toBeFinalized;
         unchecked {
-            _toBeFinalized = --toBeFinalized;
+            --toBeFinalized;
         }
 
-        if (_finalized()) {
+        if (_isFinalized()) {
             for (uint8 _i = 0; _i < collaterals.length; _i++) {
                 Collateral memory _collateral = collaterals[_i];
                 finalCollateralAmount[_collateral.token] = _collateral.amount;
@@ -422,16 +384,76 @@ contract ERC20KPIToken is
         emit Finalize(msg.sender, _result);
     }
 
+    function handleLowOrInvalidResult(
+        FinalizableOracle storage _oracle,
+        bool _andRelationship
+    ) internal {
+        for (uint256 _i = 0; _i < collaterals.length; _i++) {
+            Collateral storage _collateral = collaterals[_i];
+            uint256 _reimboursement;
+            if (_andRelationship) {
+                unchecked {
+                    _reimboursement =
+                        _collateral.amount -
+                        _collateral.minimumPayout;
+                }
+            } else {
+                uint256 _numerator = ((_collateral.amount -
+                    _collateral.minimumPayout) * _oracle.weight) << MULTIPLIER;
+                _reimboursement = (_numerator / totalWeight) >> MULTIPLIER;
+            }
+            unchecked {
+                _collateral.amount -= _reimboursement;
+            }
+        }
+    }
+
+    function handleIntermediateOrOverHigherBoundResult(
+        FinalizableOracle storage _oracle,
+        uint256 _result
+    ) internal {
+        uint256 _oracleFullRange;
+        uint256 _finalOracleProgress;
+        unchecked {
+            _oracleFullRange = _oracle.higherBound - _oracle.lowerBound;
+            _finalOracleProgress = _result >= _oracle.higherBound
+                ? _oracleFullRange
+                : _result - _oracle.lowerBound;
+        }
+        _oracle.finalProgress = _finalOracleProgress;
+        if (_finalOracleProgress < _oracleFullRange) {
+            for (uint8 _i = 0; _i < collaterals.length; _i++) {
+                Collateral storage _collateral = collaterals[_i];
+                uint256 _numerator = ((_collateral.amount -
+                    _collateral.minimumPayout) *
+                    _oracle.weight *
+                    (_oracleFullRange - _finalOracleProgress)) << MULTIPLIER;
+                uint256 _denominator = _oracleFullRange * totalWeight;
+                uint256 _reimboursement = (_numerator / _denominator) >>
+                    MULTIPLIER;
+                unchecked {
+                    _collateral.amount -= _reimboursement;
+                }
+            }
+        }
+    }
+
     function recoverERC20(address _token, address _receiver) external {
         if (msg.sender != creator) revert Forbidden();
+        bool _expired = _isExpired();
         for (uint8 _i = 0; _i < collaterals.length; _i++) {
             Collateral memory _collateral = collaterals[_i];
             if (_collateral.token == _token) {
-                uint256 _balance = IERC20Upgradeable(_collateral.token)
-                    .balanceOf(address(this));
-                uint256 _unneededBalance;
-                unchecked {
-                    _unneededBalance = _balance - _collateral.amount;
+                uint256 _balance = IERC20Upgradeable(_token).balanceOf(
+                    address(this)
+                );
+                uint256 _unneededBalance = _balance;
+                if (_expired) {
+                    _collateral.amount = 0;
+                } else {
+                    unchecked {
+                        _unneededBalance -= _collateral.amount;
+                    }
                 }
                 IERC20Upgradeable(_token).safeTransfer(
                     _receiver,
@@ -466,28 +488,31 @@ contract ERC20KPIToken is
     /// compared to the total supply and left collateral amount. If the KPI token
     /// has expired worthless, this simply burns the user's KPI tokens.
     function redeem() external override nonReentrant {
-        if (!_finalized()) revert Forbidden();
+        if (!_isFinalized() && block.timestamp < expiration) revert Forbidden();
         uint256 _kpiTokenBalance = balanceOf(msg.sender);
         if (_kpiTokenBalance == 0) revert Forbidden();
         RedeemedCollateral[]
             memory _redeemedCollaterals = new RedeemedCollateral[](
                 collaterals.length
             );
+        bool _expired = _isExpired();
         uint256 _initialSupply = initialSupply;
         for (uint8 _i = 0; _i < collaterals.length; _i++) {
             Collateral storage _collateral = collaterals[_i];
-            uint256 _redeemableAmount;
-            unchecked {
-                _redeemableAmount =
-                    (finalCollateralAmount[_collateral.token] *
-                        _kpiTokenBalance) /
-                    _initialSupply;
-                _collateral.amount -= _redeemableAmount;
+            uint256 _redeemableAmount = 0;
+            if (!_expired) {
+                unchecked {
+                    _redeemableAmount =
+                        (finalCollateralAmount[_collateral.token] *
+                            _kpiTokenBalance) /
+                        _initialSupply;
+                    _collateral.amount -= _redeemableAmount;
+                }
+                IERC20Upgradeable(_collateral.token).safeTransfer(
+                    msg.sender,
+                    _redeemableAmount
+                );
             }
-            IERC20Upgradeable(_collateral.token).safeTransfer(
-                msg.sender,
-                _redeemableAmount
-            );
             _redeemedCollaterals[_i] = RedeemedCollateral({
                 token: _collateral.token,
                 amount: _redeemableAmount
@@ -500,9 +525,9 @@ contract ERC20KPIToken is
     /// @dev Only callable by KPI token holders, lets them register their redemption
     /// by burning the KPI tokens they have. Using this function, any collateral gained
     /// by the KPI token resolution must be explicitly requested by the user through
-    /// the `redeemToken` function.
+    /// the `redeemCollateral` function.
     function registerRedemption() external override {
-        if (!_finalized()) revert Forbidden();
+        if (!_isFinalized() && block.timestamp < expiration) revert Forbidden();
         uint256 _kpiTokenBalance = balanceOf(msg.sender);
         if (_kpiTokenBalance == 0) revert Forbidden();
         _burn(msg.sender, _kpiTokenBalance);
@@ -515,7 +540,8 @@ contract ERC20KPIToken is
     /// token specified as input in the function. The function reverts if either an invalid
     /// collateral is specified or if zero of the given collateral can be redeemed.
     function redeemCollateral(address _token) external override {
-        if (!_finalized()) revert Forbidden();
+        if (!_isFinalized() && block.timestamp < expiration) revert Forbidden();
+        if (_isExpired()) revert Expired();
         uint256 _burned = registeredBurn[msg.sender];
         if (_burned == 0) revert Forbidden();
         for (uint8 _i = 0; _i < collaterals.length; _i++) {
@@ -533,6 +559,7 @@ contract ERC20KPIToken is
                     msg.sender,
                     _redeemableAmount
                 );
+                delete registeredBurn[msg.sender];
                 emit RedeemToken(msg.sender, _token, _redeemableAmount);
                 return;
             }
@@ -572,15 +599,29 @@ contract ERC20KPIToken is
     }
 
     /// @dev View function to check if the KPI token is finalized.
-    /// @return Whether the token is finalized or not.
-    function _finalized() private view returns (bool) {
+    /// @return A bool describing whether the token is finalized or not.
+    function _isFinalized() internal view returns (bool) {
         return toBeFinalized == 0;
     }
 
     /// @dev View function to check if the KPI token is finalized.
-    /// @return Whether the token is finalized or not.
+    /// @return A bool describing whether the token is finalized or not.
     function finalized() external view override returns (bool) {
-        return _finalized();
+        return _isFinalized();
+    }
+
+    /// @dev View function to check if the KPI token is expired. A KPI token is
+    /// considered expired when not finalized before the expiration date comes.
+    /// @return A bool describing whether the token is finalized or not.
+    function _isExpired() internal view returns (bool) {
+        return !_isFinalized() && expiration <= block.timestamp;
+    }
+
+    /// @dev View function to check if the KPI token is expired. A KPI token is
+    /// considered expired when not finalized before the expiration date comes.
+    /// @return A bool describing whether the token is finalized or not.
+    function expired() external view override returns (bool) {
+        return _isExpired();
     }
 
     /// @dev View function to query all the oracles associated with the KPI token at once.

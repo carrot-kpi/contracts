@@ -71,6 +71,7 @@ contract ERC20KPITokenFinalizedTest is BaseTestSetup {
         factory.createToken(
             1,
             "d",
+            block.timestamp + 60,
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
         );
@@ -137,6 +138,7 @@ contract ERC20KPITokenFinalizedTest is BaseTestSetup {
         factory.createToken(
             1,
             "d",
+            block.timestamp + 60,
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
         );
@@ -221,6 +223,7 @@ contract ERC20KPITokenFinalizedTest is BaseTestSetup {
         factory.createToken(
             1,
             "d",
+            block.timestamp + 60,
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
         );
@@ -302,6 +305,7 @@ contract ERC20KPITokenFinalizedTest is BaseTestSetup {
         factory.createToken(
             1,
             "d",
+            block.timestamp + 60,
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
         );
@@ -386,6 +390,7 @@ contract ERC20KPITokenFinalizedTest is BaseTestSetup {
         factory.createToken(
             1,
             "d",
+            block.timestamp + 60,
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
         );

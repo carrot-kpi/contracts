@@ -119,6 +119,7 @@ abstract contract BaseTestSetup is Test {
         factory.createToken(
             1,
             _description,
+            block.timestamp + 60,
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
         );

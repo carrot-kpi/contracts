@@ -56,6 +56,7 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
     function createToken(
         uint256 _id,
         string calldata _description,
+        uint256 _expiration,
         bytes calldata _initializationData,
         bytes calldata _oraclesInitializationData
     ) external override {
@@ -71,6 +72,7 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
             kpiTokensManager,
             _id,
             _description,
+            _expiration,
             _initializationData
         );
         allowOraclesCreation[_instance] = true;
