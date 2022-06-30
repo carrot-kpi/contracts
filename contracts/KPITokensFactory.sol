@@ -50,6 +50,8 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
     /// @dev Creates a KPI token with the input data.
     /// @param _id The id of the KPI token template to be used.
     /// @param _description An IPFS cid pointing to a structured JSON describing what the KPI token is about.
+    /// @param _expiration A timestamp indicating the KPI token's expiration (avoids locked funds in case
+    /// something happens to an oracle).
     /// @param _initializationData The template-specific ABI-encoded initialization data.
     /// @param _oraclesInitializationData The initialization data required by the template to initialize
     /// the linked oracles.
@@ -67,21 +69,19 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
             _initializationData,
             _oraclesInitializationData
         );
+        allowOraclesCreation[_instance] = true;
         IKPIToken(_instance).initialize(
             msg.sender,
             kpiTokensManager,
+            oraclesManager,
+            feeReceiver,
             _id,
             _description,
             _expiration,
-            _initializationData
-        );
-        allowOraclesCreation[_instance] = true;
-        IKPIToken(_instance).initializeOracles(
-            oraclesManager,
+            _initializationData,
             _oraclesInitializationData
         );
         allowOraclesCreation[_instance] = false;
-        IKPIToken(_instance).collectProtocolFees(feeReceiver);
         kpiTokens.push(_instance);
 
         emit CreateToken(_instance);

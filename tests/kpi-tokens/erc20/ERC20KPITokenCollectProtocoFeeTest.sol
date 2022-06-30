@@ -11,7 +11,7 @@ import {IERC20KPIToken} from "../../../contracts/interfaces/kpi-tokens/IERC20KPI
 /// @dev Tests ERC20 KPI token protocol fee collection.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
-    function initializeKpiToken() internal returns (ERC20KPIToken) {
+    function initializeKpiToken() internal returns (address, ERC20KPIToken) {
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             Clones.clone(address(erc20KpiTokenTemplate))
         );
@@ -26,15 +26,6 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
             amount: 10 ether,
             minimumPayout: 1 ether
         });
-
-        kpiTokenInstance.initialize(
-            address(this),
-            address(kpiTokensManager),
-            10,
-            "a",
-            block.timestamp + 60,
-            abi.encode(collaterals, "Token", "TKN", 100 ether)
-        );
 
         IERC20KPIToken.OracleData[]
             memory oracleData = new IERC20KPIToken.OracleData[](2);
@@ -74,30 +65,21 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
             abi.encodeWithSignature("instantiate(address,uint256,bytes)"),
             abi.encode(address(2))
         );
-        kpiTokenInstance.initializeOracles(
+
+        address feeReceiver = address(1234);
+        kpiTokenInstance.initialize(
+            address(this),
+            address(kpiTokensManager),
             oraclesManager,
+            feeReceiver,
+            10,
+            "a",
+            block.timestamp + 60,
+            abi.encode(collaterals, "Token", "TKN", 100 ether),
             abi.encode(oracleData, false)
         );
 
-        return kpiTokenInstance;
-    }
-
-    function testNotInitialized() external {
-        ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
-            Clones.clone(address(erc20KpiTokenTemplate))
-        );
-        vm.expectRevert(abi.encodeWithSignature("NotInitialized()"));
-        kpiTokenInstance.collectProtocolFees(address(0));
-    }
-
-    function testMultipleCollection() external {
-        ERC20KPIToken kpiTokenInstance = initializeKpiToken();
-
-        address feeReceiver = address(42);
-        kpiTokenInstance.collectProtocolFees(feeReceiver);
-
-        vm.expectRevert(abi.encodeWithSignature("AlreadyInitialized()"));
-        kpiTokenInstance.collectProtocolFees(feeReceiver);
+        return (feeReceiver, kpiTokenInstance);
     }
 
     function testExcessiveCollection() external {
@@ -116,15 +98,6 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
             minimumPayout: 9.9999999999 ether
         });
 
-        kpiTokenInstance.initialize(
-            address(this),
-            address(kpiTokensManager),
-            10,
-            "a",
-            block.timestamp + 60,
-            abi.encode(collaterals, "Token", "TKN", 100 ether)
-        );
-
         IERC20KPIToken.OracleData[]
             memory oracleData = new IERC20KPIToken.OracleData[](2);
         bytes memory firstManualRealityEthInitializationData = abi.encode(
@@ -163,22 +136,25 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
             abi.encodeWithSignature("instantiate(address,uint256,bytes)"),
             abi.encode(address(2))
         );
-        kpiTokenInstance.initializeOracles(
-            oraclesManager,
-            abi.encode(oracleData, false)
-        );
 
         vm.expectRevert(
             abi.encodeWithSignature("InvalidMinimumPayoutAfterFee()")
         );
-        kpiTokenInstance.collectProtocolFees(address(42));
+        kpiTokenInstance.initialize(
+            address(this),
+            address(kpiTokensManager),
+            oraclesManager,
+            address(1234),
+            10,
+            "a",
+            block.timestamp + 60,
+            abi.encode(collaterals, "Token", "TKN", 100 ether),
+            abi.encode(oracleData, false)
+        );
     }
 
     function testSuccessSingleCollateral() external {
-        ERC20KPIToken kpiTokenInstance = initializeKpiToken();
-
-        address feeReceiver = address(42);
-        kpiTokenInstance.collectProtocolFees(feeReceiver);
+        (, ERC20KPIToken kpiTokenInstance) = initializeKpiToken();
 
         (IERC20KPIToken.Collateral[] memory onChainCollaterals, , , , , ) = abi
             .decode(
@@ -230,15 +206,6 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
             minimumPayout: 2 ether
         });
 
-        kpiTokenInstance.initialize(
-            address(this),
-            address(kpiTokensManager),
-            10,
-            "a",
-            block.timestamp + 60,
-            abi.encode(collaterals, "Token", "TKN", 100 ether)
-        );
-
         IERC20KPIToken.OracleData[]
             memory oracleData = new IERC20KPIToken.OracleData[](2);
         bytes memory firstManualRealityEthInitializationData = abi.encode(
@@ -277,13 +244,19 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
             abi.encodeWithSignature("instantiate(address,uint256,bytes)"),
             abi.encode(address(2))
         );
-        kpiTokenInstance.initializeOracles(
-            oraclesManager,
-            abi.encode(oracleData, false)
-        );
 
         address feeReceiver = address(42);
-        kpiTokenInstance.collectProtocolFees(feeReceiver);
+        kpiTokenInstance.initialize(
+            address(this),
+            address(kpiTokensManager),
+            oraclesManager,
+            feeReceiver,
+            10,
+            "a",
+            block.timestamp + 60,
+            abi.encode(collaterals, "Token", "TKN", 100 ether),
+            abi.encode(oracleData, false)
+        );
 
         (IERC20KPIToken.Collateral[] memory onChainCollaterals, , , , , ) = abi
             .decode(

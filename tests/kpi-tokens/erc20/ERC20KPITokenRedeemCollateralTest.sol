@@ -99,7 +99,6 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             _oraclesInitializationData
         );
 
-        uint256 kpiTokensAmount = factory.kpiTokensAmount();
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             _predictedKpiTokenAddress
         );
@@ -203,7 +202,6 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             _oraclesInitializationData
         );
 
-        uint256 kpiTokensAmount = factory.kpiTokensAmount();
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             _predictedKpiTokenAddress
         );
@@ -290,7 +288,6 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             _oraclesInitializationData
         );
 
-        uint256 kpiTokensAmount = factory.kpiTokensAmount();
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             _predictedKpiTokenAddress
         );
@@ -394,7 +391,6 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             _oraclesInitializationData
         );
 
-        uint256 kpiTokensAmount = factory.kpiTokensAmount();
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             _predictedKpiTokenAddress
         );
@@ -483,7 +479,6 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             _oraclesInitializationData
         );
 
-        uint256 kpiTokensAmount = factory.kpiTokensAmount();
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             _predictedKpiTokenAddress
         );
@@ -589,7 +584,6 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             _oraclesInitializationData
         );
 
-        uint256 kpiTokensAmount = factory.kpiTokensAmount();
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             _predictedKpiTokenAddress
         );
@@ -698,7 +692,6 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             _oraclesInitializationData
         );
 
-        uint256 kpiTokensAmount = factory.kpiTokensAmount();
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             _predictedKpiTokenAddress
         );
@@ -801,7 +794,6 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             _oraclesInitializationData
         );
 
-        uint256 kpiTokensAmount = factory.kpiTokensAmount();
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             _predictedKpiTokenAddress
         );
@@ -922,7 +914,6 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             _oraclesInitializationData
         );
 
-        uint256 kpiTokensAmount = factory.kpiTokensAmount();
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             _predictedKpiTokenAddress
         );
@@ -1028,7 +1019,6 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             _oraclesInitializationData
         );
 
-        uint256 kpiTokensAmount = factory.kpiTokensAmount();
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             _predictedKpiTokenAddress
         );
@@ -1118,7 +1108,6 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             _oraclesInitializationData
         );
 
-        uint256 kpiTokensAmount = factory.kpiTokensAmount();
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             _predictedKpiTokenAddress
         );
@@ -1236,7 +1225,6 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             _oraclesInitializationData
         );
 
-        uint256 kpiTokensAmount = factory.kpiTokensAmount();
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             _predictedKpiTokenAddress
         );
@@ -1327,7 +1315,6 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             _oraclesInitializationData
         );
 
-        uint256 kpiTokensAmount = factory.kpiTokensAmount();
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             _predictedKpiTokenAddress
         );
@@ -1445,7 +1432,6 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             _oraclesInitializationData
         );
 
-        uint256 kpiTokensAmount = factory.kpiTokensAmount();
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             _predictedKpiTokenAddress
         );
@@ -1536,7 +1522,6 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             _oraclesInitializationData
         );
 
-        uint256 kpiTokensAmount = factory.kpiTokensAmount();
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             _predictedKpiTokenAddress
         );
@@ -1653,7 +1638,6 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             _oraclesInitializationData
         );
 
-        uint256 kpiTokensAmount = factory.kpiTokensAmount();
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             _predictedKpiTokenAddress
         );
@@ -1775,7 +1759,6 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             _oraclesInitializationData
         );
 
-        uint256 kpiTokensAmount = factory.kpiTokensAmount();
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             _predictedKpiTokenAddress
         );
@@ -1882,7 +1865,6 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             _oraclesInitializationData
         );
 
-        uint256 kpiTokensAmount = factory.kpiTokensAmount();
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             _predictedKpiTokenAddress
         );
@@ -2000,7 +1982,6 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             _oraclesInitializationData
         );
 
-        uint256 kpiTokensAmount = factory.kpiTokensAmount();
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             _predictedKpiTokenAddress
         );
@@ -2123,7 +2104,6 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             _oraclesInitializationData
         );
 
-        uint256 kpiTokensAmount = factory.kpiTokensAmount();
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             _predictedKpiTokenAddress
         );
@@ -2216,7 +2196,6 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             _oraclesInitializationData
         );
 
-        uint256 kpiTokensAmount = factory.kpiTokensAmount();
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             _predictedKpiTokenAddress
         );
@@ -2352,7 +2331,6 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             _oraclesInitializationData
         );
 
-        uint256 kpiTokensAmount = factory.kpiTokensAmount();
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             _predictedKpiTokenAddress
         );
@@ -2491,7 +2469,6 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             _oraclesInitializationData
         );
 
-        uint256 kpiTokensAmount = factory.kpiTokensAmount();
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             _predictedKpiTokenAddress
         );

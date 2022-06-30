@@ -19,9 +19,12 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
         kpiTokenInstance.initialize(
             address(0),
             address(0),
+            address(0),
+            address(0),
             0,
             "a",
             block.timestamp + 60,
+            abi.encode(uint256(1)),
             abi.encode(uint256(1))
         );
     }
@@ -34,9 +37,69 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
         kpiTokenInstance.initialize(
             address(1),
             address(0),
+            address(0),
+            address(0),
             0,
             "a",
             block.timestamp + 60,
+            abi.encode(uint256(1)),
+            abi.encode(uint256(1))
+        );
+    }
+
+    function testZeroAddressOraclesManager() external {
+        ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
+            Clones.clone(address(erc20KpiTokenTemplate))
+        );
+
+        IERC20KPIToken.Collateral[]
+            memory collaterals = new IERC20KPIToken.Collateral[](1);
+        collaterals[0] = IERC20KPIToken.Collateral({
+            token: address(firstErc20),
+            amount: 1,
+            minimumPayout: 0
+        });
+
+        firstErc20.mint(address(this), 1);
+        firstErc20.approve(address(kpiTokenInstance), 1);
+
+        vm.expectRevert(abi.encodeWithSignature("InvalidOraclesManager()"));
+        kpiTokenInstance.initialize(
+            address(this),
+            address(1),
+            address(0),
+            address(1),
+            0,
+            "a",
+            block.timestamp + 60,
+            abi.encode(collaterals, "Token", "TKN", 10 ether),
+            abi.encode(uint256(1))
+        );
+    }
+
+    function testZeroAddressFeeReceiver() external {
+        ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
+            Clones.clone(address(erc20KpiTokenTemplate))
+        );
+
+        IERC20KPIToken.Collateral[]
+            memory collaterals = new IERC20KPIToken.Collateral[](1);
+        collaterals[0] = IERC20KPIToken.Collateral({
+            token: address(1),
+            amount: 1,
+            minimumPayout: 0
+        });
+
+        vm.expectRevert(abi.encodeWithSignature("InvalidFeeReceiver()"));
+        kpiTokenInstance.initialize(
+            address(1),
+            address(1),
+            address(1),
+            address(0),
+            0,
+            "a",
+            block.timestamp + 60,
+            abi.encode(collaterals, "Token", "TKN", 10 ether),
             abi.encode(uint256(1))
         );
     }
@@ -45,13 +108,54 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             Clones.clone(address(erc20KpiTokenTemplate))
         );
+
         vm.expectRevert(abi.encodeWithSignature("InvalidDescription()"));
         kpiTokenInstance.initialize(
             address(1),
             address(1),
-            0,
+            address(1),
+            address(1),
+            1,
             "",
             block.timestamp + 60,
+            abi.encode(uint256(1)),
+            abi.encode(uint256(1))
+        );
+    }
+
+    function testPresentBlockTimeExpiration() external {
+        ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
+            Clones.clone(address(erc20KpiTokenTemplate))
+        );
+        vm.expectRevert(abi.encodeWithSignature("InvalidExpiration()"));
+        kpiTokenInstance.initialize(
+            address(1),
+            address(1),
+            address(1),
+            address(1),
+            0,
+            "a",
+            block.timestamp,
+            abi.encode(uint256(1)),
+            abi.encode(uint256(1))
+        );
+    }
+
+    function testPastBlockTimeExpiration() external {
+        ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
+            Clones.clone(address(erc20KpiTokenTemplate))
+        );
+        vm.warp(10);
+        vm.expectRevert(abi.encodeWithSignature("InvalidExpiration()"));
+        kpiTokenInstance.initialize(
+            address(1),
+            address(1),
+            address(1),
+            address(1),
+            0,
+            "a",
+            block.timestamp - 5,
+            abi.encode(uint256(1)),
             abi.encode(uint256(1))
         );
     }
@@ -64,9 +168,12 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
         kpiTokenInstance.initialize(
             address(1),
             address(1),
+            address(1),
+            address(1),
             0,
             "a",
-            block.timestamp + 60,
+            block.timestamp + 10,
+            abi.encode(uint256(1)),
             abi.encode(uint256(1))
         );
     }
@@ -89,10 +196,35 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
         kpiTokenInstance.initialize(
             address(1),
             address(1),
+            address(1),
+            address(1),
             0,
             "a",
-            block.timestamp + 60,
-            abi.encode(collaterals, "Token", "TKN", 10 ether)
+            block.timestamp + 10,
+            abi.encode(collaterals, "Token", "TKN", 10 ether),
+            abi.encode(uint256(1))
+        );
+    }
+
+    function testNoCollaterals() external {
+        ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
+            Clones.clone(address(erc20KpiTokenTemplate))
+        );
+
+        IERC20KPIToken.Collateral[]
+            memory collaterals = new IERC20KPIToken.Collateral[](0);
+
+        vm.expectRevert(abi.encodeWithSignature("NoCollaterals()"));
+        kpiTokenInstance.initialize(
+            address(1),
+            address(1),
+            address(1),
+            address(1),
+            0,
+            "a",
+            block.timestamp + 10,
+            abi.encode(collaterals, "Token", "TKN", 10 ether),
+            abi.encode(uint256(1))
         );
     }
 
@@ -114,10 +246,13 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
         kpiTokenInstance.initialize(
             address(1),
             address(1),
+            address(1),
+            address(1),
             0,
             "a",
-            block.timestamp + 60,
-            abi.encode(collaterals, "", "TKN", 10 ether)
+            block.timestamp + 10,
+            abi.encode(collaterals, "", "TKN", 10 ether),
+            abi.encode(uint256(1))
         );
     }
 
@@ -139,10 +274,13 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
         kpiTokenInstance.initialize(
             address(1),
             address(1),
+            address(1),
+            address(1),
             0,
             "a",
-            block.timestamp + 60,
-            abi.encode(collaterals, "Token", "", 10 ether)
+            block.timestamp + 10,
+            abi.encode(collaterals, "Token", "", 10 ether),
+            abi.encode(uint256(1))
         );
     }
 
@@ -164,10 +302,13 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
         kpiTokenInstance.initialize(
             address(1),
             address(1),
+            address(1),
+            address(1),
             0,
             "a",
-            block.timestamp + 60,
-            abi.encode(collaterals, "Token", "TKN", 0)
+            block.timestamp + 10,
+            abi.encode(collaterals, "Token", "TKN", 0),
+            abi.encode(uint256(1))
         );
     }
 
@@ -193,10 +334,13 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
         kpiTokenInstance.initialize(
             address(1),
             address(1),
+            address(1),
+            address(1),
             0,
             "a",
-            block.timestamp + 60,
-            abi.encode(collaterals, "Token", "TKN", 100 ether)
+            block.timestamp + 10,
+            abi.encode(collaterals, "Token", "TKN", 100 ether),
+            abi.encode(uint256(1))
         );
     }
 
@@ -217,10 +361,13 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
         kpiTokenInstance.initialize(
             address(1),
             address(1),
+            address(1),
+            address(1),
             0,
             "a",
-            block.timestamp + 60,
-            abi.encode(collaterals, "Token", "TKN", 10 ether)
+            block.timestamp + 10,
+            abi.encode(collaterals, "Token", "TKN", 10 ether),
+            abi.encode(uint256(1))
         );
     }
 
@@ -241,10 +388,13 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
         kpiTokenInstance.initialize(
             address(1),
             address(1),
+            address(1),
+            address(1),
             0,
             "a",
-            block.timestamp + 60,
-            abi.encode(collaterals, "Token", "TKN", 10 ether)
+            block.timestamp + 10,
+            abi.encode(collaterals, "Token", "TKN", 10 ether),
+            abi.encode(uint256(1))
         );
     }
 
@@ -265,10 +415,13 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
         kpiTokenInstance.initialize(
             address(1),
             address(1),
+            address(1),
+            address(1),
             0,
             "a",
-            block.timestamp + 60,
-            abi.encode(collaterals, "Token", "TKN", 10 ether)
+            block.timestamp + 10,
+            abi.encode(collaterals, "Token", "TKN", 10 ether),
+            abi.encode(uint256(1))
         );
     }
 
@@ -289,10 +442,13 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
         kpiTokenInstance.initialize(
             address(1),
             address(1),
+            address(1),
+            address(1),
             0,
             "a",
-            block.timestamp + 60,
-            abi.encode(collaterals, "Token", "TKN", 10 ether)
+            block.timestamp + 10,
+            abi.encode(collaterals, "Token", "TKN", 10 ether),
+            abi.encode(uint256(1))
         );
     }
 
@@ -312,13 +468,40 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
             minimumPayout: 1 ether
         });
 
+        address oraclesManager = address(2);
+        vm.mockCall(
+            oraclesManager,
+            abi.encodeWithSignature("instantiate(address,uint256,bytes)"),
+            abi.encode(address(2))
+        );
+
+        IERC20KPIToken.OracleData[]
+            memory oracleData = new IERC20KPIToken.OracleData[](1);
+        oracleData[0] = IERC20KPIToken.OracleData({
+            templateId: 1,
+            lowerBound: 0,
+            higherBound: 1,
+            weight: 1,
+            data: abi.encode(
+                address(2), // fake reality.eth address
+                address(this), // arbitrator
+                0, // template id
+                "a", // question
+                200, // question timeout
+                block.timestamp + 200 // expiry
+            )
+        });
+
         kpiTokenInstance.initialize(
             address(this),
-            address(kpiTokensManager),
-            10,
+            address(1),
+            oraclesManager,
+            address(3),
+            0,
             "a",
-            block.timestamp + 60,
-            abi.encode(collaterals, "Token", "TKN", 100 ether)
+            block.timestamp + 10,
+            abi.encode(collaterals, "Token", "TKN", 100 ether),
+            abi.encode(oracleData, false)
         );
 
         (
@@ -342,9 +525,9 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
 
         assertEq(onChainCollaterals.length, 1);
         assertEq(onChainCollaterals[0].token, address(firstErc20));
-        assertEq(onChainCollaterals[0].amount, 10 ether);
+        assertEq(onChainCollaterals[0].amount, 9.97 ether);
         assertEq(onChainCollaterals[0].minimumPayout, 1 ether);
-        assertEq(onChainFinalizableOracles.length, 0);
+        assertEq(onChainFinalizableOracles.length, 1);
         assertEq(kpiTokenInstance.totalSupply(), 100 ether);
         assertEq(onChainInitialSupply, 100 ether);
         assertEq(kpiTokenInstance.creator(), address(this));
@@ -352,138 +535,6 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
         assertTrue(!onChainAndRelationship);
         assertEq(onChainName, "Token");
         assertEq(onChainSymbol, "TKN");
-    }
-
-    function testExpirationInThePast() external {
-        IERC20KPIToken.Collateral[]
-            memory _collaterals = new IERC20KPIToken.Collateral[](1);
-        _collaterals[0] = IERC20KPIToken.Collateral({
-            token: address(firstErc20),
-            amount: 110 ether,
-            minimumPayout: 0
-        });
-        bytes memory _erc20KpiTokenInitializationData = abi.encode(
-            _collaterals,
-            "Test",
-            "TST",
-            100 ether
-        );
-
-        address _reality = address(42);
-        vm.mockCall(
-            _reality,
-            abi.encodeWithSignature(
-                "askQuestion(uint256,string,address,uint32,uint32,uint256)"
-            ),
-            abi.encode(bytes32("question id"))
-        );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
-            _reality,
-            address(this),
-            1,
-            "b",
-            60,
-            block.timestamp + 60
-        );
-        IERC20KPIToken.OracleData[]
-            memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
-        _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 1,
-            lowerBound: 10,
-            higherBound: 11,
-            weight: 1,
-            data: _manualRealityOracleInitializationData
-        });
-        bytes memory _oraclesInitializationData = abi.encode(
-            _oracleDatas,
-            true
-        );
-
-        firstErc20.mint(address(this), 110 ether);
-        address _predictedKpiTokenAddress = kpiTokensManager
-            .predictInstanceAddress(
-                address(this),
-                1,
-                "a",
-                _erc20KpiTokenInitializationData,
-                _oraclesInitializationData
-            );
-        firstErc20.approve(_predictedKpiTokenAddress, 110 ether);
-
-        vm.expectRevert(abi.encodeWithSignature("InvalidExpiration()"));
-        factory.createToken(
-            1,
-            "a",
-            block.timestamp - 1,
-            _erc20KpiTokenInitializationData,
-            _oraclesInitializationData
-        );
-    }
-
-    function testExpirationCurrentTimestamp() external {
-        IERC20KPIToken.Collateral[]
-            memory _collaterals = new IERC20KPIToken.Collateral[](1);
-        _collaterals[0] = IERC20KPIToken.Collateral({
-            token: address(firstErc20),
-            amount: 110 ether,
-            minimumPayout: 0
-        });
-        bytes memory _erc20KpiTokenInitializationData = abi.encode(
-            _collaterals,
-            "Test",
-            "TST",
-            100 ether
-        );
-
-        address _reality = address(42);
-        vm.mockCall(
-            _reality,
-            abi.encodeWithSignature(
-                "askQuestion(uint256,string,address,uint32,uint32,uint256)"
-            ),
-            abi.encode(bytes32("question id"))
-        );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
-            _reality,
-            address(this),
-            1,
-            "b",
-            60,
-            block.timestamp + 60
-        );
-        IERC20KPIToken.OracleData[]
-            memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
-        _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 1,
-            lowerBound: 10,
-            higherBound: 11,
-            weight: 1,
-            data: _manualRealityOracleInitializationData
-        });
-        bytes memory _oraclesInitializationData = abi.encode(
-            _oracleDatas,
-            true
-        );
-
-        firstErc20.mint(address(this), 110 ether);
-        address _predictedKpiTokenAddress = kpiTokensManager
-            .predictInstanceAddress(
-                address(this),
-                1,
-                "a",
-                _erc20KpiTokenInitializationData,
-                _oraclesInitializationData
-            );
-        firstErc20.approve(_predictedKpiTokenAddress, 110 ether);
-
-        vm.expectRevert(abi.encodeWithSignature("InvalidExpiration()"));
-        factory.createToken(
-            1,
-            "a",
-            block.timestamp,
-            _erc20KpiTokenInitializationData,
-            _oraclesInitializationData
-        );
     }
 
     function testInitializationSuccess() external {

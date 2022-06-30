@@ -34,8 +34,6 @@ contract ERC20KPIToken is
         0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff;
     uint256 internal constant MULTIPLIER = 64;
 
-    bool internal oraclesInitialized;
-    bool internal protocolFeeCollected;
     bool internal andRelationship;
     uint16 internal toBeFinalized;
     address public creator;
@@ -51,12 +49,13 @@ contract ERC20KPIToken is
     mapping(address => uint256) internal finalCollateralAmount;
 
     error Forbidden();
+    error NotInitialized();
     error InvalidCollateral();
+    error InvalidFeeReceiver();
+    error InvalidOraclesManager();
     error InvalidOracleBounds();
     error InvalidOracleWeights();
     error InvalidExpiration();
-    error AlreadyInitialized();
-    error NotInitialized();
     error InvalidDescription();
     error TooManyCollaterals();
     error TooManyOracles();
@@ -70,15 +69,18 @@ contract ERC20KPIToken is
     error DuplicatedCollateral();
     error NoRedemptionPossible();
     error Expired();
+    error NoOracles();
+    error NoCollaterals();
 
     event Initialize(
         address indexed creator,
         string description,
         uint256 expiration,
-        bytes data
+        bytes kpiTokenData,
+        bytes oraclesData
     );
     event InitializeOracles(FinalizableOracle[] finalizableOracles);
-    event CollectProtocolFee(TokenAmount[] collected, address _receiver);
+    event CollectProtocolFees(TokenAmount[] collected, address _receiver);
     event Finalize(address indexed oracle, uint256 result);
     event RecoverERC20(
         address token,
@@ -103,9 +105,14 @@ contract ERC20KPIToken is
     /// @param _creator Since the factory is assumed to be the caller of this function,
     /// it must forward the original caller (msg.sender, the KPI token creator) here.
     /// @param _kpiTokensManager The factory-forwarded address of the KPI tokens manager.
+    /// @param _oraclesManager The factory-forwarded address of the oracles manager.
+    /// @param _feeReceiver The factory-forwarded address of the fee receiver.
     /// @param _kpiTokenTemplateId The id of the template.
     /// @param _description An IPFS cid pointing to a structured JSON describing what the
-    /// @param _data An ABI-encoded structure forwarded by the factory from the KPI token
+    /// @param _expiration A timestamp determining the expiration date of the KPI token (the
+    /// expiration date is used to avoid a malicious/unresponsive oracle from locking up the
+    /// funds and should be set accordingly).
+    /// @param _kpiTokenData An ABI-encoded structure forwarded by the factory from the KPI token
     /// creator, containing the initialization parameters for the ERC20 KPI token template.
     /// In particular the structure is formed in the following way:
     /// - `Collateral[] memory _collaterals`: an array of `Collateral` structs conveying
@@ -114,75 +121,7 @@ contract ERC20KPIToken is
     /// - `string memory _erc20Name`: The `name` of the created ERC20 token.
     /// - `string memory _erc20Symbol`: The `symbol` of the created ERC20 token.
     /// - `string memory _erc20Supply`: The initial supply of the created ERC20 token.
-    function initialize(
-        address _creator,
-        address _kpiTokensManager,
-        uint256 _kpiTokenTemplateId,
-        string calldata _description,
-        uint256 _expiration,
-        bytes calldata _data
-    ) external override initializer {
-        if (_creator == address(0)) revert InvalidCreator();
-        if (_kpiTokensManager == address(0)) revert InvalidKpiTokensManager();
-        if (bytes(_description).length == 0) revert InvalidDescription();
-        if (_expiration <= block.timestamp) revert InvalidExpiration();
-
-        (
-            Collateral[] memory _collaterals,
-            string memory _erc20Name,
-            string memory _erc20Symbol,
-            uint256 _erc20Supply
-        ) = abi.decode(_data, (Collateral[], string, string, uint256));
-
-        if (_collaterals.length > 5) revert TooManyCollaterals();
-        if (bytes(_erc20Name).length == 0) revert InvalidName();
-        if (bytes(_erc20Symbol).length == 0) revert InvalidSymbol();
-        if (_erc20Supply == 0) revert InvalidTotalSupply();
-
-        takeCollaterals(_creator, _collaterals);
-
-        __ReentrancyGuard_init();
-        __ERC20_init(_erc20Name, _erc20Symbol);
-        _mint(_creator, _erc20Supply);
-
-        initialSupply = _erc20Supply;
-        creator = _creator;
-        description = _description;
-        expiration = _expiration;
-        kpiTokensManager = _kpiTokensManager;
-        kpiTokenTemplateId = _kpiTokenTemplateId;
-
-        emit Initialize(_creator, _description, _expiration, _data);
-    }
-
-    function takeCollaterals(address _creator, Collateral[] memory _collaterals)
-        internal
-    {
-        for (uint8 _i = 0; _i < _collaterals.length; _i++) {
-            Collateral memory _collateral = _collaterals[_i];
-            if (
-                _collateral.token == address(0) ||
-                _collateral.amount == 0 ||
-                _collateral.minimumPayout >= _collateral.amount
-            ) revert InvalidCollateral();
-            for (uint8 _j = _i + 1; _j < _collaterals.length; _j++)
-                if (_collateral.token == _collaterals[_j].token)
-                    revert DuplicatedCollateral();
-            IERC20Upgradeable(_collateral.token).safeTransferFrom(
-                _creator,
-                address(this),
-                _collateral.amount
-            );
-            collaterals.push(_collateral);
-        }
-    }
-
-    /// @dev Initializes the oracles tied to this KPI token (both the actual oracle
-    /// instantiation and configuration data needed to interpret the relayed result
-    /// at the KPI-token level). This function is generally invoked by the factory,
-    /// in turn invoked by a KPI token creator.
-    /// @param _oraclesManager The factory-forwarded address of the oracles manager.
-    /// @param _data An ABI-encoded structure forwarded by the factory from the KPI token
+    /// @param _oraclesData An ABI-encoded structure forwarded by the factory from the KPI token
     /// creator, containing the initialization parameters for the chosen oracle templates.
     /// In particular the structure is formed in the following way:
     /// - `OracleData[] memory _oracleDatas`: data about the oracle, such as:
@@ -207,19 +146,167 @@ contract ERC20KPIToken is
     /// - `bool _andRelationship`: Whether all KPIs should be at least partly reached in
     ///   order to unlock collaterals for KPI token holders to redeem (minus the minimum
     ///   payout amount, which is unlocked under any circumstance).
-    function initializeOracles(address _oraclesManager, bytes calldata _data)
-        external
-    {
-        address _creator = creator;
-        if (_creator == address(0)) revert NotInitialized();
-        if (_oraclesManager == address(0)) revert ZeroAddressOraclesManager();
-        if (oraclesInitialized) revert AlreadyInitialized();
+    function initialize(
+        address _creator,
+        address _kpiTokensManager,
+        address _oraclesManager,
+        address _feeReceiver,
+        uint256 _kpiTokenTemplateId,
+        string memory _description,
+        uint256 _expiration,
+        bytes memory _kpiTokenData,
+        bytes memory _oraclesData
+    ) external override initializer {
+        initializeState(
+            _creator,
+            _kpiTokensManager,
+            _kpiTokenTemplateId,
+            _description,
+            _expiration,
+            _kpiTokenData
+        );
+
+        (Collateral[] memory _collaterals, , , ) = abi.decode(
+            _kpiTokenData,
+            (Collateral[], string, string, uint256)
+        );
+
+        collectCollateralsAndFees(_creator, _collaterals, _feeReceiver);
+        initializeOracles(_creator, _oraclesManager, _oraclesData);
+
+        emit Initialize(
+            _creator,
+            _description,
+            _expiration,
+            _kpiTokenData,
+            _oraclesData
+        );
+    }
+
+    /// @dev Utility function used to perform checks and partially initialize the state
+    /// of the KPI token. This is only invoked by the more generic `initialize` function.
+    /// @param _creator Since the factory is assumed to be the caller of this function,
+    /// it must forward the original caller (msg.sender, the KPI token creator) here.
+    /// @param _kpiTokensManager The factory-forwarded address of the KPI tokens manager.
+    /// @param _kpiTokenTemplateId The id of the template.
+    /// @param _description An IPFS cid pointing to a structured JSON describing what the
+    /// @param _expiration A timestamp determining the expiration date of the KPI token (the
+    /// @param _data ABI-encoded data used to configura the KPI token (see the doc of the
+    /// `initialize` function for more on this).
+    function initializeState(
+        address _creator,
+        address _kpiTokensManager,
+        uint256 _kpiTokenTemplateId,
+        string memory _description,
+        uint256 _expiration,
+        bytes memory _data
+    ) internal onlyInitializing {
+        if (_creator == address(0)) revert InvalidCreator();
+        if (_kpiTokensManager == address(0)) revert InvalidKpiTokensManager();
+        if (bytes(_description).length == 0) revert InvalidDescription();
+        if (_expiration <= block.timestamp) revert InvalidExpiration();
+
+        (
+            ,
+            string memory _erc20Name,
+            string memory _erc20Symbol,
+            uint256 _erc20Supply
+        ) = abi.decode(_data, (Collateral[], string, string, uint256));
+
+        if (bytes(_erc20Name).length == 0) revert InvalidName();
+        if (bytes(_erc20Symbol).length == 0) revert InvalidSymbol();
+        if (_erc20Supply == 0) revert InvalidTotalSupply();
+
+        __ReentrancyGuard_init();
+        __ERC20_init(_erc20Name, _erc20Symbol);
+        _mint(_creator, _erc20Supply);
+
+        initialSupply = _erc20Supply;
+        creator = _creator;
+        description = _description;
+        expiration = _expiration;
+        kpiTokensManager = _kpiTokensManager;
+        kpiTokenTemplateId = _kpiTokenTemplateId;
+    }
+
+    /// @dev Utility function used to collect collateral and fees from the KPI token
+    /// creator. This is only invoked by the more generic `initialize` function.
+    /// @param _creator The KPI token creator.
+    /// @param _collaterals The collaterals array as taken from the ABI-encoded data
+    /// passed in by the KPI token creator.
+    /// @param _feeReceiver The factory-forwarded address of the fee receiver.
+    function collectCollateralsAndFees(
+        address _creator,
+        Collateral[] memory _collaterals,
+        address _feeReceiver
+    ) internal onlyInitializing {
+        if (_collaterals.length == 0) revert NoCollaterals();
+        if (_collaterals.length > 5) revert TooManyCollaterals();
+        if (_feeReceiver == address(0)) revert InvalidFeeReceiver();
+
+        TokenAmount[] memory _collectedFees = new TokenAmount[](
+            _collaterals.length
+        );
+        for (uint8 _i = 0; _i < _collaterals.length; _i++) {
+            Collateral memory _collateral = _collaterals[_i];
+            if (
+                _collateral.token == address(0) ||
+                _collateral.amount == 0 ||
+                _collateral.minimumPayout >= _collateral.amount
+            ) revert InvalidCollateral();
+            for (uint8 _j = _i + 1; _j < _collaterals.length; _j++)
+                if (_collateral.token == _collaterals[_j].token)
+                    revert DuplicatedCollateral();
+            IERC20Upgradeable(_collateral.token).safeTransferFrom(
+                _creator,
+                address(this),
+                _collateral.amount
+            );
+            uint256 _fee = calculateProtocolFee(_collateral.amount);
+            IERC20Upgradeable(_collateral.token).safeTransfer(
+                _feeReceiver,
+                _fee
+            );
+            uint256 _amountMinusFees;
+            unchecked {
+                _amountMinusFees = _collateral.amount - _fee;
+            }
+            if (_amountMinusFees <= _collateral.minimumPayout)
+                revert InvalidMinimumPayoutAfterFee();
+            unchecked {
+                _collateral.amount = _amountMinusFees;
+            }
+            _collectedFees[_i] = TokenAmount({
+                token: _collateral.token,
+                amount: _fee
+            });
+            collaterals.push(_collateral);
+        }
+
+        emit CollectProtocolFees(_collectedFees, _feeReceiver);
+    }
+
+    /// @dev Initializes the oracles tied to this KPI token (both the actual oracle
+    /// instantiation and configuration data needed to interpret the relayed result
+    /// at the KPI-token level). This function is only invoked by the `initialize` function.
+    /// @param _creator The KPI token creator.
+    /// @param _oraclesManager The address of the oracles manager, used to instantiate
+    /// the oracles.
+    /// @param _data ABI-encoded data used to create and configura the oracles (see
+    /// the doc of the `initialize` function for more on this).
+    function initializeOracles(
+        address _creator,
+        address _oraclesManager,
+        bytes memory _data
+    ) internal onlyInitializing {
+        if (_oraclesManager == address(0)) revert InvalidOraclesManager();
 
         (OracleData[] memory _oracleDatas, bool _andRelationship) = abi.decode(
             _data,
             (OracleData[], bool)
         );
 
+        if (_oracleDatas.length == 0) revert NoOracles();
         if (_oracleDatas.length > 5) revert TooManyOracles();
 
         FinalizableOracle[]
@@ -251,44 +338,6 @@ contract ERC20KPIToken is
 
         toBeFinalized = uint16(_oracleDatas.length);
         andRelationship = _andRelationship;
-        oraclesInitialized = true;
-
-        emit InitializeOracles(_finalizableOracles);
-    }
-
-    /// @dev Collects the protocol fee from the collaterals backing the KPI token.
-    /// In the specific case, the fee is taken as a percentage of the ERC20
-    /// collaterals backing the KPI token.
-    /// @param _feeReceiver The address to which the collected fees must be sent.
-    function collectProtocolFees(address _feeReceiver) external nonReentrant {
-        if (!oraclesInitialized) revert NotInitialized();
-        if (protocolFeeCollected) revert AlreadyInitialized();
-
-        TokenAmount[] memory _collected = new TokenAmount[](collaterals.length);
-        for (uint256 _i = 0; _i < collaterals.length; _i++) {
-            Collateral storage _collateral = collaterals[_i];
-            uint256 _fee = calculateProtocolFee(_collateral.amount);
-            IERC20Upgradeable(_collateral.token).safeTransfer(
-                _feeReceiver,
-                _fee
-            );
-            uint256 _amountMinusFees;
-            unchecked {
-                _amountMinusFees = _collateral.amount - _fee;
-            }
-            if (_amountMinusFees <= _collateral.minimumPayout)
-                revert InvalidMinimumPayoutAfterFee();
-            unchecked {
-                _collateral.amount = _amountMinusFees;
-            }
-            _collected[_i] = TokenAmount({
-                token: _collateral.token,
-                amount: _fee
-            });
-        }
-
-        protocolFeeCollected = true;
-        emit CollectProtocolFee(_collected, _feeReceiver);
     }
 
     /// @dev Given an input address, returns a storage pointer to the
@@ -344,7 +393,7 @@ contract ERC20KPIToken is
     /// finalize, the remaining collateral, if any, becomes redeemable by KPI token holders.
     /// @param _result The oracle end result.
     function finalize(uint256 _result) external override nonReentrant {
-        if (!oraclesInitialized) revert NotInitialized();
+        if (!_isInitialized()) revert NotInitialized();
 
         FinalizableOracle storage _oracle = finalizableOracle(msg.sender);
         if (_isExpired()) {
@@ -579,6 +628,7 @@ contract ERC20KPIToken is
     {
         TokenAmount[] memory _collaterals = abi.decode(_data, (TokenAmount[]));
 
+        if (_collaterals.length == 0) revert NoCollaterals();
         if (_collaterals.length > 5) revert TooManyCollaterals();
 
         TokenAmount[] memory _fees = new TokenAmount[](_collaterals.length);
@@ -624,10 +674,16 @@ contract ERC20KPIToken is
         return _isExpired();
     }
 
+    /// @dev View function to check if the KPI token is initialized.
+    /// @return A bool describing whether the token is initialized or not.
+    function _isInitialized() internal view returns (bool) {
+        return creator != address(0);
+    }
+
     /// @dev View function to query all the oracles associated with the KPI token at once.
     /// @return The oracles array.
     function oracles() external view override returns (address[] memory) {
-        if (!oraclesInitialized) revert NotInitialized();
+        if (!_isInitialized()) revert NotInitialized();
         address[] memory _oracleAddresses = new address[](
             finalizableOracles.length
         );

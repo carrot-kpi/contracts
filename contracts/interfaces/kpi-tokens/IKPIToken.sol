@@ -10,16 +10,14 @@ interface IKPIToken {
     function initialize(
         address _creator,
         address _kpiTokensManager,
+        address _oraclesManager,
+        address _feeReceiver,
         uint256 _kpiTokenTemplateId,
         string memory _description,
         uint256 _expiration,
-        bytes memory _data
+        bytes memory _kpiTokenData,
+        bytes memory _oraclesData
     ) external;
-
-    function initializeOracles(address _oraclesManager, bytes memory _data)
-        external;
-
-    function collectProtocolFees(address _feeReceiver) external;
 
     function finalize(uint256 _result) external;
 

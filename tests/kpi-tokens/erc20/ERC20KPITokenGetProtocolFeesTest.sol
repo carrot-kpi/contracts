@@ -26,9 +26,19 @@ contract ERC20KPITokenGetProtocolFeesTest is BaseTestSetup {
                 minimumPayout: i - 1
             });
 
-        vm.expectRevert(
-            abi.encodeWithSignature("TooManyCollaterals()")
+        vm.expectRevert(abi.encodeWithSignature("TooManyCollaterals()"));
+        kpiTokenInstance.protocolFee(abi.encode(collaterals));
+    }
+
+    function testNoCollaterals() external {
+        ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
+            Clones.clone(address(erc20KpiTokenTemplate))
         );
+
+        IERC20KPIToken.Collateral[]
+            memory collaterals = new IERC20KPIToken.Collateral[](0);
+
+        vm.expectRevert(abi.encodeWithSignature("NoCollaterals()"));
         kpiTokenInstance.protocolFee(abi.encode(collaterals));
     }
 
@@ -40,9 +50,7 @@ contract ERC20KPITokenGetProtocolFeesTest is BaseTestSetup {
         TokenAmount[] memory collaterals = new TokenAmount[](1);
         collaterals[0] = TokenAmount({token: address(firstErc20), amount: 0});
 
-        vm.expectRevert(
-            abi.encodeWithSignature("InvalidCollateral()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("InvalidCollateral()"));
         kpiTokenInstance.protocolFee(abi.encode(collaterals));
     }
 
@@ -54,9 +62,7 @@ contract ERC20KPITokenGetProtocolFeesTest is BaseTestSetup {
         TokenAmount[] memory collaterals = new TokenAmount[](1);
         collaterals[0] = TokenAmount({token: address(0), amount: 1});
 
-        vm.expectRevert(
-            abi.encodeWithSignature("InvalidCollateral()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("InvalidCollateral()"));
         kpiTokenInstance.protocolFee(abi.encode(collaterals));
     }
 
@@ -75,9 +81,7 @@ contract ERC20KPITokenGetProtocolFeesTest is BaseTestSetup {
             amount: 10 ether
         });
 
-        vm.expectRevert(
-            abi.encodeWithSignature("DuplicatedCollateral()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("DuplicatedCollateral()"));
         kpiTokenInstance.protocolFee(abi.encode(collaterals));
     }
 
