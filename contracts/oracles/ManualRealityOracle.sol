@@ -83,7 +83,8 @@ contract ManualRealityOracle is IOracle, Initializable {
         if (_arbitrator == address(0)) revert ZeroAddressArbitrator();
         if (bytes(_question).length == 0) revert InvalidQuestion();
         if (_questionTimeout == 0) revert InvalidQuestionTimeout();
-        if (_openingTimestamp <= block.timestamp) revert InvalidOpeningTimestamp();
+        if (_openingTimestamp <= block.timestamp)
+            revert InvalidOpeningTimestamp();
 
         oraclesManager = msg.sender;
         templateId = _templateId;
