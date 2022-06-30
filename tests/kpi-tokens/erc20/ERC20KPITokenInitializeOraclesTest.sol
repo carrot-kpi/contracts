@@ -47,7 +47,7 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
             address(kpiTokensManager),
             oraclesManager,
             feeReceiver,
-            10,
+            1,
             "a",
             block.timestamp + 60,
             abi.encode(collaterals, "Token", "TKN", 100 ether),

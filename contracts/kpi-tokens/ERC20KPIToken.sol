@@ -42,7 +42,7 @@ contract ERC20KPIToken is
     FinalizableOracle[] internal finalizableOracles;
     string public description;
     uint256 public expiration;
-    uint256 internal kpiTokenTemplateId;
+    IKPITokensManager.Template internal kpiTokenTemplate;
     uint256 internal initialSupply;
     uint256 internal totalWeight;
     mapping(address => uint256) internal registeredBurn;
@@ -74,6 +74,10 @@ contract ERC20KPIToken is
 
     event Initialize(
         address indexed creator,
+        address kpiTokensManager,
+        address oraclesManager,
+        address feeReceiver,
+        uint256 indexed templateId,
         string description,
         uint256 expiration,
         bytes kpiTokenData,
@@ -83,9 +87,9 @@ contract ERC20KPIToken is
     event CollectProtocolFees(TokenAmount[] collected, address _receiver);
     event Finalize(address indexed oracle, uint256 result);
     event RecoverERC20(
-        address token,
+        address indexed token,
         uint256 amount,
-        address indexed _receiver
+        address indexed receiver
     );
     event Redeem(
         address indexed account,
@@ -93,7 +97,7 @@ contract ERC20KPIToken is
         RedeemedCollateral[] redeemed
     );
     event RegisterRedemption(address indexed account, uint256 burned);
-    event RedeemToken(
+    event RedeemCollateral(
         address indexed account,
         address collateral,
         uint256 amount
@@ -176,6 +180,10 @@ contract ERC20KPIToken is
 
         emit Initialize(
             _creator,
+            _kpiTokensManager,
+            _oraclesManager,
+            _feeReceiver,
+            _kpiTokenTemplateId,
             _description,
             _expiration,
             _kpiTokenData,
@@ -226,7 +234,9 @@ contract ERC20KPIToken is
         description = _description;
         expiration = _expiration;
         kpiTokensManager = _kpiTokensManager;
-        kpiTokenTemplateId = _kpiTokenTemplateId;
+        kpiTokenTemplate = IKPITokensManager(_kpiTokensManager).template(
+            _kpiTokenTemplateId
+        );
     }
 
     /// @dev Utility function used to collect collateral and fees from the KPI token
@@ -338,6 +348,8 @@ contract ERC20KPIToken is
 
         toBeFinalized = uint16(_oracleDatas.length);
         andRelationship = _andRelationship;
+
+        emit InitializeOracles(_finalizableOracles);
     }
 
     /// @dev Given an input address, returns a storage pointer to the
@@ -609,7 +621,7 @@ contract ERC20KPIToken is
                     _redeemableAmount
                 );
                 delete registeredBurn[msg.sender];
-                emit RedeemToken(msg.sender, _token, _redeemableAmount);
+                emit RedeemCollateral(msg.sender, _token, _redeemableAmount);
                 return;
             }
         }
@@ -716,6 +728,6 @@ contract ERC20KPIToken is
         override
         returns (IKPITokensManager.Template memory)
     {
-        return IKPITokensManager(kpiTokensManager).template(kpiTokenTemplateId);
+        return kpiTokenTemplate;
     }
 }
