@@ -28,18 +28,12 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         ManualRealityOracle oracleInstance = ManualRealityOracle(
             Clones.clone(address(manualRealityOracleTemplate))
         );
-        uint256 _templateId = 123;
-        vm.mockCall(
-            address(oraclesManager),
-            abi.encodeWithSignature("exists(uint256)", _templateId),
-            abi.encode(false)
-        );
         vm.prank(address(oraclesManager));
         vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
         oracleInstance.initialize(
             address(1),
-            _templateId,
-            abi.encode(uint256(1))
+            10,
+            abi.encode(address(1), address(1), 0, "a", 60, block.timestamp + 60)
         );
     }
 
@@ -127,8 +121,12 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
             ),
             abi.encode(_questionId)
         );
+        vm.mockCall(
+            address(this),
+            abi.encodeWithSignature("template(uint256)"),
+            abi.encode(_template)
+        );
         uint256 _openingTs = block.timestamp + 60;
-        emit log_address(address(oraclesManager));
         vm.prank(address(oraclesManager));
         oracleInstance.initialize(
             address(1),
@@ -158,18 +156,16 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
             address _onChainReality,
             bytes32 _onChainQuestionId,
             address _onChainArbitrator,
-            uint256 _onChainRealityTemplateId,
             string memory _onChainQuestion,
             uint32 _onChainTimeout,
             uint32 _onChainOpeningTs
         ) = abi.decode(
                 _data,
-                (address, bytes32, address, uint256, string, uint32, uint32)
+                (address, bytes32, address, string, uint32, uint32)
             );
         assertEq(_onChainReality, _realityAddress);
         assertEq(_onChainQuestionId, _questionId);
         assertEq(_onChainArbitrator, address(1));
-        assertEq(_onChainRealityTemplateId, 0);
         assertEq(_onChainQuestion, "a");
         assertEq(_onChainTimeout, 60);
         assertEq(_onChainOpeningTs, _openingTs);

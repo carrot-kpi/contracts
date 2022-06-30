@@ -21,14 +21,12 @@ contract ManualRealityOracle is IOracle, Initializable {
     address public kpiToken;
     address internal oraclesManager;
     address internal reality;
-    uint256 internal realityTemplateId;
+    IOraclesManager.Template internal oracleTemplate;
     bytes32 internal questionId;
     string internal question;
-    uint256 internal templateId;
 
     error Forbidden();
     error ZeroAddressKpiToken();
-    error NonExistentTemplate();
     error ZeroAddressReality();
     error ZeroAddressArbitrator();
     error InvalidQuestion();
@@ -64,8 +62,6 @@ contract ManualRealityOracle is IOracle, Initializable {
         bytes calldata _data
     ) external override initializer {
         if (_kpiToken == address(0)) revert ZeroAddressKpiToken();
-        if (!IOraclesManager(msg.sender).exists(_templateId))
-            revert NonExistentTemplate();
 
         (
             address _reality,
@@ -87,10 +83,9 @@ contract ManualRealityOracle is IOracle, Initializable {
             revert InvalidOpeningTimestamp();
 
         oraclesManager = msg.sender;
-        templateId = _templateId;
         kpiToken = _kpiToken;
         reality = _reality;
-        realityTemplateId = _realityTemplateId;
+        oracleTemplate = IOraclesManager(msg.sender).template(_templateId);
         question = _question;
         questionId = IReality(_reality).askQuestion(
             _realityTemplateId,
@@ -109,7 +104,7 @@ contract ManualRealityOracle is IOracle, Initializable {
     function finalize() external {
         bytes32 _questionId = questionId; // gas optimization
         address _reality = reality; // gas optimization
-        if (finalized || IKPIToken(kpiToken).finalized()) revert Forbidden();
+        if (finalized) revert Forbidden();
         uint256 _result = uint256(IReality(_reality).resultFor(_questionId));
         IKPIToken(kpiToken).finalize(_result);
         finalized = true;
@@ -129,7 +124,6 @@ contract ManualRealityOracle is IOracle, Initializable {
                 _reality,
                 _questionId,
                 IReality(_reality).getArbitrator(_questionId),
-                realityTemplateId,
                 question,
                 IReality(_reality).getTimeout(_questionId),
                 IReality(_reality).getOpeningTS(_questionId)
@@ -144,6 +138,6 @@ contract ManualRealityOracle is IOracle, Initializable {
         override
         returns (IOraclesManager.Template memory)
     {
-        return IOraclesManager(oraclesManager).template(templateId);
+        return oracleTemplate;
     }
 }
