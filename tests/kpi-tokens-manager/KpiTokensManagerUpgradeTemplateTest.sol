@@ -21,6 +21,11 @@ contract KpiTokensManagerUpgradeTemplateTest is BaseTestSetup {
         kpiTokensManager.upgradeTemplate(2, address(1), uint8(0), "a");
     }
 
+    function testZeroAddressNewTemplate() external {
+        vm.expectRevert(abi.encodeWithSignature("ZeroAddressTemplate()"));
+        kpiTokensManager.upgradeTemplate(1, address(0), uint8(0), "");
+    }
+
     function testEmptySpecification() external {
         vm.expectRevert(abi.encodeWithSignature("InvalidSpecification()"));
         kpiTokensManager.upgradeTemplate(1, address(1), uint8(0), "");

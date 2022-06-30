@@ -186,6 +186,7 @@ contract OraclesManager is Ownable, IOraclesManager {
         uint8 _versionBump,
         string calldata _newSpecification
     ) external override onlyOwner {
+        if (_newTemplate == address(0)) revert ZeroAddressTemplate();
         if (bytes(_newSpecification).length == 0) revert InvalidSpecification();
         Template storage _templateFromStorage = storageTemplate(_id);
         if (
