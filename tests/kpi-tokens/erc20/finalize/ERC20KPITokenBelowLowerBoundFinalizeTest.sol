@@ -564,6 +564,155 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
 
         assertEq(onChainFinalizableOracles.length, 2);
         assertTrue(onChainFinalizableOracles[0].finalized);
+        assertTrue(!onChainFinalizableOracles[1].finalized);
+
+        assertTrue(kpiTokenInstance.finalized());
+        assertEq(firstErc20.balanceOf(address(this)), 0);
+    }
+
+    function testBelowLowerBoundAndRelationshipMultipleOraclesBothOraclesFinalization()
+        external
+    {
+        IERC20KPIToken.Collateral[]
+            memory _collaterals = new IERC20KPIToken.Collateral[](1);
+        _collaterals[0] = IERC20KPIToken.Collateral({
+            token: address(firstErc20),
+            amount: 2,
+            minimumPayout: 0
+        });
+        bytes memory _erc20KpiTokenInitializationData = abi.encode(
+            _collaterals,
+            "Test",
+            "TST",
+            100 ether
+        );
+
+        address _reality = address(42);
+        vm.mockCall(
+            _reality,
+            abi.encodeWithSignature(
+                "askQuestion(uint256,string,address,uint32,uint32,uint256)"
+            ),
+            abi.encode(bytes32("question id"))
+        );
+        bytes memory _firstManualRealityOracleInitializationData = abi.encode(
+            _reality,
+            address(this),
+            1,
+            "a",
+            60,
+            block.timestamp + 60
+        );
+        bytes memory _secondManualRealityOracleInitializationData = abi.encode(
+            _reality,
+            address(this),
+            1,
+            "b",
+            60,
+            block.timestamp + 60
+        );
+        IERC20KPIToken.OracleData[]
+            memory _oracleDatas = new IERC20KPIToken.OracleData[](2);
+        _oracleDatas[0] = IERC20KPIToken.OracleData({
+            templateId: 1,
+            lowerBound: 10,
+            higherBound: 11,
+            weight: 1,
+            data: _firstManualRealityOracleInitializationData
+        });
+        _oracleDatas[1] = IERC20KPIToken.OracleData({
+            templateId: 1,
+            lowerBound: 20,
+            higherBound: 26,
+            weight: 1,
+            data: _secondManualRealityOracleInitializationData
+        });
+        bytes memory _oraclesInitializationData = abi.encode(
+            _oracleDatas,
+            true
+        );
+
+        firstErc20.mint(address(this), 2);
+        address _predictedKpiTokenAddress = kpiTokensManager
+            .predictInstanceAddress(
+                address(this),
+                1,
+                "a",
+                _erc20KpiTokenInitializationData,
+                _oraclesInitializationData
+            );
+        firstErc20.approve(_predictedKpiTokenAddress, 2);
+
+        factory.createToken(
+            1,
+            "a",
+            block.timestamp + 60,
+            _erc20KpiTokenInitializationData,
+            _oraclesInitializationData
+        );
+
+        ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
+            _predictedKpiTokenAddress
+        );
+
+        address oracle = kpiTokenInstance.oracles()[0];
+        vm.prank(oracle);
+        kpiTokenInstance.finalize(5);
+
+        (
+            IERC20KPIToken.Collateral[] memory onChainCollaterals,
+            IERC20KPIToken.FinalizableOracle[] memory onChainFinalizableOracles,
+            ,
+            ,
+            ,
+
+        ) = abi.decode(
+                kpiTokenInstance.data(),
+                (
+                    IERC20KPIToken.Collateral[],
+                    IERC20KPIToken.FinalizableOracle[],
+                    bool,
+                    uint256,
+                    string,
+                    string
+                )
+            );
+
+        assertEq(onChainCollaterals.length, 1);
+        assertEq(onChainCollaterals[0].token, _collaterals[0].token);
+        assertEq(onChainCollaterals[0].amount, 0);
+        assertEq(onChainCollaterals[0].minimumPayout, 0);
+
+        assertEq(onChainFinalizableOracles.length, 2);
+        assertTrue(onChainFinalizableOracles[0].finalized);
+        assertTrue(!onChainFinalizableOracles[1].finalized);
+
+        assertTrue(kpiTokenInstance.finalized());
+        assertEq(firstErc20.balanceOf(address(this)), 0);
+
+        // second oracle finalization
+        vm.prank(kpiTokenInstance.oracles()[1]);
+        kpiTokenInstance.finalize(5);
+
+        (onChainCollaterals, onChainFinalizableOracles, , , , ) = abi.decode(
+            kpiTokenInstance.data(),
+            (
+                IERC20KPIToken.Collateral[],
+                IERC20KPIToken.FinalizableOracle[],
+                bool,
+                uint256,
+                string,
+                string
+            )
+        );
+
+        assertEq(onChainCollaterals.length, 1);
+        assertEq(onChainCollaterals[0].token, _collaterals[0].token);
+        assertEq(onChainCollaterals[0].amount, 0);
+        assertEq(onChainCollaterals[0].minimumPayout, 0);
+
+        assertEq(onChainFinalizableOracles.length, 2);
+        assertTrue(onChainFinalizableOracles[0].finalized);
         assertTrue(onChainFinalizableOracles[1].finalized);
 
         assertTrue(kpiTokenInstance.finalized());
@@ -689,7 +838,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
 
         assertEq(onChainFinalizableOracles.length, 2);
         assertTrue(onChainFinalizableOracles[0].finalized);
-        assertTrue(onChainFinalizableOracles[1].finalized);
+        assertTrue(!onChainFinalizableOracles[1].finalized);
 
         assertTrue(kpiTokenInstance.finalized());
         assertEq(firstErc20.balanceOf(address(this)), 0);
@@ -1304,7 +1453,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
 
         assertEq(onChainFinalizableOracles.length, 2);
         assertTrue(onChainFinalizableOracles[0].finalized);
-        assertTrue(onChainFinalizableOracles[1].finalized);
+        assertTrue(!onChainFinalizableOracles[1].finalized);
 
         assertTrue(kpiTokenInstance.finalized());
         assertEq(firstErc20.balanceOf(address(this)), 0);
@@ -1440,7 +1589,7 @@ contract ERC20KPITokenBelowLowerBoundFinalizeTest is BaseTestSetup {
 
         assertEq(onChainFinalizableOracles.length, 2);
         assertTrue(onChainFinalizableOracles[0].finalized);
-        assertTrue(onChainFinalizableOracles[1].finalized);
+        assertTrue(!onChainFinalizableOracles[1].finalized);
 
         assertTrue(kpiTokenInstance.finalized());
         assertEq(firstErc20.balanceOf(address(this)), 0);

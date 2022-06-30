@@ -152,10 +152,30 @@ contract ERC20KPITokenBaseFinalizeTest is BaseTestSetup {
 
         assertEq(onChainFinalizableOracles.length, 2);
         assertTrue(onChainFinalizableOracles[0].finalized);
-        assertTrue(onChainFinalizableOracles[1].finalized);
+        assertTrue(!onChainFinalizableOracles[1].finalized);
 
         vm.prank(kpiTokenInstance.oracles()[1]);
-        vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
         kpiTokenInstance.finalize(0);
+
+        (onChainCollaterals, onChainFinalizableOracles, , , , ) = abi.decode(
+            kpiTokenInstance.data(),
+            (
+                IERC20KPIToken.Collateral[],
+                IERC20KPIToken.FinalizableOracle[],
+                bool,
+                uint256,
+                string,
+                string
+            )
+        );
+
+        assertEq(onChainCollaterals.length, 1);
+        assertEq(onChainCollaterals[0].token, _collaterals[0].token);
+        assertEq(onChainCollaterals[0].amount, 0);
+        assertEq(onChainCollaterals[0].minimumPayout, 0);
+
+        assertEq(onChainFinalizableOracles.length, 2);
+        assertTrue(onChainFinalizableOracles[0].finalized);
+        assertTrue(onChainFinalizableOracles[1].finalized);
     }
 }

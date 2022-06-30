@@ -46,7 +46,7 @@ contract ERC20KPIToken is
     uint256 internal initialSupply;
     uint256 internal totalWeight;
     mapping(address => uint256) internal registeredBurn;
-    mapping(address => uint256) internal finalCollateralAmount;
+    mapping(address => uint256) internal postFinalizationCollateralAmount;
 
     error Forbidden();
     error NotInitialized();
@@ -408,21 +408,19 @@ contract ERC20KPIToken is
         if (!_isInitialized()) revert NotInitialized();
 
         FinalizableOracle storage _oracle = finalizableOracle(msg.sender);
-        if (_isExpired()) {
+        if (_isFinalized() || _isExpired()) {
             _oracle.finalized = true;
+            emit Finalize(msg.sender, _result);
             return;
         }
 
         if (_result <= _oracle.lowerBound || _result == INVALID_ANSWER) {
-            // if oracles are in an 'and' relationship and at least one gives a
-            // negative result, give back all the collateral minus the minimum payout
-            // to the creator, otherwise calculate the exact amount to give back.
             bool _andRelationship = andRelationship;
             handleLowOrInvalidResult(_oracle, _andRelationship);
             if (_andRelationship) {
-                for (uint256 _i = 0; _i < finalizableOracles.length; _i++)
-                    finalizableOracles[_i].finalized = true;
                 toBeFinalized = 0;
+                _oracle.finalized = true;
+                registerPostFinalizationCollateralAmounts();
                 emit Finalize(msg.sender, _result);
                 return;
             }
@@ -435,14 +433,17 @@ contract ERC20KPIToken is
             --toBeFinalized;
         }
 
-        if (_isFinalized()) {
-            for (uint8 _i = 0; _i < collaterals.length; _i++) {
-                Collateral memory _collateral = collaterals[_i];
-                finalCollateralAmount[_collateral.token] = _collateral.amount;
-            }
-        }
+        if (_isFinalized()) registerPostFinalizationCollateralAmounts();
 
         emit Finalize(msg.sender, _result);
+    }
+
+    function registerPostFinalizationCollateralAmounts() internal {
+        for (uint8 _i = 0; _i < collaterals.length; _i++) {
+            Collateral memory _collateral = collaterals[_i];
+            postFinalizationCollateralAmount[_collateral.token] = _collateral
+                .amount;
+        }
     }
 
     function handleLowOrInvalidResult(
@@ -564,7 +565,7 @@ contract ERC20KPIToken is
             if (!_expired) {
                 unchecked {
                     _redeemableAmount =
-                        (finalCollateralAmount[_collateral.token] *
+                        (postFinalizationCollateralAmount[_collateral.token] *
                             _kpiTokenBalance) /
                         _initialSupply;
                     _collateral.amount -= _redeemableAmount;
@@ -611,7 +612,8 @@ contract ERC20KPIToken is
                 uint256 _redeemableAmount;
                 unchecked {
                     _redeemableAmount =
-                        (finalCollateralAmount[_collateral.token] * _burned) /
+                        (postFinalizationCollateralAmount[_collateral.token] *
+                            _burned) /
                         initialSupply;
                     if (_redeemableAmount == 0) revert NoRedemptionPossible();
                     _collateral.amount -= _redeemableAmount;

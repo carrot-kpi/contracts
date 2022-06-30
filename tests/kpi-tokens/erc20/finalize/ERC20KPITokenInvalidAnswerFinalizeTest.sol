@@ -567,7 +567,7 @@ contract ERC20KPITokenInvalidAnswerFinalizeTest is BaseTestSetup {
 
         assertEq(onChainFinalizableOracles.length, 2);
         assertTrue(onChainFinalizableOracles[0].finalized);
-        assertTrue(onChainFinalizableOracles[1].finalized);
+        assertTrue(!onChainFinalizableOracles[1].finalized);
 
         assertTrue(kpiTokenInstance.finalized());
         assertEq(firstErc20.balanceOf(address(this)), 0);
@@ -692,7 +692,7 @@ contract ERC20KPITokenInvalidAnswerFinalizeTest is BaseTestSetup {
 
         assertEq(onChainFinalizableOracles.length, 2);
         assertTrue(onChainFinalizableOracles[0].finalized);
-        assertTrue(onChainFinalizableOracles[1].finalized);
+        assertTrue(!onChainFinalizableOracles[1].finalized);
 
         assertTrue(kpiTokenInstance.finalized());
         assertEq(firstErc20.balanceOf(address(this)), 0);
@@ -1307,7 +1307,7 @@ contract ERC20KPITokenInvalidAnswerFinalizeTest is BaseTestSetup {
 
         assertEq(onChainFinalizableOracles.length, 2);
         assertTrue(onChainFinalizableOracles[0].finalized);
-        assertTrue(onChainFinalizableOracles[1].finalized);
+        assertTrue(!onChainFinalizableOracles[1].finalized);
 
         assertTrue(kpiTokenInstance.finalized());
         assertEq(firstErc20.balanceOf(address(this)), 0);
@@ -1443,7 +1443,7 @@ contract ERC20KPITokenInvalidAnswerFinalizeTest is BaseTestSetup {
 
         assertEq(onChainFinalizableOracles.length, 2);
         assertTrue(onChainFinalizableOracles[0].finalized);
-        assertTrue(onChainFinalizableOracles[1].finalized);
+        assertTrue(!onChainFinalizableOracles[1].finalized);
 
         assertTrue(kpiTokenInstance.finalized());
         assertEq(firstErc20.balanceOf(address(this)), 0);
