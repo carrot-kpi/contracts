@@ -18,12 +18,6 @@ interface IKPITokensManager {
         string specification;
     }
 
-    struct EnumerableTemplateSet {
-        uint256 ids;
-        Template[] values;
-        mapping(uint256 => uint256) index;
-    }
-
     function predictInstanceAddress(
         address _creator,
         uint256 _id,

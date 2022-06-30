@@ -18,7 +18,9 @@ import {IKPITokensManager} from "./interfaces/IKPITokensManager.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract KPITokensManager is Ownable, IKPITokensManager {
     address public immutable factory;
-    EnumerableTemplateSet private templates;
+    uint256 internal templateId;
+    Template[] internal templates;
+    mapping(uint256 => uint256) internal templateIdToIndex;
 
     error ZeroAddressFactory();
     error Forbidden();
@@ -146,8 +148,8 @@ contract KPITokensManager is Ownable, IKPITokensManager {
     {
         if (_template == address(0)) revert ZeroAddressTemplate();
         if (bytes(_specification).length == 0) revert InvalidSpecification();
-        uint256 _id = ++templates.ids;
-        templates.values.push(
+        uint256 _id = ++templateId;
+        templates.push(
             Template({
                 id: _id,
                 addrezz: _template,
@@ -155,7 +157,7 @@ contract KPITokensManager is Ownable, IKPITokensManager {
                 specification: _specification
             })
         );
-        templates.index[_id] = templates.values.length;
+        templateIdToIndex[_id] = templates.length;
         emit AddTemplate(_id, _template, _specification);
     }
 
@@ -163,21 +165,19 @@ contract KPITokensManager is Ownable, IKPITokensManager {
     /// by the contract owner (governance).
     /// @param _id The id of the template that must be removed.
     function removeTemplate(uint256 _id) external override onlyOwner {
-        uint256 _index = templates.index[_id];
+        uint256 _index = templateIdToIndex[_id];
         if (_index == 0) revert NonExistentTemplate();
         unchecked {
             _index--;
         }
-        Template storage _lastTemplate = templates.values[
-            templates.values.length - 1
-        ];
+        Template storage _lastTemplate = templates[templates.length - 1];
         if (_lastTemplate.id != _id) {
-            templates.values[_index] = _lastTemplate;
-            templates.index[_lastTemplate.id] = _index;
+            templates[_index] = _lastTemplate;
+            templateIdToIndex[_lastTemplate.id] = _index;
         } else {
-            delete templates.index[_id];
+            delete templateIdToIndex[_id];
         }
-        templates.values.pop();
+        templates.pop();
         emit RemoveTemplate(_id);
     }
 
@@ -241,9 +241,9 @@ contract KPITokensManager is Ownable, IKPITokensManager {
         returns (Template storage)
     {
         if (_id == 0) revert NonExistentTemplate();
-        uint256 _index = templates.index[_id];
+        uint256 _index = templateIdToIndex[_id];
         if (_index == 0) revert NonExistentTemplate();
-        Template storage _template = templates.values[_index - 1];
+        Template storage _template = templates[_index - 1];
         return _template;
     }
 
@@ -264,15 +264,15 @@ contract KPITokensManager is Ownable, IKPITokensManager {
     /// @return True if the template exists, false otherwise.
     function exists(uint256 _id) external view override returns (bool) {
         if (_id == 0) return false;
-        uint256 _index = templates.index[_id];
+        uint256 _index = templateIdToIndex[_id];
         if (_index == 0) return false;
-        return templates.values[_index - 1].id == _id;
+        return templates[_index - 1].id == _id;
     }
 
     /// @dev Gets the amount of all registered templates.
     /// @return The templates amount.
     function templatesAmount() external view override returns (uint256) {
-        return templates.values.length;
+        return templates.length;
     }
 
     /// @dev Gets a templates slice based on indexes.
@@ -285,12 +285,12 @@ contract KPITokensManager is Ownable, IKPITokensManager {
         override
         returns (Template[] memory)
     {
-        if (_toIndex > templates.values.length || _fromIndex > _toIndex)
+        if (_toIndex > templates.length || _fromIndex > _toIndex)
             revert InvalidIndices();
         uint256 _range = _toIndex - _fromIndex;
         Template[] memory _templates = new Template[](_range);
         for (uint256 _i = 0; _i < _range; _i++)
-            _templates[_i] = templates.values[_fromIndex + _i];
+            _templates[_i] = templates[_fromIndex + _i];
         return _templates;
     }
 }
