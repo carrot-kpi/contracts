@@ -13,7 +13,7 @@ import {IReality} from "../interfaces/external/IReality.sol";
 /// on-chain. Since the oracle is crowdsourced, it's extremely flexible,
 /// and any condition that can be put into text can leverage Reality.eth
 /// as an oracle. The setup is of great importance to ensure the safety
-/// of the solution (question timeout, expiry, arbitrator atc must be set
+/// of the solution (question timeout, opening timestamp, arbitrator atc must be set
 /// with care to avoid unwanted results).
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract ManualRealityOracle is IOracle, Initializable {
@@ -33,7 +33,7 @@ contract ManualRealityOracle is IOracle, Initializable {
     error ZeroAddressArbitrator();
     error InvalidQuestion();
     error InvalidQuestionTimeout();
-    error InvalidExpiry();
+    error InvalidOpeningTimestamp();
 
     event Initialize(
         address indexed kpiToken,
@@ -57,7 +57,7 @@ contract ManualRealityOracle is IOracle, Initializable {
     /// - `uint256 _realityTemplateId`: The template id for the Reality.eth question.
     /// - `string memory _question`: The question that must be submitted to Reality.eth.
     /// - `uint32 _questionTimeout`: The question timeout as described in the Reality.eth docs (linked above).
-    /// - `uint32 _expiry`: The question expiry as described in the Reality.eth docs (linked above).
+    /// - `uint32 _openingTimestamp`: The question opening timestamp as described in the Reality.eth docs (linked above).
     function initialize(
         address _kpiToken,
         uint256 _templateId,
@@ -73,7 +73,7 @@ contract ManualRealityOracle is IOracle, Initializable {
             uint256 _realityTemplateId,
             string memory _question,
             uint32 _questionTimeout,
-            uint32 _expiry
+            uint32 _openingTimestamp
         ) = abi.decode(
                 _data,
                 (address, address, uint256, string, uint32, uint32)
@@ -83,7 +83,7 @@ contract ManualRealityOracle is IOracle, Initializable {
         if (_arbitrator == address(0)) revert ZeroAddressArbitrator();
         if (bytes(_question).length == 0) revert InvalidQuestion();
         if (_questionTimeout == 0) revert InvalidQuestionTimeout();
-        if (_expiry <= block.timestamp) revert InvalidExpiry();
+        if (_openingTimestamp <= block.timestamp) revert InvalidOpeningTimestamp();
 
         oraclesManager = msg.sender;
         templateId = _templateId;
@@ -96,7 +96,7 @@ contract ManualRealityOracle is IOracle, Initializable {
             _question,
             _arbitrator,
             _questionTimeout,
-            _expiry,
+            _openingTimestamp,
             0
         );
 
