@@ -37,7 +37,6 @@ contract ERC20KPIToken is
     bool internal allOrNone;
     uint16 internal toBeFinalized;
     address public creator;
-    address internal kpiTokensManager;
     Collateral[] internal collaterals;
     FinalizableOracle[] internal finalizableOracles;
     string public description;
@@ -227,7 +226,6 @@ contract ERC20KPIToken is
         creator = _creator;
         description = _description;
         expiration = _expiration;
-        kpiTokensManager = _kpiTokensManager;
         kpiTokenTemplate = IKPITokensManager(_kpiTokensManager).template(
             _kpiTokenTemplateId
         );
