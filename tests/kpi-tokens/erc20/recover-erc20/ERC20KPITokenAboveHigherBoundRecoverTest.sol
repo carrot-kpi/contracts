@@ -85,6 +85,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         vm.prank(oracle);
         kpiTokenInstance.finalize(10023 ether);
 
+        vm.expectRevert(abi.encodeWithSignature("NothingToRecover()"));
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
 
         assertEq(firstErc20.balanceOf(address(this)), 0 ether);
@@ -266,6 +267,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         vm.prank(oracle);
         kpiTokenInstance.finalize(97 ether);
 
+        vm.expectRevert(abi.encodeWithSignature("NothingToRecover()"));
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
 
         assertEq(firstErc20.balanceOf(address(this)), 0 ether);
@@ -373,6 +375,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         vm.prank(kpiTokenInstance.oracles()[1]);
         kpiTokenInstance.finalize(97 ether);
 
+        vm.expectRevert(abi.encodeWithSignature("NothingToRecover()"));
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
         assertEq(firstErc20.balanceOf(address(this)), 19.94 ether);
     }
@@ -453,6 +456,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         vm.prank(oracle);
         kpiTokenInstance.finalize(10023 ether);
 
+        vm.expectRevert(abi.encodeWithSignature("NothingToRecover()"));
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
 
         assertEq(firstErc20.balanceOf(address(this)), 0 ether);
@@ -737,6 +741,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         vm.prank(oracle);
         kpiTokenInstance.finalize(97 ether);
 
+        vm.expectRevert(abi.encodeWithSignature("NothingToRecover()"));
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
 
         assertEq(firstErc20.balanceOf(address(this)), 0 ether);
@@ -926,7 +931,9 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         vm.prank(oracle);
         kpiTokenInstance.finalize(10023 ether);
 
+        vm.expectRevert(abi.encodeWithSignature("NothingToRecover()"));
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
+        vm.expectRevert(abi.encodeWithSignature("NothingToRecover()"));
         kpiTokenInstance.recoverERC20(address(secondErc20), address(this));
 
         assertEq(firstErc20.balanceOf(address(this)), 0);
@@ -1130,7 +1137,9 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         vm.prank(oracle);
         kpiTokenInstance.finalize(97 ether);
 
+        vm.expectRevert(abi.encodeWithSignature("NothingToRecover()"));
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
+        vm.expectRevert(abi.encodeWithSignature("NothingToRecover()"));
         kpiTokenInstance.recoverERC20(address(secondErc20), address(this));
 
         assertEq(firstErc20.balanceOf(address(this)), 0);
@@ -1334,7 +1343,9 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         vm.prank(oracle);
         kpiTokenInstance.finalize(10023 ether);
 
+        vm.expectRevert(abi.encodeWithSignature("NothingToRecover()"));
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
+        vm.expectRevert(abi.encodeWithSignature("NothingToRecover()"));
         kpiTokenInstance.recoverERC20(address(secondErc20), address(this));
 
         assertEq(firstErc20.balanceOf(address(this)), 0);
@@ -1538,7 +1549,9 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         vm.prank(oracle);
         kpiTokenInstance.finalize(97 ether);
 
+        vm.expectRevert(abi.encodeWithSignature("NothingToRecover()"));
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
+        vm.expectRevert(abi.encodeWithSignature("NothingToRecover()"));
         kpiTokenInstance.recoverERC20(address(secondErc20), address(this));
 
         assertEq(firstErc20.balanceOf(address(this)), 0);

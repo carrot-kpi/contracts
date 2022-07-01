@@ -66,10 +66,13 @@ contract ERC20KPIToken is
     error ZeroAddressOraclesManager();
     error InvalidMinimumPayoutAfterFee();
     error DuplicatedCollateral();
-    error NoRedemptionPossible();
     error Expired();
     error NoOracles();
     error NoCollaterals();
+    error NothingToRedeem();
+    error ZeroAddressToken();
+    error ZeroAddressReceiver();
+    error NothingToRecover();
 
     event Initialize(
         address indexed creator,
@@ -95,6 +98,7 @@ contract ERC20KPIToken is
     event RegisterRedemption(address indexed account, uint256 burned);
     event RedeemCollateral(
         address indexed account,
+        address indexed receiver,
         address collateral,
         uint256 amount
     );
@@ -265,10 +269,12 @@ contract ERC20KPIToken is
                 _collateral.amount
             );
             uint256 _fee = calculateProtocolFee(_collateral.amount);
-            IERC20Upgradeable(_collateral.token).safeTransfer(
-                _feeReceiver,
-                _fee
-            );
+            if (_fee > 0) {
+                IERC20Upgradeable(_collateral.token).safeTransfer(
+                    _feeReceiver,
+                    _fee
+                );
+            }
             uint256 _amountMinusFees;
             unchecked {
                 _amountMinusFees = _collateral.amount - _fee;
@@ -535,7 +541,8 @@ contract ERC20KPIToken is
     ///   the contract).
     /// @param _token The ERC20 token address to be rescued.
     /// @param _receiver The address to which the rescued ERC20 tokens (if any) will be sent.
-    function recoverERC20(address _token, address _receiver) external {
+    function recoverERC20(address _token, address _receiver) external override {
+        if (_receiver == address(0)) revert ZeroAddressReceiver();
         if (msg.sender != creator) revert Forbidden();
         bool _expired = _isExpired();
         for (uint8 _i = 0; _i < collaterals.length; _i++) {
@@ -552,6 +559,7 @@ contract ERC20KPIToken is
                         _unneededBalance -= _collateral.amount;
                     }
                 }
+                if (_unneededBalance == 0) revert NothingToRecover();
                 IERC20Upgradeable(_token).safeTransfer(
                     _receiver,
                     _unneededBalance
@@ -563,6 +571,7 @@ contract ERC20KPIToken is
         uint256 _reimboursement = IERC20Upgradeable(_token).balanceOf(
             address(this)
         );
+        if (_reimboursement == 0) revert NothingToRecover();
         IERC20Upgradeable(_token).safeTransfer(_receiver, _reimboursement);
         emit RecoverERC20(_token, _reimboursement, _receiver);
     }
@@ -605,10 +614,12 @@ contract ERC20KPIToken is
                         _initialSupply;
                     _collateral.amount -= _redeemableAmount;
                 }
-                IERC20Upgradeable(_collateral.token).safeTransfer(
-                    msg.sender,
-                    _redeemableAmount
-                );
+                if (_redeemableAmount > 0) {
+                    IERC20Upgradeable(_collateral.token).safeTransfer(
+                        msg.sender,
+                        _redeemableAmount
+                    );
+                }
             }
             _redeemedCollaterals[_i] = RedeemedCollateral({
                 token: _collateral.token,
@@ -636,7 +647,12 @@ contract ERC20KPIToken is
     /// KPI tokens through the `registerRedemption` function, this redeems the collateral
     /// token specified as input in the function. The function reverts if either an invalid
     /// collateral is specified or if zero of the given collateral can be redeemed.
-    function redeemCollateral(address _token) external override {
+    function redeemCollateral(address _token, address _receiver)
+        external
+        override
+    {
+        if (_token == address(0)) revert ZeroAddressToken();
+        if (_receiver == address(0)) revert ZeroAddressReceiver();
         if (!_isFinalized() && block.timestamp < expiration) revert Forbidden();
         if (_isExpired()) revert Expired();
         uint256 _burned = registeredBurn[msg.sender];
@@ -650,15 +666,20 @@ contract ERC20KPIToken is
                         (postFinalizationCollateralAmount[_collateral.token] *
                             _burned) /
                         initialSupply;
-                    if (_redeemableAmount == 0) revert NoRedemptionPossible();
+                    if (_redeemableAmount == 0) revert NothingToRedeem();
                     _collateral.amount -= _redeemableAmount;
                 }
                 IERC20Upgradeable(_token).safeTransfer(
-                    msg.sender,
+                    _receiver,
                     _redeemableAmount
                 );
                 delete registeredBurn[msg.sender];
-                emit RedeemCollateral(msg.sender, _token, _redeemableAmount);
+                emit RedeemCollateral(
+                    msg.sender,
+                    _token,
+                    _receiver,
+                    _redeemableAmount
+                );
                 return;
             }
         }
