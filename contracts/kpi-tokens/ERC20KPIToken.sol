@@ -34,7 +34,7 @@ contract ERC20KPIToken is
         0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff;
     uint256 internal constant MULTIPLIER = 64;
 
-    bool internal andRelationship;
+    bool internal allOrNone;
     uint16 internal toBeFinalized;
     address public creator;
     address internal kpiTokensManager;
@@ -74,9 +74,6 @@ contract ERC20KPIToken is
 
     event Initialize(
         address indexed creator,
-        address kpiTokensManager,
-        address oraclesManager,
-        address feeReceiver,
         uint256 indexed templateId,
         string description,
         uint256 expiration,
@@ -147,7 +144,7 @@ contract ERC20KPIToken is
     ///     - `uint256 _data`: ABI-encoded, oracle-specific data used to effectively
     ///       instantiate the oracle in charge of monitoring this KPI and reporting the
     ///       final result on-chain.
-    /// - `bool _andRelationship`: Whether all KPIs should be at least partly reached in
+    /// - `bool _allOrNone`: Whether all KPIs should be at least partly reached in
     ///   order to unlock collaterals for KPI token holders to redeem (minus the minimum
     ///   payout amount, which is unlocked under any circumstance).
     function initialize(
@@ -180,9 +177,6 @@ contract ERC20KPIToken is
 
         emit Initialize(
             _creator,
-            _kpiTokensManager,
-            _oraclesManager,
-            _feeReceiver,
             _kpiTokenTemplateId,
             _description,
             _expiration,
@@ -311,7 +305,7 @@ contract ERC20KPIToken is
     ) internal onlyInitializing {
         if (_oraclesManager == address(0)) revert InvalidOraclesManager();
 
-        (OracleData[] memory _oracleDatas, bool _andRelationship) = abi.decode(
+        (OracleData[] memory _oracleDatas, bool _allOrNone) = abi.decode(
             _data,
             (OracleData[], bool)
         );
@@ -347,7 +341,7 @@ contract ERC20KPIToken is
         }
 
         toBeFinalized = uint16(_oracleDatas.length);
-        andRelationship = _andRelationship;
+        allOrNone = _allOrNone;
 
         emit InitializeOracles(_finalizableOracles);
     }
@@ -415,9 +409,9 @@ contract ERC20KPIToken is
         }
 
         if (_result <= _oracle.lowerBound || _result == INVALID_ANSWER) {
-            bool _andRelationship = andRelationship;
-            handleLowOrInvalidResult(_oracle, _andRelationship);
-            if (_andRelationship) {
+            bool _allOrNone = allOrNone;
+            handleLowOrInvalidResult(_oracle, _allOrNone);
+            if (_allOrNone) {
                 toBeFinalized = 0;
                 _oracle.finalized = true;
                 registerPostFinalizationCollateralAmounts();
@@ -438,22 +432,26 @@ contract ERC20KPIToken is
         emit Finalize(msg.sender, _result);
     }
 
-    function registerPostFinalizationCollateralAmounts() internal {
-        for (uint8 _i = 0; _i < collaterals.length; _i++) {
-            Collateral memory _collateral = collaterals[_i];
-            postFinalizationCollateralAmount[_collateral.token] = _collateral
-                .amount;
-        }
-    }
-
+    /// @dev Handles collateral state changes in case an oracle reported a low or invalid
+    /// answer. In particular:
+    /// - If an "all or none" approach has been chosen at the KPI token initialization
+    /// level, all the collateral minus any minimum payour is marked to be recovered
+    /// by the KPI token creator. From the KPI token holder's point of view, the token
+    /// expires worthless on the spot.
+    /// - If no "all or none" condition has been set, the KPI contract calculates how
+    /// much of the collaterals the specific condition "governed" (through the weighting
+    /// mechanism), subtracts any minimum payout for these and sends back the right amount
+    /// of collateral to the KPI token creator.
+    /// @param _oracle The oracle being finalized.
+    /// @param _allOrNone Whether all the oracles are in an "all or none" configuration or not.
     function handleLowOrInvalidResult(
         FinalizableOracle storage _oracle,
-        bool _andRelationship
+        bool _allOrNone
     ) internal {
         for (uint256 _i = 0; _i < collaterals.length; _i++) {
             Collateral storage _collateral = collaterals[_i];
             uint256 _reimboursement;
-            if (_andRelationship) {
+            if (_allOrNone) {
                 unchecked {
                     _reimboursement =
                         _collateral.amount -
@@ -470,6 +468,21 @@ contract ERC20KPIToken is
         }
     }
 
+    /// @dev Handles collateral state changes in case an oracle reported an intermediate answer.
+    /// In particular if a result is in the specified range (and NOT above the higher bound) set
+    /// for the KPI, the same calculations happen and some of the collateral gets sent back
+    /// to the KPI token creator depending on how far we were from reaching the full KPI
+    /// progress.
+    ///
+    /// If a result is at or above the higher bound set for the KPI token, pretty much
+    /// nothing happens to the collateral, which is fully assigned to the KPI token holders
+    /// and which will become redeemable once the finalization process has ended for all
+    /// the oracles assigned to the KPI token.
+    ///
+    /// Once all the oracles associated with the KPI token have reported their end result and
+    /// finalize, the remaining collateral, if any, becomes redeemable by KPI token holders.
+    /// @param _oracle The oracle being finalized.
+    /// @param _result The result the oracle is reporting.
     function handleIntermediateOrOverHigherBoundResult(
         FinalizableOracle storage _oracle,
         uint256 _result
@@ -500,6 +513,30 @@ contract ERC20KPIToken is
         }
     }
 
+    /// @dev After the KPI token has successfully been finalized, this function registers
+    /// the collaterals situation before any redemptions happens. This is used to be able
+    /// to handle the separate burn/redeem feature, increasing the overall security of the
+    /// solution (a subset of malicious/unresponsive tokens will not be enough to jeopardize
+    /// the whole campaign).
+    function registerPostFinalizationCollateralAmounts() internal {
+        for (uint8 _i = 0; _i < collaterals.length; _i++) {
+            Collateral memory _collateral = collaterals[_i];
+            postFinalizationCollateralAmount[_collateral.token] = _collateral
+                .amount;
+        }
+    }
+
+    /// @dev Callable by the KPI token creator, this function lets them recover any ERC20
+    /// token sent to the KPI token contract. An arbitrary receiver address can be specified
+    /// so that the function can be used to also help users that did something wrong by
+    /// mistake by sending ERC20 tokens here. Two scenarios are possible here:
+    /// - The KPI token creator wants to recover unused collateral that has been unlocked
+    ///   by the KPI token after one or more oracle finalizations.
+    /// - The KPI token creator wants to recover an arbitrary ERC20 token sent by mistake
+    ///   to the KPI token contract (even the ERC20 KPI token itself can be recovered from
+    ///   the contract).
+    /// @param _token The ERC20 token address to be rescued.
+    /// @param _receiver The address to which the rescued ERC20 tokens (if any) will be sent.
     function recoverERC20(address _token, address _receiver) external {
         if (msg.sender != creator) revert Forbidden();
         bool _expired = _isExpired();
@@ -715,7 +752,7 @@ contract ERC20KPIToken is
             abi.encode(
                 collaterals,
                 finalizableOracles,
-                andRelationship,
+                allOrNone,
                 initialSupply,
                 name(),
                 symbol()
