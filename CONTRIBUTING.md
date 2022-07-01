@@ -3,6 +3,7 @@
 Carrot v1 contracts are developed using Foundry, so in order to contribute you
 need to first install Foundry locally. Check out
 [this link](https://getfoundry.sh/) to easily install Foundry on your machine.
+Make sure you periodically update Foundry to the latest version.
 
 Foundry manages dependencies using git submodules, so it's advised to use
 `git clone --recurse-submodules` when cloning the repo in order to have a
@@ -35,6 +36,14 @@ the project.
 Tests are written in Solidity and you can find them in the `tests` folder. Both
 property-based fuzzing and standard unit tests are easily supported through the
 use of Foundry.
+
+In order to launch tests you can both use Forge commands directly or yarn
+scripts. For example, these are the available yarn scripts:
+
+- `test`: self explanatory, simply runs the tests.
+- `test:gasreport`: runs the tests giving out a gas consumption report at the
+  end.
+- `test:coverage`: runs the tests giving out a coverage report at the end.
 
 ## Github Actions
 
