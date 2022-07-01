@@ -674,11 +674,11 @@ contract ERC20KPIToken is
                     if (_redeemableAmount == 0) revert NothingToRedeem();
                     _collateral.amount -= _redeemableAmount;
                 }
+                delete registeredBurn[msg.sender];
                 IERC20Upgradeable(_token).safeTransfer(
                     _receiver,
                     _redeemableAmount
                 );
-                delete registeredBurn[msg.sender];
                 emit RedeemCollateral(
                     msg.sender,
                     _token,
