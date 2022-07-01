@@ -2662,7 +2662,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         assertEq(firstErc20.balanceOf(address(this)), 0 ether);
 
         vm.prank(holder1);
-        kpiTokenInstance.redeem();
+        kpiTokenInstance.redeem(abi.encode(holder1));
         assertEq(kpiTokenInstance.balanceOf(holder1), 0);
         assertEq(kpiTokenInstance.totalSupply(), 99 ether);
         assertEq(firstErc20.balanceOf(holder1), 0.365566666666666666 ether);
@@ -2797,7 +2797,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         assertEq(firstErc20.balanceOf(address(this)), 0 ether);
 
         vm.prank(holder1);
-        kpiTokenInstance.redeem();
+        kpiTokenInstance.redeem(abi.encode(holder1));
         assertEq(kpiTokenInstance.balanceOf(holder1), 0);
         assertEq(kpiTokenInstance.totalSupply(), 99 ether);
         assertEq(firstErc20.balanceOf(holder1), 0.365566666666666666 ether);

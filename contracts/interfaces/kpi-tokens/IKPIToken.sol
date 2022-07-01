@@ -21,7 +21,7 @@ interface IKPIToken {
 
     function finalize(uint256 _result) external;
 
-    function redeem() external;
+    function redeem(bytes memory _data) external;
 
     function creator() external view returns (address);
 

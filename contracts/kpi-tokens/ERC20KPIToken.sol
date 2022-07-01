@@ -593,7 +593,12 @@ contract ERC20KPIToken is
     /// left in the contract after finalization, proportional to their balance
     /// compared to the total supply and left collateral amount. If the KPI token
     /// has expired worthless, this simply burns the user's KPI tokens.
-    function redeem() external override nonReentrant {
+    /// @param _data ABI-encoded data specifying the redeem parameters. In this
+    /// specific case the ABI encoded parameter is an address that will receive
+    /// the redeemed collaterals (if any).
+    function redeem(bytes calldata _data) external override nonReentrant {
+        address _receiver = abi.decode(_data, (address));
+        if (_receiver == address(0)) revert ZeroAddressReceiver();
         if (!_isFinalized() && block.timestamp < expiration) revert Forbidden();
         uint256 _kpiTokenBalance = balanceOf(msg.sender);
         if (_kpiTokenBalance == 0) revert Forbidden();
@@ -616,7 +621,7 @@ contract ERC20KPIToken is
                 }
                 if (_redeemableAmount > 0) {
                     IERC20Upgradeable(_collateral.token).safeTransfer(
-                        msg.sender,
+                        _receiver,
                         _redeemableAmount
                     );
                 }
