@@ -102,13 +102,10 @@ contract ManualRealityOracle is IOracle, Initializable {
     /// @dev Once the question is finalized on Reality.eth, this must be manually called to
     /// report back the result to the linked KPI token. This also marks the oracle as finalized.
     function finalize() external {
-        bytes32 _questionId = questionId; // gas optimization
-        address _reality = reality; // gas optimization
         if (finalized) revert Forbidden();
-        uint256 _result = uint256(IReality(_reality).resultFor(_questionId));
-        IKPIToken(kpiToken).finalize(_result);
         finalized = true;
-
+        uint256 _result = uint256(IReality(reality).resultFor(questionId));
+        IKPIToken(kpiToken).finalize(_result);
         emit Finalize(_result);
     }
 
