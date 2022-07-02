@@ -82,7 +82,10 @@ contract ERC20KPIToken is
         bytes oraclesData
     );
     event InitializeOracles(FinalizableOracle[] finalizableOracles);
-    event CollectProtocolFees(TokenAmount[] collected, address _receiver);
+    event CollectProtocolFees(
+        TokenAmount[] collected,
+        address indexed _receiver
+    );
     event Finalize(address indexed oracle, uint256 result);
     event RecoverERC20(
         address indexed token,
