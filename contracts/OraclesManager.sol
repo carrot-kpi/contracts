@@ -255,7 +255,10 @@ contract OraclesManager is Ownable, IOraclesManager {
         return templates.length;
     }
 
-    /// @dev Gets a templates slice based on indexes.
+    /// @dev Gets a templates slice based on indexes. N.B.: the templates are not
+    /// ordered and due to how templates are removed, it could happen to have 2
+    /// disjointed slices with the same template being in both, even though it
+    /// should be rare.
     /// @param _fromIndex The index from which to get templates.
     /// @param _toIndex The maximum index to which to get templates.
     /// @return A templates array representing the slice taken through the given indexes.
