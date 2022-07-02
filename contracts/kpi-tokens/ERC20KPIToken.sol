@@ -63,7 +63,6 @@ contract ERC20KPIToken is
     error InvalidTotalSupply();
     error InvalidCreator();
     error InvalidKpiTokensManager();
-    error ZeroAddressOraclesManager();
     error InvalidMinimumPayoutAfterFee();
     error DuplicatedCollateral();
     error Expired();
@@ -255,40 +254,41 @@ contract ERC20KPIToken is
         );
         for (uint8 _i = 0; _i < _collaterals.length; _i++) {
             Collateral memory _collateral = _collaterals[_i];
+            uint256 _collateralAmountBeforeFee = _collateral.amount;
             if (
                 _collateral.token == address(0) ||
-                _collateral.amount == 0 ||
-                _collateral.minimumPayout >= _collateral.amount
+                _collateralAmountBeforeFee == 0 ||
+                _collateral.minimumPayout >= _collateralAmountBeforeFee
             ) revert InvalidCollateral();
             for (uint8 _j = _i + 1; _j < _collaterals.length; _j++)
                 if (_collateral.token == _collaterals[_j].token)
                     revert DuplicatedCollateral();
-            IERC20Upgradeable(_collateral.token).safeTransferFrom(
-                _creator,
-                address(this),
-                _collateral.amount
-            );
-            uint256 _fee = calculateProtocolFee(_collateral.amount);
-            if (_fee > 0) {
-                IERC20Upgradeable(_collateral.token).safeTransfer(
-                    _feeReceiver,
-                    _fee
-                );
-            }
+            uint256 _fee = calculateProtocolFee(_collateralAmountBeforeFee);
             uint256 _amountMinusFees;
             unchecked {
-                _amountMinusFees = _collateral.amount - _fee;
+                _amountMinusFees = _collateralAmountBeforeFee - _fee;
             }
             if (_amountMinusFees <= _collateral.minimumPayout)
                 revert InvalidMinimumPayoutAfterFee();
             unchecked {
                 _collateral.amount = _amountMinusFees;
             }
+            collaterals.push(_collateral);
+            IERC20Upgradeable(_collateral.token).safeTransferFrom(
+                _creator,
+                address(this),
+                _collateralAmountBeforeFee
+            );
+            if (_fee > 0) {
+                IERC20Upgradeable(_collateral.token).safeTransfer(
+                    _feeReceiver,
+                    _fee
+                );
+            }
             _collectedFees[_i] = TokenAmount({
                 token: _collateral.token,
                 amount: _fee
             });
-            collaterals.push(_collateral);
         }
 
         emit CollectProtocolFees(_collectedFees, _feeReceiver);
@@ -596,12 +596,13 @@ contract ERC20KPIToken is
     /// @param _data ABI-encoded data specifying the redeem parameters. In this
     /// specific case the ABI encoded parameter is an address that will receive
     /// the redeemed collaterals (if any).
-    function redeem(bytes calldata _data) external override nonReentrant {
+    function redeem(bytes calldata _data) external override {
         address _receiver = abi.decode(_data, (address));
         if (_receiver == address(0)) revert ZeroAddressReceiver();
         if (!_isFinalized() && block.timestamp < expiration) revert Forbidden();
         uint256 _kpiTokenBalance = balanceOf(msg.sender);
         if (_kpiTokenBalance == 0) revert Forbidden();
+        _burn(msg.sender, _kpiTokenBalance);
         RedeemedCollateral[]
             memory _redeemedCollaterals = new RedeemedCollateral[](
                 collaterals.length
@@ -631,7 +632,6 @@ contract ERC20KPIToken is
                 amount: _redeemableAmount
             });
         }
-        _burn(msg.sender, _kpiTokenBalance);
         emit Redeem(msg.sender, _kpiTokenBalance, _redeemedCollaterals);
     }
 
