@@ -34,13 +34,13 @@ contract KPITokensManager is Ownable, IKPITokensManager {
 
     event AddTemplate(
         uint256 indexed id,
-        address template,
+        address indexed template,
         string specification
     );
     event RemoveTemplate(uint256 indexed id);
     event UpgradeTemplate(
         uint256 indexed id,
-        address newTemplate,
+        address indexed newTemplate,
         uint8 versionBump,
         string newSpecification
     );
