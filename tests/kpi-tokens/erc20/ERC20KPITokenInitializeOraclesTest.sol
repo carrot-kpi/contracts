@@ -258,7 +258,7 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         assertEq(finalizableOracle.addrezz, address(2));
         assertEq(finalizableOracle.lowerBound, 0);
         assertEq(finalizableOracle.higherBound, 1);
-        assertEq(finalizableOracle.finalProgress, 0);
+        assertEq(finalizableOracle.finalResult, 0);
         assertEq(finalizableOracle.weight, 1);
         assertTrue(!finalizableOracle.finalized);
         assertTrue(andRelationship);
@@ -316,7 +316,7 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         assertEq(finalizableOracle.addrezz, address(2));
         assertEq(finalizableOracle.lowerBound, 0);
         assertEq(finalizableOracle.higherBound, 1);
-        assertEq(finalizableOracle.finalProgress, 0);
+        assertEq(finalizableOracle.finalResult, 0);
         assertEq(finalizableOracle.weight, 1);
         assertTrue(!finalizableOracle.finalized);
         assertTrue(!andRelationship);
@@ -388,14 +388,14 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         assertEq(onChainFinalizableOracles[0].addrezz, address(2));
         assertEq(onChainFinalizableOracles[0].lowerBound, 0);
         assertEq(onChainFinalizableOracles[0].higherBound, 1);
-        assertEq(onChainFinalizableOracles[0].finalProgress, 0);
+        assertEq(onChainFinalizableOracles[0].finalResult, 0);
         assertEq(onChainFinalizableOracles[0].weight, 1);
         assertTrue(!onChainFinalizableOracles[0].finalized);
 
         assertEq(onChainFinalizableOracles[1].addrezz, address(2));
         assertEq(onChainFinalizableOracles[1].lowerBound, 5 ether);
         assertEq(onChainFinalizableOracles[1].higherBound, 10 ether);
-        assertEq(onChainFinalizableOracles[1].finalProgress, 0);
+        assertEq(onChainFinalizableOracles[1].finalResult, 0);
         assertEq(onChainFinalizableOracles[1].weight, 3);
         assertTrue(!onChainFinalizableOracles[1].finalized);
 
@@ -468,14 +468,14 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         assertEq(onChainFinalizableOracles[0].addrezz, address(2));
         assertEq(onChainFinalizableOracles[0].lowerBound, 0);
         assertEq(onChainFinalizableOracles[0].higherBound, 1);
-        assertEq(onChainFinalizableOracles[0].finalProgress, 0);
+        assertEq(onChainFinalizableOracles[0].finalResult, 0);
         assertEq(onChainFinalizableOracles[0].weight, 1);
         assertTrue(!onChainFinalizableOracles[0].finalized);
 
         assertEq(onChainFinalizableOracles[1].addrezz, address(2));
         assertEq(onChainFinalizableOracles[1].lowerBound, 5 ether);
         assertEq(onChainFinalizableOracles[1].higherBound, 10 ether);
-        assertEq(onChainFinalizableOracles[1].finalProgress, 0);
+        assertEq(onChainFinalizableOracles[1].finalResult, 0);
         assertEq(onChainFinalizableOracles[1].weight, 3);
         assertTrue(!onChainFinalizableOracles[1].finalized);
 

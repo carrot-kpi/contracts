@@ -339,7 +339,7 @@ contract ERC20KPIToken is
                 addrezz: _instance,
                 lowerBound: _oracleData.lowerBound,
                 higherBound: _oracleData.higherBound,
-                finalProgress: 0,
+                finalResult: 0,
                 weight: _oracleData.weight,
                 finalized: false
             });
@@ -502,7 +502,7 @@ contract ERC20KPIToken is
                 ? _oracleFullRange
                 : _result - _oracle.lowerBound;
         }
-        _oracle.finalProgress = _finalOracleProgress;
+        _oracle.finalResult = _result;
         if (_finalOracleProgress < _oracleFullRange) {
             for (uint8 _i = 0; _i < collaterals.length; _i++) {
                 Collateral storage _collateral = collaterals[_i];

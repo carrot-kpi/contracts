@@ -26,7 +26,7 @@ interface IERC20KPIToken is IKPIToken, IERC20Upgradeable {
         address addrezz;
         uint256 lowerBound;
         uint256 higherBound;
-        uint256 finalProgress;
+        uint256 finalResult;
         uint256 weight;
         bool finalized;
     }
