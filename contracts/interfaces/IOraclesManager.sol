@@ -29,7 +29,7 @@ interface IOraclesManager {
         address _creator,
         uint256 _id,
         bytes memory _initializationData
-    ) external returns (address);
+    ) external payable returns (address);
 
     function addTemplate(
         address _template,

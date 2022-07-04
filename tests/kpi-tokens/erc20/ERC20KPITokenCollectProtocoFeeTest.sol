@@ -50,6 +50,7 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
             lowerBound: 0,
             higherBound: 1,
             weight: 1,
+            value: 0,
             data: firstManualRealityEthInitializationData
         });
         oracleData[1] = IERC20KPIToken.OracleData({
@@ -57,6 +58,7 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
             lowerBound: 5 ether,
             higherBound: 10 ether,
             weight: 3,
+            value: 0,
             data: secondManualRealityEthInitializationData
         });
         address oraclesManager = address(2);
@@ -121,6 +123,7 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
             lowerBound: 0,
             higherBound: 1,
             weight: 1,
+            value: 0,
             data: firstManualRealityEthInitializationData
         });
         oracleData[1] = IERC20KPIToken.OracleData({
@@ -128,6 +131,7 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
             lowerBound: 5 ether,
             higherBound: 10 ether,
             weight: 3,
+            value: 0,
             data: secondManualRealityEthInitializationData
         });
         address oraclesManager = address(2);
@@ -229,6 +233,7 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
             lowerBound: 0,
             higherBound: 1,
             weight: 1,
+            value: 0,
             data: firstManualRealityEthInitializationData
         });
         oracleData[1] = IERC20KPIToken.OracleData({
@@ -236,6 +241,7 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
             lowerBound: 5 ether,
             higherBound: 10 ether,
             weight: 3,
+            value: 0,
             data: secondManualRealityEthInitializationData
         });
         address oraclesManager = address(2);

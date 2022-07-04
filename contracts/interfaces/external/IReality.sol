@@ -5,14 +5,15 @@ pragma solidity >=0.8.0;
 /// @dev Interface for the Reality contract.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 interface IReality {
-    function askQuestion(
+    function askQuestionWithMinBond(
         uint256 _templateId,
-        string calldata _question,
+        string memory _question,
         address _arbitrator,
         uint32 _timeout,
         uint32 _openingTs,
-        uint256 _nonce
-    ) external returns (bytes32 _questionId);
+        uint256 _nonce,
+        uint256 _minimumBond
+    ) external payable returns (bytes32);
 
     function isFinalized(bytes32 _id) external view returns (bool);
 

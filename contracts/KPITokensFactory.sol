@@ -61,7 +61,7 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
         uint256 _expiration,
         bytes calldata _initializationData,
         bytes calldata _oraclesInitializationData
-    ) external override {
+    ) external payable override {
         address _instance = IKPITokensManager(kpiTokensManager).instantiate(
             msg.sender,
             _id,
@@ -70,7 +70,7 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
             _oraclesInitializationData
         );
         allowOraclesCreation[_instance] = true;
-        IKPIToken(_instance).initialize(
+        IKPIToken(_instance).initialize{value: msg.value}(
             msg.sender,
             kpiTokensManager,
             oraclesManager,

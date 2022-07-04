@@ -79,7 +79,7 @@ abstract contract BaseTestSetup is Test {
         vm.mockCall(
             _reality,
             abi.encodeWithSignature(
-                "askQuestion(uint256,string,address,uint32,uint32,uint256)"
+                "askQuestionWithMinBond(uint256,string,address,uint32,uint32,uint256,uint256)"
             ),
             abi.encode(bytes32("question id"))
         );
@@ -98,6 +98,7 @@ abstract contract BaseTestSetup is Test {
             lowerBound: 0,
             higherBound: 1,
             weight: 1,
+            value: 0,
             data: _manualRealityOracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(

@@ -17,7 +17,7 @@ interface IKPIToken {
         uint256 _expiration,
         bytes memory _kpiTokenData,
         bytes memory _oraclesData
-    ) external;
+    ) external payable;
 
     function finalize(uint256 _result) external;
 

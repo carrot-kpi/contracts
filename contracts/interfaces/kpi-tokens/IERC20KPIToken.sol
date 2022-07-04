@@ -13,6 +13,7 @@ interface IERC20KPIToken is IKPIToken, IERC20Upgradeable {
         uint256 lowerBound;
         uint256 higherBound;
         uint256 weight;
+        uint256 value;
         bytes data;
     }
 

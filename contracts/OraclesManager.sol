@@ -101,7 +101,7 @@ contract OraclesManager is Ownable, IOraclesManager {
         address _creator,
         uint256 _id,
         bytes calldata _initializationData
-    ) external override returns (address) {
+    ) external payable override returns (address) {
         if (!IKPITokensFactory(factory).allowOraclesCreation(msg.sender))
             revert Forbidden();
         Template storage _template = storageTemplate(_id);
@@ -109,7 +109,11 @@ contract OraclesManager is Ownable, IOraclesManager {
             _template.addrezz,
             salt(_creator, _initializationData)
         );
-        IOracle(_instance).initialize(msg.sender, _id, _initializationData);
+        IOracle(_instance).initialize{value: msg.value}(
+            msg.sender,
+            _id,
+            _initializationData
+        );
         return _instance;
     }
 

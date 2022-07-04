@@ -37,7 +37,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralFinalizeTest2 is
         vm.mockCall(
             _reality,
             abi.encodeWithSignature(
-                "askQuestion(uint256,string,address,uint32,uint32,uint256)"
+                "askQuestionWithMinBond(uint256,string,address,uint32,uint32,uint256,uint256)"
             ),
             abi.encode(bytes32("question id"))
         );
@@ -64,6 +64,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralFinalizeTest2 is
             lowerBound: 10 ether,
             higherBound: 14 ether,
             weight: 1,
+            value: 0,
             data: _firstManualRealityOracleInitializationData
         });
         _oracleDatas[1] = IERC20KPIToken.OracleData({
@@ -71,6 +72,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralFinalizeTest2 is
             lowerBound: 20 ether,
             higherBound: 26 ether,
             weight: 1,
+            value: 0,
             data: _secondManualRealityOracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
@@ -173,7 +175,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralFinalizeTest2 is
         vm.mockCall(
             _reality,
             abi.encodeWithSignature(
-                "askQuestion(uint256,string,address,uint32,uint32,uint256)"
+                "askQuestionWithMinBond(uint256,string,address,uint32,uint32,uint256,uint256)"
             ),
             abi.encode(bytes32("question id"))
         );
@@ -200,6 +202,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralFinalizeTest2 is
             lowerBound: 10 ether,
             higherBound: 43 ether,
             weight: 1,
+            value: 0,
             data: _firstManualRealityOracleInitializationData
         });
         _oracleDatas[1] = IERC20KPIToken.OracleData({
@@ -207,6 +210,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralFinalizeTest2 is
             lowerBound: 200 ether,
             higherBound: 2607 ether,
             weight: 2,
+            value: 0,
             data: _secondManualRealityOracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(

@@ -37,7 +37,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
         vm.mockCall(
             _reality,
             abi.encodeWithSignature(
-                "askQuestion(uint256,string,address,uint32,uint32,uint256)"
+                "askQuestionWithMinBond(uint256,string,address,uint32,uint32,uint256,uint256)"
             ),
             abi.encode(bytes32("question id"))
         );
@@ -47,7 +47,8 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
             1,
             "b",
             60,
-            block.timestamp + 60
+            block.timestamp + 60,
+            0
         );
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
@@ -56,6 +57,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
             lowerBound: 10,
             higherBound: 12,
             weight: 1,
+            value: 0,
             data: _manualRealityOracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
@@ -129,7 +131,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
         vm.mockCall(
             _reality,
             abi.encodeWithSignature(
-                "askQuestion(uint256,string,address,uint32,uint32,uint256)"
+                "askQuestionWithMinBond(uint256,string,address,uint32,uint32,uint256,uint256)"
             ),
             abi.encode(bytes32("question id"))
         );
@@ -139,7 +141,8 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
             1,
             "b",
             60,
-            block.timestamp + 60
+            block.timestamp + 60,
+            0
         );
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
@@ -148,6 +151,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
             lowerBound: 10,
             higherBound: 12,
             weight: 1,
+            value: 0,
             data: _manualRealityOracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
@@ -226,7 +230,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
         vm.mockCall(
             _reality,
             abi.encodeWithSignature(
-                "askQuestion(uint256,string,address,uint32,uint32,uint256)"
+                "askQuestionWithMinBond(uint256,string,address,uint32,uint32,uint256,uint256)"
             ),
             abi.encode(bytes32("question id"))
         );
@@ -236,7 +240,8 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
             1,
             "b",
             60,
-            block.timestamp + 60
+            block.timestamp + 60,
+            0
         );
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
@@ -245,6 +250,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
             lowerBound: 10 ether,
             higherBound: 20 ether,
             weight: 1,
+            value: 0,
             data: _manualRealityOracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
@@ -318,7 +324,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
         vm.mockCall(
             _reality,
             abi.encodeWithSignature(
-                "askQuestion(uint256,string,address,uint32,uint32,uint256)"
+                "askQuestionWithMinBond(uint256,string,address,uint32,uint32,uint256,uint256)"
             ),
             abi.encode(bytes32("question id"))
         );
@@ -328,7 +334,8 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
             1,
             "b",
             60,
-            block.timestamp + 60
+            block.timestamp + 60,
+            0
         );
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
@@ -337,6 +344,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
             lowerBound: 10 ether,
             higherBound: 20 ether,
             weight: 1,
+            value: 0,
             data: _manualRealityOracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
@@ -413,7 +421,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
         vm.mockCall(
             _reality,
             abi.encodeWithSignature(
-                "askQuestion(uint256,string,address,uint32,uint32,uint256)"
+                "askQuestionWithMinBond(uint256,string,address,uint32,uint32,uint256,uint256)"
             ),
             abi.encode(bytes32("question id"))
         );
@@ -423,7 +431,8 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
             1,
             "b",
             60,
-            block.timestamp + 60
+            block.timestamp + 60,
+            0
         );
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
@@ -432,6 +441,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
             lowerBound: 40 ether,
             higherBound: 50 ether,
             weight: 1,
+            value: 0,
             data: _manualRealityOracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
@@ -505,7 +515,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
         vm.mockCall(
             _reality,
             abi.encodeWithSignature(
-                "askQuestion(uint256,string,address,uint32,uint32,uint256)"
+                "askQuestionWithMinBond(uint256,string,address,uint32,uint32,uint256,uint256)"
             ),
             abi.encode(bytes32("question id"))
         );
@@ -515,7 +525,8 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
             1,
             "b",
             60,
-            block.timestamp + 60
+            block.timestamp + 60,
+            0
         );
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
@@ -524,6 +535,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
             lowerBound: 40 ether,
             higherBound: 50 ether,
             weight: 1,
+            value: 0,
             data: _manualRealityOracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
@@ -602,7 +614,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
         vm.mockCall(
             _reality,
             abi.encodeWithSignature(
-                "askQuestion(uint256,string,address,uint32,uint32,uint256)"
+                "askQuestionWithMinBond(uint256,string,address,uint32,uint32,uint256,uint256)"
             ),
             abi.encode(bytes32("question id"))
         );
@@ -612,7 +624,8 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
             1,
             "b",
             60,
-            block.timestamp + 60
+            block.timestamp + 60,
+            0
         );
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
@@ -621,6 +634,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
             lowerBound: 102 ether,
             higherBound: 286 ether,
             weight: 1,
+            value: 0,
             data: _manualRealityOracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
@@ -700,7 +714,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
         vm.mockCall(
             _reality,
             abi.encodeWithSignature(
-                "askQuestion(uint256,string,address,uint32,uint32,uint256)"
+                "askQuestionWithMinBond(uint256,string,address,uint32,uint32,uint256,uint256)"
             ),
             abi.encode(bytes32("question id"))
         );
@@ -710,7 +724,8 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
             1,
             "b",
             60,
-            block.timestamp + 60
+            block.timestamp + 60,
+            0
         );
         IERC20KPIToken.OracleData[]
             memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
@@ -719,6 +734,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
             lowerBound: 102 ether,
             higherBound: 286 ether,
             weight: 1,
+            value: 0,
             data: _manualRealityOracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
@@ -797,7 +813,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
         vm.mockCall(
             _reality,
             abi.encodeWithSignature(
-                "askQuestion(uint256,string,address,uint32,uint32,uint256)"
+                "askQuestionWithMinBond(uint256,string,address,uint32,uint32,uint256,uint256)"
             ),
             abi.encode(bytes32("question id"))
         );
@@ -824,6 +840,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
             lowerBound: 10 ether,
             higherBound: 14 ether,
             weight: 1,
+            value: 0,
             data: _firstManualRealityOracleInitializationData
         });
         _oracleDatas[1] = IERC20KPIToken.OracleData({
@@ -831,6 +848,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
             lowerBound: 20 ether,
             higherBound: 26 ether,
             weight: 1,
+            value: 0,
             data: _secondManualRealityOracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
@@ -904,7 +922,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
         vm.mockCall(
             _reality,
             abi.encodeWithSignature(
-                "askQuestion(uint256,string,address,uint32,uint32,uint256)"
+                "askQuestionWithMinBond(uint256,string,address,uint32,uint32,uint256,uint256)"
             ),
             abi.encode(bytes32("question id"))
         );
@@ -931,6 +949,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
             lowerBound: 10 ether,
             higherBound: 14 ether,
             weight: 1,
+            value: 0,
             data: _firstManualRealityOracleInitializationData
         });
         _oracleDatas[1] = IERC20KPIToken.OracleData({
@@ -938,6 +957,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
             lowerBound: 20 ether,
             higherBound: 26 ether,
             weight: 1,
+            value: 0,
             data: _secondManualRealityOracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
@@ -1016,7 +1036,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
         vm.mockCall(
             _reality,
             abi.encodeWithSignature(
-                "askQuestion(uint256,string,address,uint32,uint32,uint256)"
+                "askQuestionWithMinBond(uint256,string,address,uint32,uint32,uint256,uint256)"
             ),
             abi.encode(bytes32("question id"))
         );
@@ -1043,6 +1063,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
             lowerBound: 10 ether,
             higherBound: 43 ether,
             weight: 1,
+            value: 0,
             data: _firstManualRealityOracleInitializationData
         });
         _oracleDatas[1] = IERC20KPIToken.OracleData({
@@ -1050,6 +1071,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
             lowerBound: 200 ether,
             higherBound: 2607 ether,
             weight: 2,
+            value: 0,
             data: _secondManualRealityOracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
@@ -1129,7 +1151,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
         vm.mockCall(
             _reality,
             abi.encodeWithSignature(
-                "askQuestion(uint256,string,address,uint32,uint32,uint256)"
+                "askQuestionWithMinBond(uint256,string,address,uint32,uint32,uint256,uint256)"
             ),
             abi.encode(bytes32("question id"))
         );
@@ -1156,6 +1178,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
             lowerBound: 10 ether,
             higherBound: 43 ether,
             weight: 1,
+            value: 0,
             data: _firstManualRealityOracleInitializationData
         });
         _oracleDatas[1] = IERC20KPIToken.OracleData({
@@ -1163,6 +1186,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
             lowerBound: 200 ether,
             higherBound: 2607 ether,
             weight: 2,
+            value: 0,
             data: _secondManualRealityOracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(

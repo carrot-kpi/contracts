@@ -52,7 +52,7 @@ contract ERC20KPITokenBaseFinalizeTest is BaseTestSetup {
         vm.mockCall(
             _reality,
             abi.encodeWithSignature(
-                "askQuestion(uint256,string,address,uint32,uint32,uint256)"
+                "askQuestionWithMinBond(uint256,string,address,uint32,uint32,uint256,uint256)"
             ),
             abi.encode(bytes32("question id"))
         );
@@ -79,6 +79,7 @@ contract ERC20KPITokenBaseFinalizeTest is BaseTestSetup {
             lowerBound: 10,
             higherBound: 11,
             weight: 1,
+            value: 0,
             data: _firstManualRealityOracleInitializationData
         });
         _oracleDatas[1] = IERC20KPIToken.OracleData({
@@ -86,6 +87,7 @@ contract ERC20KPITokenBaseFinalizeTest is BaseTestSetup {
             lowerBound: 20,
             higherBound: 21,
             weight: 1,
+            value: 0,
             data: _secondManualRealityOracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(

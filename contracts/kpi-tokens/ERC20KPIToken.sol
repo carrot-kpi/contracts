@@ -162,7 +162,7 @@ contract ERC20KPIToken is
         uint256 _expiration,
         bytes memory _kpiTokenData,
         bytes memory _oraclesData
-    ) external override initializer {
+    ) external payable override initializer {
         initializeState(
             _creator,
             _kpiTokensManager,
@@ -330,11 +330,9 @@ contract ERC20KPIToken is
                 revert InvalidOracleBounds();
             if (_oracleData.weight == 0) revert InvalidOracleWeights();
             totalWeight += _oracleData.weight;
-            address _instance = IOraclesManager(_oraclesManager).instantiate(
-                _creator,
-                _oracleData.templateId,
-                _oracleData.data
-            );
+            address _instance = IOraclesManager(_oraclesManager).instantiate{
+                value: _oracleData.value
+            }(_creator, _oracleData.templateId, _oracleData.data);
             FinalizableOracle memory _finalizableOracle = FinalizableOracle({
                 addrezz: _instance,
                 lowerBound: _oracleData.lowerBound,

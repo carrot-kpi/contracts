@@ -60,7 +60,7 @@ contract ManualRealityOracle is IOracle, Initializable {
         address _kpiToken,
         uint256 _templateId,
         bytes calldata _data
-    ) external override initializer {
+    ) external payable override initializer {
         if (_kpiToken == address(0)) revert ZeroAddressKpiToken();
 
         (
@@ -69,10 +69,11 @@ contract ManualRealityOracle is IOracle, Initializable {
             uint256 _realityTemplateId,
             string memory _question,
             uint32 _questionTimeout,
-            uint32 _openingTimestamp
+            uint32 _openingTimestamp,
+            uint256 _minimumBond
         ) = abi.decode(
                 _data,
-                (address, address, uint256, string, uint32, uint32)
+                (address, address, uint256, string, uint32, uint32, uint256)
             );
 
         if (_reality == address(0)) revert ZeroAddressReality();
@@ -87,13 +88,16 @@ contract ManualRealityOracle is IOracle, Initializable {
         reality = _reality;
         oracleTemplate = IOraclesManager(msg.sender).template(_templateId);
         question = _question;
-        questionId = IReality(_reality).askQuestion(
+        questionId = IReality(_reality).askQuestionWithMinBond{
+            value: msg.value
+        }(
             _realityTemplateId,
             _question,
             _arbitrator,
             _questionTimeout,
             _openingTimestamp,
-            0
+            0,
+            _minimumBond
         );
 
         emit Initialize(_kpiToken, _templateId, _data);

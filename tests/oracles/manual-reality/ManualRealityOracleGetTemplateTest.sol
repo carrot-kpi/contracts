@@ -20,7 +20,7 @@ contract ManualRealityOracleGetTemplateTest is BaseTestSetup {
         vm.mockCall(
             _realityAddress,
             abi.encodeWithSignature(
-                "askQuestion(uint256,string,address,uint32,uint32,uint256)"
+                "askQuestionWithMinBond(uint256,string,address,uint32,uint32,uint256,uint256)"
             ),
             abi.encode(_questionId)
         );
