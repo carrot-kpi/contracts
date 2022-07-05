@@ -19,6 +19,8 @@ interface IOraclesManager {
         bool automatable;
     }
 
+    function initialize(address _factory) external;
+
     function predictInstanceAddress(
         address _creator,
         uint256 _id,

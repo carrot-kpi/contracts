@@ -1,6 +1,8 @@
 pragma solidity 0.8.15;
 
 import {Clones} from "oz/proxy/Clones.sol";
+import {TransparentUpgradeableProxy} from "oz/proxy/transparent/TransparentUpgradeableProxy.sol";
+import {ProxyAdmin} from "oz/proxy/transparent/ProxyAdmin.sol";
 import {ERC20KPIToken} from "../contracts/kpi-tokens/ERC20KPIToken.sol";
 import {ManualRealityOracle} from "../contracts/oracles/ManualRealityOracle.sol";
 import {OraclesManager} from "../contracts/OraclesManager.sol";
@@ -52,9 +54,24 @@ contract Deploy {
             ERC20_KPI_TOKEN_SPECIFICATION
         );
 
-        OraclesManager _oraclesManager = new OraclesManager(address(_factory));
+        OraclesManager _oraclesManager = new OraclesManager();
+
+        // deploy a proxy for the oracle manager
+        ProxyAdmin _proxyAdmin = new ProxyAdmin();
+        TransparentUpgradeableProxy _proxy = new TransparentUpgradeableProxy(
+            address(_oraclesManager),
+            address(proxyAdmin),
+            abi.encodeWithSignature("initialize(address)", address(_factory))
+        );
+
         emit log_string("Oracles manager deployed at address");
         emit log_address(address(_oraclesManager));
+
+        emit log_string("Oracles manager proxy admin deployed at address");
+        emit log_address(address(_proxyAdmin));
+
+        emit log_string("Oracles manager proxy deployed at address");
+        emit log_address(address(_proxy));
 
         ManualRealityOracle _manualRealityOracleTemplate = new ManualRealityOracle();
         emit log_string("Manual Reality oracle template deployed at address");

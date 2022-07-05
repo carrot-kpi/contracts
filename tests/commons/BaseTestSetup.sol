@@ -1,12 +1,14 @@
 pragma solidity 0.8.15;
 
 import {Test} from "forge-std/Test.sol";
+import {TransparentUpgradeableProxy} from "oz/proxy/transparent/TransparentUpgradeableProxy.sol";
+import {ProxyAdmin} from "oz/proxy/transparent/ProxyAdmin.sol";
+import {ERC20PresetMinterPauser} from "oz/token/ERC20/presets/ERC20PresetMinterPauser.sol";
 import {ERC20KPIToken} from "../../contracts/kpi-tokens/ERC20KPIToken.sol";
 import {KPITokensManager} from "../../contracts/KPITokensManager.sol";
 import {ManualRealityOracle} from "../../contracts/oracles/ManualRealityOracle.sol";
 import {OraclesManager} from "../../contracts/OraclesManager.sol";
 import {KPITokensFactory} from "../../contracts/KPITokensFactory.sol";
-import {ERC20PresetMinterPauser} from "oz/token/ERC20/presets/ERC20PresetMinterPauser.sol";
 import {IERC20KPIToken} from "../../contracts/interfaces/kpi-tokens/IERC20KPIToken.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
@@ -27,6 +29,8 @@ abstract contract BaseTestSetup is Test {
     KPITokensManager internal kpiTokensManager;
     ManualRealityOracle internal manualRealityOracleTemplate;
     OraclesManager internal oraclesManager;
+    ProxyAdmin internal oraclesManagerProxyAdmin;
+    TransparentUpgradeableProxy internal oraclesManagerProxy;
 
     function setUp() external {
         firstErc20 = new ERC20PresetMinterPauser("Token 1", "TKN1");
@@ -43,10 +47,16 @@ abstract contract BaseTestSetup is Test {
         );
 
         manualRealityOracleTemplate = new ManualRealityOracle();
-        oraclesManager = new OraclesManager(
-            address(factory) /* ,
-            address(0) */ // jolt jobs registry
+        address _oraclesManagerImplementation = address(new OraclesManager());
+
+        oraclesManagerProxyAdmin = new ProxyAdmin();
+        oraclesManagerProxy = new TransparentUpgradeableProxy(
+            _oraclesManagerImplementation,
+            address(oraclesManagerProxyAdmin),
+            abi.encodeWithSignature("initialize(address)", address(factory))
         );
+        oraclesManager = OraclesManager(address(oraclesManagerProxy));
+
         oraclesManager.addTemplate(
             address(manualRealityOracleTemplate),
             false,

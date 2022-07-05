@@ -1,7 +1,7 @@
 pragma solidity 0.8.15;
 
-import {Ownable} from "oz/access/Ownable.sol";
-import {Clones} from "oz/proxy/Clones.sol";
+import {OwnableUpgradeable} from "oz-upgradeable/access/OwnableUpgradeable.sol";
+import {ClonesUpgradeable} from "oz-upgradeable/proxy/ClonesUpgradeable.sol";
 import {IKPIToken} from "./interfaces/kpi-tokens/IKPIToken.sol";
 import {IOracle} from "./interfaces/oracles/IOracle.sol";
 import {IOraclesManager} from "./interfaces/IOraclesManager.sol";
@@ -17,8 +17,8 @@ import {IKPITokensFactory} from "./interfaces/IKPITokensFactory.sol";
 /// (addition, removal, upgrade of templates and more) and the
 /// governance contract must be the owner of the oracles manager.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
-contract OraclesManager is Ownable, IOraclesManager {
-    address public immutable factory;
+contract OraclesManager is OwnableUpgradeable, IOraclesManager {
+    address public factory;
     uint256 internal templateId;
     Template[] internal templates;
     mapping(uint256 => uint256) internal templateIdToIndex;
@@ -51,9 +51,10 @@ contract OraclesManager is Ownable, IOraclesManager {
         string newSpecification
     );
 
-    constructor(address _factory) {
+    function initialize(address _factory) external override initializer {
         if (_factory == address(0)) revert ZeroAddressFactory();
         factory = _factory;
+        __Ownable_init();
     }
 
     /// @dev Calculates the salt value used in CREATE2 when
@@ -82,7 +83,7 @@ contract OraclesManager is Ownable, IOraclesManager {
         bytes calldata _initializationData
     ) external view override returns (address) {
         return
-            Clones.predictDeterministicAddress(
+            ClonesUpgradeable.predictDeterministicAddress(
                 storageTemplate(_id).addrezz,
                 salt(_creator, _initializationData),
                 address(this)
@@ -105,7 +106,7 @@ contract OraclesManager is Ownable, IOraclesManager {
         if (!IKPITokensFactory(factory).allowOraclesCreation(msg.sender))
             revert Forbidden();
         Template storage _template = storageTemplate(_id);
-        address _instance = Clones.cloneDeterministic(
+        address _instance = ClonesUpgradeable.cloneDeterministic(
             _template.addrezz,
             salt(_creator, _initializationData)
         );

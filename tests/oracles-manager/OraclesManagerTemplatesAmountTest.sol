@@ -11,9 +11,8 @@ import {Clones} from "oz/proxy/Clones.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract OraclesManagerTemplatesAmountTest is BaseTestSetup {
     function testNoTemplates() external {
-        oraclesManager = new OraclesManager(
-            address(factory) /* , address(0) */
-        );
+        oraclesManager = new OraclesManager();
+        oraclesManager.initialize(address(factory));
         assertEq(oraclesManager.templatesAmount(), 0);
     }
 
