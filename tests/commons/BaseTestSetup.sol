@@ -28,6 +28,7 @@ abstract contract BaseTestSetup is Test {
     ERC20KPIToken internal erc20KpiTokenTemplate;
     KPITokensManager internal kpiTokensManager;
     ManualRealityOracle internal manualRealityOracleTemplate;
+    address internal oraclesManagerImplementation;
     OraclesManager internal oraclesManager;
     ProxyAdmin internal oraclesManagerProxyAdmin;
     TransparentUpgradeableProxy internal oraclesManagerProxy;
@@ -47,11 +48,11 @@ abstract contract BaseTestSetup is Test {
         );
 
         manualRealityOracleTemplate = new ManualRealityOracle();
-        address _oraclesManagerImplementation = address(new OraclesManager());
+        oraclesManagerImplementation = address(new OraclesManager());
 
         oraclesManagerProxyAdmin = new ProxyAdmin();
         oraclesManagerProxy = new TransparentUpgradeableProxy(
-            _oraclesManagerImplementation,
+            oraclesManagerImplementation,
             address(oraclesManagerProxyAdmin),
             abi.encodeWithSignature("initialize(address)", address(factory))
         );
