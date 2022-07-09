@@ -46,6 +46,8 @@ contract ERC20KPIToken is
     uint256 internal totalWeight;
     mapping(address => uint256) internal registeredBurn;
     mapping(address => uint256) internal postFinalizationCollateralAmount;
+    mapping(address => mapping(address => uint256))
+        internal redeemedCollateralOf;
 
     error Forbidden();
     error NotInitialized();
@@ -645,7 +647,7 @@ contract ERC20KPIToken is
         uint256 _kpiTokenBalance = balanceOf(msg.sender);
         if (_kpiTokenBalance == 0) revert Forbidden();
         _burn(msg.sender, _kpiTokenBalance);
-        registeredBurn[msg.sender] = _kpiTokenBalance;
+        registeredBurn[msg.sender] += _kpiTokenBalance;
         emit RegisterRedemption(msg.sender, _kpiTokenBalance);
     }
 
@@ -669,13 +671,14 @@ contract ERC20KPIToken is
                 uint256 _redeemableAmount;
                 unchecked {
                     _redeemableAmount =
-                        (postFinalizationCollateralAmount[_collateral.token] *
-                            _burned) /
-                        initialSupply;
+                        ((postFinalizationCollateralAmount[_collateral.token] *
+                            _burned) / initialSupply) -
+                        redeemedCollateralOf[msg.sender][_token];
                     if (_redeemableAmount == 0) revert NothingToRedeem();
                     _collateral.amount -= _redeemableAmount;
                 }
-                delete registeredBurn[msg.sender];
+                if (_redeemableAmount == 0) revert Forbidden();
+                redeemedCollateralOf[msg.sender][_token] += _redeemableAmount;
                 IERC20Upgradeable(_token).safeTransfer(
                     _receiver,
                     _redeemableAmount

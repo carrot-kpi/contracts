@@ -655,8 +655,8 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
 
         vm.prank(holder);
         kpiTokenInstance.registerRedemption();
-        vm.prank(holder);
         vm.expectRevert(abi.encodeWithSignature("NothingToRedeem()"));
+        vm.prank(holder);
         kpiTokenInstance.redeemCollateral(address(firstErc20), holder);
         assertEq(kpiTokenInstance.balanceOf(holder), 0);
         assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 109.67 ether);
@@ -1075,6 +1075,252 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         );
         vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
         kpiTokenInstance.redeemCollateral(address(firstErc20), holder);
+    }
+
+    function testOverHigherBoundSingleOracleIncrementalRedemption() external {
+        address holder = address(123321);
+
+        IERC20KPIToken.Collateral[]
+            memory _collaterals = new IERC20KPIToken.Collateral[](1);
+        _collaterals[0] = IERC20KPIToken.Collateral({
+            token: address(firstErc20),
+            amount: 110 ether,
+            minimumPayout: 0
+        });
+        bytes memory _erc20KpiTokenInitializationData = abi.encode(
+            _collaterals,
+            "Test",
+            "TST",
+            100 ether
+        );
+
+        address _reality = address(42);
+        vm.mockCall(
+            _reality,
+            abi.encodeWithSignature(
+                "askQuestionWithMinBond(uint256,string,address,uint32,uint32,uint256,uint256)"
+            ),
+            abi.encode(bytes32("question id"))
+        );
+        bytes memory _manualRealityOracleInitializationData = abi.encode(
+            _reality,
+            address(this),
+            1,
+            "b",
+            60,
+            block.timestamp + 60,
+            0
+        );
+        IERC20KPIToken.OracleData[]
+            memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
+        _oracleDatas[0] = IERC20KPIToken.OracleData({
+            templateId: 1,
+            lowerBound: 10,
+            higherBound: 11,
+            weight: 1,
+            value: 0,
+            data: _manualRealityOracleInitializationData
+        });
+        bytes memory _oraclesInitializationData = abi.encode(
+            _oracleDatas,
+            true
+        );
+
+        firstErc20.mint(address(this), 110 ether);
+        address _predictedKpiTokenAddress = kpiTokensManager
+            .predictInstanceAddress(
+                address(this),
+                1,
+                "a",
+                _erc20KpiTokenInitializationData,
+                _oraclesInitializationData
+            );
+        firstErc20.approve(_predictedKpiTokenAddress, 110 ether);
+
+        factory.createToken(
+            1,
+            "a",
+            block.timestamp + 60,
+            _erc20KpiTokenInitializationData,
+            _oraclesInitializationData
+        );
+
+        ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
+            _predictedKpiTokenAddress
+        );
+
+        kpiTokenInstance.transfer(holder, 1 ether);
+        assertEq(kpiTokenInstance.balanceOf(holder), 1 ether);
+
+        address oracle = kpiTokenInstance.oracles()[0];
+        vm.prank(oracle);
+        kpiTokenInstance.finalize(12);
+
+        (IERC20KPIToken.Collateral[] memory onChainCollaterals, , , , , ) = abi
+            .decode(
+                kpiTokenInstance.data(),
+                (
+                    IERC20KPIToken.Collateral[],
+                    IERC20KPIToken.FinalizableOracle[],
+                    bool,
+                    uint256,
+                    string,
+                    string
+                )
+            );
+
+        assertEq(onChainCollaterals.length, 1);
+        assertEq(onChainCollaterals[0].amount, 109.67 ether);
+
+        vm.prank(holder);
+        kpiTokenInstance.registerRedemption();
+        vm.prank(holder);
+        kpiTokenInstance.redeemCollateral(address(firstErc20), holder);
+        assertEq(kpiTokenInstance.balanceOf(holder), 0 ether);
+        assertEq(firstErc20.balanceOf(holder), 1.0967 ether);
+        assertEq(
+            firstErc20.balanceOf(address(kpiTokenInstance)),
+            108.5733 ether
+        );
+        vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
+        kpiTokenInstance.redeemCollateral(address(firstErc20), holder);
+
+        kpiTokenInstance.transfer(holder, 10 ether);
+
+        vm.prank(holder);
+        kpiTokenInstance.registerRedemption();
+        vm.prank(holder);
+        kpiTokenInstance.redeemCollateral(address(firstErc20), holder);
+        assertEq(kpiTokenInstance.balanceOf(holder), 0 ether);
+        assertEq(firstErc20.balanceOf(holder), 12.0637 ether);
+        assertEq(
+            firstErc20.balanceOf(address(kpiTokenInstance)),
+            97.6063 ether
+        );
+        vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
+        kpiTokenInstance.redeemCollateral(address(firstErc20), holder);
+    }
+
+    function testOverHigherBoundSingleOracleMultiCollateral() external {
+        address holder = address(123321);
+
+        IERC20KPIToken.Collateral[]
+            memory _collaterals = new IERC20KPIToken.Collateral[](2);
+        _collaterals[0] = IERC20KPIToken.Collateral({
+            token: address(firstErc20),
+            amount: 110 ether,
+            minimumPayout: 0
+        });
+        _collaterals[1] = IERC20KPIToken.Collateral({
+            token: address(secondErc20),
+            amount: 100 ether,
+            minimumPayout: 0
+        });
+        bytes memory _erc20KpiTokenInitializationData = abi.encode(
+            _collaterals,
+            "Test",
+            "TST",
+            100 ether
+        );
+
+        address _reality = address(42);
+        vm.mockCall(
+            _reality,
+            abi.encodeWithSignature(
+                "askQuestionWithMinBond(uint256,string,address,uint32,uint32,uint256,uint256)"
+            ),
+            abi.encode(bytes32("question id"))
+        );
+        bytes memory _manualRealityOracleInitializationData = abi.encode(
+            _reality,
+            address(this),
+            1,
+            "b",
+            60,
+            block.timestamp + 60,
+            0
+        );
+        IERC20KPIToken.OracleData[]
+            memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
+        _oracleDatas[0] = IERC20KPIToken.OracleData({
+            templateId: 1,
+            lowerBound: 10,
+            higherBound: 11,
+            weight: 1,
+            value: 0,
+            data: _manualRealityOracleInitializationData
+        });
+        bytes memory _oraclesInitializationData = abi.encode(
+            _oracleDatas,
+            true
+        );
+
+        firstErc20.mint(address(this), 110 ether);
+        secondErc20.mint(address(this), 100 ether);
+        address _predictedKpiTokenAddress = kpiTokensManager
+            .predictInstanceAddress(
+                address(this),
+                1,
+                "a",
+                _erc20KpiTokenInitializationData,
+                _oraclesInitializationData
+            );
+        firstErc20.approve(_predictedKpiTokenAddress, 110 ether);
+        secondErc20.approve(_predictedKpiTokenAddress, 100 ether);
+
+        factory.createToken(
+            1,
+            "a",
+            block.timestamp + 60,
+            _erc20KpiTokenInitializationData,
+            _oraclesInitializationData
+        );
+
+        ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
+            _predictedKpiTokenAddress
+        );
+
+        kpiTokenInstance.transfer(holder, 1 ether);
+        assertEq(kpiTokenInstance.balanceOf(holder), 1 ether);
+
+        address oracle = kpiTokenInstance.oracles()[0];
+        vm.prank(oracle);
+        kpiTokenInstance.finalize(12);
+
+        (IERC20KPIToken.Collateral[] memory onChainCollaterals, , , , , ) = abi
+            .decode(
+                kpiTokenInstance.data(),
+                (
+                    IERC20KPIToken.Collateral[],
+                    IERC20KPIToken.FinalizableOracle[],
+                    bool,
+                    uint256,
+                    string,
+                    string
+                )
+            );
+
+        assertEq(onChainCollaterals.length, 2);
+        assertEq(onChainCollaterals[0].amount, 109.67 ether);
+        assertEq(onChainCollaterals[1].amount, 99.7 ether);
+
+        vm.prank(holder);
+        kpiTokenInstance.registerRedemption();
+        vm.prank(holder);
+        kpiTokenInstance.redeemCollateral(address(firstErc20), holder);
+        assertEq(kpiTokenInstance.balanceOf(holder), 0 ether);
+        assertEq(firstErc20.balanceOf(holder), 1.0967 ether);
+        assertEq(
+            firstErc20.balanceOf(address(kpiTokenInstance)),
+            108.5733 ether
+        );
+        vm.prank(holder);
+        kpiTokenInstance.redeemCollateral(address(secondErc20), holder);
+        assertEq(secondErc20.balanceOf(holder), 0.997 ether);
+        assertEq(
+            secondErc20.balanceOf(address(kpiTokenInstance)),
+            98.703 ether
+        );
     }
 
     function testOverHigherBoundSingleOracleExpired() external {
@@ -2868,7 +3114,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             firstErc20.balanceOf(address(this)),
             32.535433333333333333 ether
         );
-        vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
+        vm.expectRevert(abi.encodeWithSignature("NothingToRedeem()"));
         kpiTokenInstance.redeemCollateral(address(firstErc20), address(this));
 
         assertEq(
