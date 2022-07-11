@@ -623,12 +623,10 @@ contract ERC20KPIToken is
                         _initialSupply;
                     _collateral.amount -= _redeemableAmount;
                 }
-                if (_redeemableAmount > 0) {
-                    IERC20Upgradeable(_collateral.token).safeTransfer(
-                        _receiver,
-                        _redeemableAmount
-                    );
-                }
+                IERC20Upgradeable(_collateral.token).safeTransfer(
+                    _receiver,
+                    _redeemableAmount
+                );
             }
             _redeemedCollaterals[_i] = RedeemedCollateral({
                 token: _collateral.token,
