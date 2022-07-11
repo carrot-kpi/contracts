@@ -175,7 +175,8 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 19.94 ether);
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
 
-        assertEq(firstErc20.balanceOf(address(this)), 19.94 ether);
+        assertEq(firstErc20.balanceOf(address(this)), 9.94 ether);
+        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 10 ether);
     }
 
     function testOverHigherBoundAndRelationshipMultipleOracle() external {
@@ -361,13 +362,12 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
             _oraclesInitializationData
         );
 
-        uint256 kpiTokensAmount = factory.kpiTokensAmount();
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
-            factory.enumerate(
-                kpiTokensAmount > 0 ? kpiTokensAmount - 1 : kpiTokensAmount,
-                kpiTokensAmount > 0 ? kpiTokensAmount : 1
-            )[0]
+            _predictedKpiTokenAddress
         );
+
+        address _holder = address(1234567876543);
+        kpiTokenInstance.transfer(_holder, 50 ether);
 
         vm.warp(_expiration);
 
@@ -376,14 +376,18 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         kpiTokenInstance.finalize(97 ether);
 
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
-        assertEq(firstErc20.balanceOf(address(this)), 19.94 ether);
+        assertEq(firstErc20.balanceOf(address(this)), 9.94 ether);
 
         vm.prank(kpiTokenInstance.oracles()[1]);
         kpiTokenInstance.finalize(97 ether);
 
         vm.expectRevert(abi.encodeWithSignature("NothingToRecover()"));
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
-        assertEq(firstErc20.balanceOf(address(this)), 19.94 ether);
+        assertEq(firstErc20.balanceOf(address(this)), 9.94 ether);
+
+        vm.prank(_holder);
+        kpiTokenInstance.redeem(abi.encode(_holder));
+        assertEq(firstErc20.balanceOf(_holder), 5 ether);
     }
 
     function testOverHigherBoundOrRelationshipSingleOracle() external {
@@ -551,8 +555,8 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
 
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
 
-        assertEq(firstErc20.balanceOf(address(this)), 19.94 ether);
-        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 0);
+        assertEq(firstErc20.balanceOf(address(this)), 9.94 ether);
+        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 10 ether);
     }
 
     function testOverHigherBoundOrRelationshipMultiOracleExpiredExpired()
@@ -655,8 +659,8 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
 
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
 
-        assertEq(firstErc20.balanceOf(address(this)), 19.94 ether);
-        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 0);
+        assertEq(firstErc20.balanceOf(address(this)), 9.94 ether);
+        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 10 ether);
     }
 
     function testOverHigherBoundOrRelationshipMultipleOracle() external {
@@ -856,8 +860,8 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         kpiTokenInstance.finalize(97 ether);
 
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
-        assertEq(firstErc20.balanceOf(address(this)), 49.85 ether);
-        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 0);
+        assertEq(firstErc20.balanceOf(address(this)), 39.85 ether);
+        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 10 ether);
     }
 
     function testOverHigherBoundAndRelationshipSingleOracleMultiCollateral()
@@ -1047,10 +1051,10 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
         kpiTokenInstance.recoverERC20(address(secondErc20), address(this));
 
-        assertEq(firstErc20.balanceOf(address(this)), 19.94 ether);
-        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 0);
-        assertEq(secondErc20.balanceOf(address(this)), 34.895 ether);
-        assertEq(secondErc20.balanceOf(address(kpiTokenInstance)), 0);
+        assertEq(firstErc20.balanceOf(address(this)), 9.94 ether);
+        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 10 ether);
+        assertEq(secondErc20.balanceOf(address(this)), 22.695 ether);
+        assertEq(secondErc20.balanceOf(address(kpiTokenInstance)), 12.2 ether);
     }
 
     function testOverHigherBoundAndRelationshipMultipleOracleMultiCollateral()
@@ -1272,10 +1276,10 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
         kpiTokenInstance.recoverERC20(address(secondErc20), address(this));
 
-        assertEq(firstErc20.balanceOf(address(this)), 19.94 ether);
-        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 0);
-        assertEq(secondErc20.balanceOf(address(this)), 20.16931 ether);
-        assertEq(secondErc20.balanceOf(address(kpiTokenInstance)), 0);
+        assertEq(firstErc20.balanceOf(address(this)), 9.94 ether);
+        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 10 ether);
+        assertEq(secondErc20.balanceOf(address(this)), 1.26931 ether);
+        assertEq(secondErc20.balanceOf(address(kpiTokenInstance)), 18.9 ether);
     }
 
     function testOverHigherBoundOrRelationshipSingleOracleMultiCollateral()
@@ -1465,10 +1469,10 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
         kpiTokenInstance.recoverERC20(address(secondErc20), address(this));
 
-        assertEq(firstErc20.balanceOf(address(this)), 19.94 ether);
-        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 0);
-        assertEq(secondErc20.balanceOf(address(this)), 28.913 ether);
-        assertEq(secondErc20.balanceOf(address(kpiTokenInstance)), 0);
+        assertEq(firstErc20.balanceOf(address(this)), 9.94 ether);
+        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 10 ether);
+        assertEq(secondErc20.balanceOf(address(this)), 0.913 ether);
+        assertEq(secondErc20.balanceOf(address(kpiTokenInstance)), 28 ether);
     }
 
     function testOverHigherBoundOrRelationshipMultipleOracleMultiCollateral()
@@ -1690,9 +1694,9 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
         kpiTokenInstance.recoverERC20(address(secondErc20), address(this));
 
-        assertEq(firstErc20.balanceOf(address(this)), 19.94 ether);
-        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 0);
-        assertEq(secondErc20.balanceOf(address(this)), 12.61205 ether);
-        assertEq(secondErc20.balanceOf(address(kpiTokenInstance)), 0);
+        assertEq(firstErc20.balanceOf(address(this)), 9.94 ether);
+        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 10 ether);
+        assertEq(secondErc20.balanceOf(address(this)), 2.61205 ether);
+        assertEq(secondErc20.balanceOf(address(kpiTokenInstance)), 10 ether);
     }
 }

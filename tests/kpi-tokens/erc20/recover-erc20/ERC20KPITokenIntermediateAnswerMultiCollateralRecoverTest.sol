@@ -391,8 +391,8 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
         kpiTokenInstance.recoverERC20(address(secondErc20), address(this));
 
-        assertEq(firstErc20.balanceOf(address(this)), 9.97 ether);
-        assertEq(secondErc20.balanceOf(address(this)), 101.694 ether);
+        assertEq(firstErc20.balanceOf(address(this)), 8.97 ether);
+        assertEq(secondErc20.balanceOf(address(this)), 10.194 ether);
     }
 
     function testIntermediateBoundOrRelationshipSingleOracleZeroMinimumPayoutMultiCollateral()
@@ -781,10 +781,10 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
         kpiTokenInstance.recoverERC20(address(secondErc20), address(this));
 
-        assertEq(firstErc20.balanceOf(address(this)), 44.865 ether);
-        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 0);
-        assertEq(secondErc20.balanceOf(address(this)), 818.537 ether);
-        assertEq(secondErc20.balanceOf(address(kpiTokenInstance)), 0);
+        assertEq(firstErc20.balanceOf(address(this)), 22.865 ether);
+        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 22 ether);
+        assertEq(secondErc20.balanceOf(address(this)), 780.537 ether);
+        assertEq(secondErc20.balanceOf(address(kpiTokenInstance)), 38 ether);
     }
 
     function testIntermediateBoundAndRelationshipMultipleOraclesZeroMinimumPayoutMultiCollateral()
@@ -1233,9 +1233,9 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralRecoverTest is
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
         kpiTokenInstance.recoverERC20(address(secondErc20), address(this));
 
-        assertEq(firstErc20.balanceOf(address(this)), 1.994 ether);
-        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 0);
-        assertEq(secondErc20.balanceOf(address(this)), 25.922 ether);
-        assertEq(secondErc20.balanceOf(address(kpiTokenInstance)), 0);
+        assertEq(firstErc20.balanceOf(address(this)), 0.994 ether);
+        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 1 ether);
+        assertEq(secondErc20.balanceOf(address(this)), 15.922 ether);
+        assertEq(secondErc20.balanceOf(address(kpiTokenInstance)), 10 ether);
     }
 }

@@ -274,8 +274,8 @@ contract ERC20KPITokenBelowLowerBoundRecoverTest is BaseTestSetup {
             memory _collaterals = new IERC20KPIToken.Collateral[](1);
         _collaterals[0] = IERC20KPIToken.Collateral({
             token: address(firstErc20),
-            amount: 2,
-            minimumPayout: 1
+            amount: 2 ether,
+            minimumPayout: 1 ether
         });
         bytes memory _erc20KpiTokenInitializationData = abi.encode(
             _collaterals,
@@ -316,7 +316,7 @@ contract ERC20KPITokenBelowLowerBoundRecoverTest is BaseTestSetup {
             true
         );
 
-        firstErc20.mint(address(this), 2);
+        firstErc20.mint(address(this), 2 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
                 address(this),
@@ -325,7 +325,7 @@ contract ERC20KPITokenBelowLowerBoundRecoverTest is BaseTestSetup {
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );
-        firstErc20.approve(_predictedKpiTokenAddress, 2);
+        firstErc20.approve(_predictedKpiTokenAddress, 2 ether);
 
         uint256 _expiration = block.timestamp + 60;
         factory.createToken(
@@ -352,7 +352,7 @@ contract ERC20KPITokenBelowLowerBoundRecoverTest is BaseTestSetup {
 
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
 
-        assertEq(firstErc20.balanceOf(address(this)), 2);
+        assertEq(firstErc20.balanceOf(address(this)), 0.994 ether);
     }
 
     function testBelowLowerBoundOrRelationshipSingleOracleZeroMinimumPayout()
@@ -698,7 +698,7 @@ contract ERC20KPITokenBelowLowerBoundRecoverTest is BaseTestSetup {
 
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
 
-        assertEq(firstErc20.balanceOf(address(this)), 2);
+        assertEq(firstErc20.balanceOf(address(this)), 1);
     }
 
     function testBelowLowerBoundAndRelationshipMultipleOraclesZeroMinimumPayout()
@@ -1104,7 +1104,8 @@ contract ERC20KPITokenBelowLowerBoundRecoverTest is BaseTestSetup {
 
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
 
-        assertEq(firstErc20.balanceOf(address(this)), 2);
+        assertEq(firstErc20.balanceOf(address(this)), 1);
+        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 1);
     }
 
     function testBelowLowerBoundAndRelationshipSingleOracleZeroMinimumPayoutMultiCollateral()
@@ -1485,8 +1486,8 @@ contract ERC20KPITokenBelowLowerBoundRecoverTest is BaseTestSetup {
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
         kpiTokenInstance.recoverERC20(address(secondErc20), address(this));
 
-        assertEq(firstErc20.balanceOf(address(this)), 2);
-        assertEq(secondErc20.balanceOf(address(this)), 6.979 ether);
+        assertEq(firstErc20.balanceOf(address(this)), 1);
+        assertEq(secondErc20.balanceOf(address(this)), 0.979 ether);
     }
 
     function testBelowLowerBoundOrRelationshipSingleOracleZeroMinimumPayoutMultiCollateral()
@@ -1781,8 +1782,8 @@ contract ERC20KPITokenBelowLowerBoundRecoverTest is BaseTestSetup {
             memory _collaterals = new IERC20KPIToken.Collateral[](2);
         _collaterals[0] = IERC20KPIToken.Collateral({
             token: address(firstErc20),
-            amount: 2,
-            minimumPayout: 1
+            amount: 2 ether,
+            minimumPayout: 1 ether
         });
         _collaterals[1] = IERC20KPIToken.Collateral({
             token: address(secondErc20),
@@ -1828,7 +1829,7 @@ contract ERC20KPITokenBelowLowerBoundRecoverTest is BaseTestSetup {
             false
         );
 
-        firstErc20.mint(address(this), 2);
+        firstErc20.mint(address(this), 2 ether);
         secondErc20.mint(address(this), 3.5 ether);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
@@ -1838,7 +1839,7 @@ contract ERC20KPITokenBelowLowerBoundRecoverTest is BaseTestSetup {
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );
-        firstErc20.approve(_predictedKpiTokenAddress, 2);
+        firstErc20.approve(_predictedKpiTokenAddress, 2 ether);
         secondErc20.approve(_predictedKpiTokenAddress, 3.5 ether);
 
         uint256 _expiration = block.timestamp + 60;
@@ -1867,8 +1868,8 @@ contract ERC20KPITokenBelowLowerBoundRecoverTest is BaseTestSetup {
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
         kpiTokenInstance.recoverERC20(address(secondErc20), address(this));
 
-        assertEq(firstErc20.balanceOf(address(this)), 2);
-        assertEq(secondErc20.balanceOf(address(this)), 3.4895 ether);
+        assertEq(firstErc20.balanceOf(address(this)), 0.994 ether);
+        assertEq(secondErc20.balanceOf(address(this)), 2.2895 ether);
     }
 
     function testBelowLowerBoundAndRelationshipMultipleOraclesZeroMinimumPayoutMultiCollateral()
@@ -2309,7 +2310,7 @@ contract ERC20KPITokenBelowLowerBoundRecoverTest is BaseTestSetup {
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
         kpiTokenInstance.recoverERC20(address(secondErc20), address(this));
 
-        assertEq(firstErc20.balanceOf(address(this)), 2);
-        assertEq(secondErc20.balanceOf(address(this)), 39.88 ether);
+        assertEq(firstErc20.balanceOf(address(this)), 1);
+        assertEq(secondErc20.balanceOf(address(this)), 7.481061607 ether);
     }
 }

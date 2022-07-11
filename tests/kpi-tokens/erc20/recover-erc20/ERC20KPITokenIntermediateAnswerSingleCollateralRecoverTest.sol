@@ -355,8 +355,8 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralRecoverTest is
 
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
 
-        assertEq(firstErc20.balanceOf(address(this)), 9.97 ether);
-        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 0);
+        assertEq(firstErc20.balanceOf(address(this)), 8.97 ether);
+        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 1 ether);
     }
 
     function testIntermediateBoundOrRelationshipSingleOracleZeroMinimumPayout()
@@ -706,8 +706,8 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralRecoverTest is
 
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
 
-        assertEq(firstErc20.balanceOf(address(this)), 44.865 ether);
-        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 0);
+        assertEq(firstErc20.balanceOf(address(this)), 22.865 ether);
+        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 22 ether);
     }
 
     function testIntermediateBoundAndRelationshipMultipleOraclesZeroMinimumPayout()
@@ -1110,7 +1110,7 @@ contract ERC20KPITokenIntermediateAnswerSingleCollateralRecoverTest is
 
         kpiTokenInstance.recoverERC20(address(firstErc20), address(this));
 
-        assertEq(firstErc20.balanceOf(address(this)), 1.994 ether);
-        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 0);
+        assertEq(firstErc20.balanceOf(address(this)), 0.994 ether);
+        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 1 ether);
     }
 }

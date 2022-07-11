@@ -556,11 +556,10 @@ contract ERC20KPIToken is
                 );
                 uint256 _unneededBalance = _balance;
                 if (_expired) {
-                    _collateral.amount = 0;
-                } else {
-                    unchecked {
-                        _unneededBalance -= _collateral.amount;
-                    }
+                    _collateral.amount = _collateral.minimumPayout;
+                }
+                unchecked {
+                    _unneededBalance -= _collateral.amount;
                 }
                 if (_unneededBalance == 0) revert NothingToRecover();
                 IERC20Upgradeable(_token).safeTransfer(
@@ -615,19 +614,22 @@ contract ERC20KPIToken is
         for (uint8 _i = 0; _i < collaterals.length; _i++) {
             Collateral storage _collateral = collaterals[_i];
             uint256 _redeemableAmount = 0;
-            if (!_expired) {
-                unchecked {
-                    _redeemableAmount =
-                        (postFinalizationCollateralAmount[_collateral.token] *
-                            _kpiTokenBalance) /
-                        _initialSupply;
-                    _collateral.amount -= _redeemableAmount;
-                }
-                IERC20Upgradeable(_collateral.token).safeTransfer(
-                    _receiver,
-                    _redeemableAmount
-                );
+            unchecked {
+                _redeemableAmount =
+                    ((
+                        _expired
+                            ? _collateral.minimumPayout
+                            : postFinalizationCollateralAmount[
+                                _collateral.token
+                            ]
+                    ) * _kpiTokenBalance) /
+                    _initialSupply;
+                _collateral.amount -= _redeemableAmount;
             }
+            IERC20Upgradeable(_collateral.token).safeTransfer(
+                _receiver,
+                _redeemableAmount
+            );
             _redeemedCollaterals[_i] = RedeemedCollateral({
                 token: _collateral.token,
                 amount: _redeemableAmount
@@ -669,8 +671,14 @@ contract ERC20KPIToken is
                 uint256 _redeemableAmount;
                 unchecked {
                     _redeemableAmount =
-                        ((postFinalizationCollateralAmount[_collateral.token] *
-                            _burned) / initialSupply) -
+                        ((
+                            _isExpired()
+                                ? _collateral.minimumPayout
+                                : postFinalizationCollateralAmount[
+                                    _collateral.token
+                                ]
+                        ) * _burned) /
+                        initialSupply -
                         redeemedCollateralOf[msg.sender][_token];
                     if (_redeemableAmount == 0) revert NothingToRedeem();
                     _collateral.amount -= _redeemableAmount;
