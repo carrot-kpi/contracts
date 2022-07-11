@@ -56,6 +56,7 @@ contract ManualRealityOracle is IOracle, Initializable {
     /// - `string memory _question`: The question that must be submitted to Reality.eth.
     /// - `uint32 _questionTimeout`: The question timeout as described in the Reality.eth docs (linked above).
     /// - `uint32 _openingTimestamp`: The question opening timestamp as described in the Reality.eth docs (linked above).
+    /// - `uint256 minimumBond`: The minimum bond that can be used to answer the question.
     function initialize(
         address _kpiToken,
         uint256 _templateId,
