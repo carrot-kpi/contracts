@@ -8,6 +8,7 @@ import {ManualRealityOracle} from "../contracts/oracles/ManualRealityOracle.sol"
 import {OraclesManager} from "../contracts/OraclesManager.sol";
 import {KPITokensManager} from "../contracts/KPITokensManager.sol";
 import {KPITokensFactory} from "../contracts/KPITokensFactory.sol";
+import {Vm} from "forge-std/Vm.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Deploy
@@ -18,8 +19,8 @@ contract Deploy {
     event log_address(address);
     event log_uint(uint256);
 
-    CheatCodes internal constant vm =
-        CheatCodes(address(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D));
+    Vm internal constant vm =
+        Vm(address(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D));
     string internal constant ERC20_KPI_TOKEN_SPECIFICATION =
         "QmXU4G418hZLL8yxXdjkTFSoH2FdSe6ELgUuSm5fHHJMMN";
     string internal constant MANUAL_REALITY_ETH_ORACLE_SPECIFICATION =
@@ -60,9 +61,10 @@ contract Deploy {
         ProxyAdmin _proxyAdmin = new ProxyAdmin();
         TransparentUpgradeableProxy _proxy = new TransparentUpgradeableProxy(
             address(_oraclesManager),
-            address(proxyAdmin),
+            address(_proxyAdmin),
             abi.encodeWithSignature("initialize(address)", address(_factory))
         );
+        _oraclesManager = OraclesManager(address(_proxy));
 
         emit log_string("Oracles manager deployed at address");
         emit log_address(address(_oraclesManager));
