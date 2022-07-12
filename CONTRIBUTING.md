@@ -95,7 +95,8 @@ In order to create a test token with the ERC20 template + Reality oracle
 template you can run the following command from the root of the project:
 
 ```
-FOUNDRY_PROFILE=production forge script --broadcast --slow --private-key PRIVATE_KEY --fork-url RPC_ENDPOINT --sig 'run(address,address,uint256,uint256,address,uint256,address,address,string,uint32,uint32,string)' ./scripts/CreateManualRealityEthERC20KpiToken.sol FACTORY_ADDRESS KPI_TOKENS_MANAGER_ADDRESS COLLATERAL_TOKEN COLLATERAL_AMOUNT REALITY_ADDRESS ARBITRATOR_ADDRESS REALITY_QUESTION_TEXT REALITY_QUESTION_TIMEOUT REALITY_QUESTION_EXPIRY DESCRIPTION
+FOUNDRY_PROFILE=production forge script --broadcast --slow --private-key PRIVATE_KEY --fork-url RPC_ENDPOINT --sig 'run(address,address,address,uint256,address,address,string,uint32,uint32,string,uint256)' ./scripts/CreateManualRealityEthERC20KpiToken.sol FACTORY_ADDRESS KPI_TOKENS_MANAGER_ADDRESS COLLATERAL_TOKEN COLLATERAL_AMOUNT REALITY_ADDRESS ARBITRATOR_ADDRESS REALITY_QUESTION_TEXT REALITY_QUESTION_TIMEOUT REALITY_QUESTION_EXPIRY DESCRIPTION
+EXPIRATION
 ```
 
 the values to pass are:
