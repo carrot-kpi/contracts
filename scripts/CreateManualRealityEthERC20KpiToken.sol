@@ -5,6 +5,7 @@ import {ERC20KPIToken} from "../contracts/kpi-tokens/ERC20KPIToken.sol";
 import {IERC20KPIToken} from "../contracts/interfaces/kpi-tokens/IERC20KPIToken.sol";
 import {KPITokensManager} from "../contracts/KPITokensManager.sol";
 import {KPITokensFactory} from "../contracts/KPITokensFactory.sol";
+import {Vm} from "forge-std/Vm.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Create manual RealityEth ERC20 KPI token
@@ -22,13 +23,14 @@ contract CreateManualRealityEthERC20KpiToken {
         uint32 questionTimeout;
         uint32 expiry;
         string description;
+        uint256 expiration;
     }
 
     event log_string(string);
     event log_address(address);
 
-    CheatCodes internal constant vm =
-        CheatCodes(address(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D));
+    Vm internal constant vm =
+        Vm(address(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D));
 
     function run(
         KPITokensFactory _factory,
@@ -40,7 +42,8 @@ contract CreateManualRealityEthERC20KpiToken {
         string calldata _question,
         uint32 _questionTimeout,
         uint32 _expiry,
-        string calldata _description
+        string calldata _description,
+        uint256 _expiration
     ) external {
         Args memory _args = Args({
             factory: _factory,
@@ -52,7 +55,8 @@ contract CreateManualRealityEthERC20KpiToken {
             question: _question,
             questionTimeout: _questionTimeout,
             expiry: _expiry,
-            description: _description
+            description: _description,
+            expiration: _expiration
         });
 
         IERC20KPIToken.Collateral[]
@@ -76,13 +80,15 @@ contract CreateManualRealityEthERC20KpiToken {
             lowerBound: 0,
             higherBound: 1,
             weight: 1,
+            value: 0,
             data: abi.encode(
                 _args.reality,
                 _args.arbitrator,
-                uint256(0),
+                uint256(1),
                 _args.question,
                 _args.questionTimeout,
-                _args.expiry
+                _args.expiry,
+                0
             )
         });
         bytes memory _oraclesInitializationData = abi.encode(
@@ -111,6 +117,7 @@ contract CreateManualRealityEthERC20KpiToken {
         _args.factory.createToken(
             1,
             _args.description,
+            _args.expiration,
             _kpiTokenInitializationData,
             _oraclesInitializationData
         );
