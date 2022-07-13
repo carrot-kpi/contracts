@@ -554,7 +554,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         vm.prank(holder);
         kpiTokenInstance.registerRedemption();
         vm.prank(holder);
-        vm.expectRevert(abi.encodeWithSignature("Expired()"));
+        vm.expectRevert(abi.encodeWithSignature("NothingToRedeem()"));
         kpiTokenInstance.redeemCollateral(address(firstErc20), holder);
     }
 
@@ -747,7 +747,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         vm.prank(holder);
         kpiTokenInstance.registerRedemption();
         vm.prank(holder);
-        vm.expectRevert(abi.encodeWithSignature("Expired()"));
+        vm.expectRevert(abi.encodeWithSignature("NothingToRedeem()"));
         kpiTokenInstance.redeemCollateral(address(firstErc20), holder);
         assertEq(kpiTokenInstance.balanceOf(holder), 0);
         assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 109.67 ether);
@@ -1331,7 +1331,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         _collaterals[0] = IERC20KPIToken.Collateral({
             token: address(firstErc20),
             amount: 110 ether,
-            minimumPayout: 0
+            minimumPayout: 40 ether
         });
         bytes memory _erc20KpiTokenInitializationData = abi.encode(
             _collaterals,
@@ -1424,8 +1424,9 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         vm.prank(holder);
         kpiTokenInstance.registerRedemption();
         vm.prank(holder);
-        vm.expectRevert(abi.encodeWithSignature("Expired()"));
         kpiTokenInstance.redeemCollateral(address(firstErc20), holder);
+        assertEq(firstErc20.balanceOf(holder), 0.4 ether);
+        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 109.27 ether);
     }
 
     function testIntermediateSingleOracle() external {
@@ -1664,7 +1665,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         _collaterals[0] = IERC20KPIToken.Collateral({
             token: address(firstErc20),
             amount: 22 ether,
-            minimumPayout: 0
+            minimumPayout: 1 ether
         });
         bytes memory _erc20KpiTokenInitializationData = abi.encode(
             _collaterals,
@@ -1743,8 +1744,9 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         vm.prank(holder);
         kpiTokenInstance.registerRedemption();
         vm.prank(holder);
-        vm.expectRevert(abi.encodeWithSignature("Expired()"));
         kpiTokenInstance.redeemCollateral(address(firstErc20), holder);
+        assertEq(firstErc20.balanceOf(holder), 0.01 ether);
+        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 21.924 ether);
     }
 
     function testBelowLowerBoundSingleOracleMultipleParticipants() external {
@@ -1874,7 +1876,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         _collaterals[0] = IERC20KPIToken.Collateral({
             token: address(firstErc20),
             amount: 110 ether,
-            minimumPayout: 0
+            minimumPayout: 9 ether
         });
         bytes memory _erc20KpiTokenInitializationData = abi.encode(
             _collaterals,
@@ -1954,8 +1956,9 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         vm.prank(holder1);
         kpiTokenInstance.registerRedemption();
         vm.prank(holder1);
-        vm.expectRevert(abi.encodeWithSignature("Expired()"));
         kpiTokenInstance.redeemCollateral(address(firstErc20), holder1);
+        assertEq(firstErc20.balanceOf(holder1), 0.09 ether);
+        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 109.58 ether);
     }
 
     function testAtLowerBoundSingleOracleMultipleParticipants() external {
@@ -2085,7 +2088,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         _collaterals[0] = IERC20KPIToken.Collateral({
             token: address(firstErc20),
             amount: 110 ether,
-            minimumPayout: 0
+            minimumPayout: 10 ether
         });
         bytes memory _erc20KpiTokenInitializationData = abi.encode(
             _collaterals,
@@ -2165,8 +2168,16 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         vm.prank(holder1);
         kpiTokenInstance.registerRedemption();
         vm.prank(holder1);
-        vm.expectRevert(abi.encodeWithSignature("Expired()"));
         kpiTokenInstance.redeemCollateral(address(firstErc20), holder1);
+        assertEq(firstErc20.balanceOf(holder1), 0.1 ether);
+        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 109.57 ether);
+
+        vm.prank(holder2);
+        kpiTokenInstance.registerRedemption();
+        vm.prank(holder2);
+        kpiTokenInstance.redeemCollateral(address(firstErc20), holder2);
+        assertEq(firstErc20.balanceOf(holder2), 1 ether);
+        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 108.57 ether);
     }
 
     function testOverHigherBoundSingleOracleMultipleParticipants() external {
@@ -2418,7 +2429,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         _collaterals[0] = IERC20KPIToken.Collateral({
             token: address(firstErc20),
             amount: 110 ether,
-            minimumPayout: 0
+            minimumPayout: 10 ether
         });
         bytes memory _erc20KpiTokenInitializationData = abi.encode(
             _collaterals,
@@ -2514,8 +2525,9 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         vm.prank(holder1);
         kpiTokenInstance.registerRedemption();
         vm.prank(holder1);
-        vm.expectRevert(abi.encodeWithSignature("Expired()"));
         kpiTokenInstance.redeemCollateral(address(firstErc20), holder1);
+        assertEq(firstErc20.balanceOf(holder1), 0.1 ether);
+        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 109.57 ether);
     }
 
     function testIntermediateSingleOracleMultipleParticipants() external {
@@ -2769,7 +2781,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         _collaterals[0] = IERC20KPIToken.Collateral({
             token: address(firstErc20),
             amount: 110 ether,
-            minimumPayout: 0
+            minimumPayout: 10 ether
         });
         bytes memory _erc20KpiTokenInitializationData = abi.encode(
             _collaterals,
@@ -2849,8 +2861,16 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         vm.prank(holder1);
         kpiTokenInstance.registerRedemption();
         vm.prank(holder1);
-        vm.expectRevert(abi.encodeWithSignature("Expired()"));
         kpiTokenInstance.redeemCollateral(address(firstErc20), holder1);
+        assertEq(firstErc20.balanceOf(holder1), 0.1 ether);
+        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 109.57 ether);
+
+        vm.prank(holder2);
+        kpiTokenInstance.registerRedemption();
+        vm.prank(holder2);
+        kpiTokenInstance.redeemCollateral(address(firstErc20), holder2);
+        assertEq(firstErc20.balanceOf(holder2), 1 ether);
+        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 108.57 ether);
     }
 
     function testIntermediateSingleOracleMultipleParticipantsMixedApproach()
@@ -3140,7 +3160,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         _collaterals[0] = IERC20KPIToken.Collateral({
             token: address(firstErc20),
             amount: 110 ether,
-            minimumPayout: 0
+            minimumPayout: 20 ether
         });
         bytes memory _erc20KpiTokenInitializationData = abi.encode(
             _collaterals,
@@ -3217,11 +3237,19 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         vm.prank(oracle);
         kpiTokenInstance.finalize(11);
 
+        vm.prank(holder1);
+        kpiTokenInstance.registerRedemption();
+        vm.prank(holder1);
+        kpiTokenInstance.redeemCollateral(address(firstErc20), holder1);
+        assertEq(firstErc20.balanceOf(holder1), 0.2 ether);
+        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 109.47 ether);
+
         vm.prank(holder2);
         kpiTokenInstance.registerRedemption();
         vm.prank(holder2);
-        vm.expectRevert(abi.encodeWithSignature("Expired()"));
         kpiTokenInstance.redeemCollateral(address(firstErc20), holder2);
+        assertEq(firstErc20.balanceOf(holder2), 2 ether);
+        assertEq(firstErc20.balanceOf(address(kpiTokenInstance)), 107.47 ether);
     }
 
     function testIntermediateSingleOracleMultipleParticipantsMixedApproach2()

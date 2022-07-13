@@ -67,7 +67,6 @@ contract ERC20KPIToken is
     error InvalidKpiTokensManager();
     error InvalidMinimumPayoutAfterFee();
     error DuplicatedCollateral();
-    error Expired();
     error NoOracles();
     error NoCollaterals();
     error NothingToRedeem();
@@ -662,7 +661,6 @@ contract ERC20KPIToken is
         if (_token == address(0)) revert ZeroAddressToken();
         if (_receiver == address(0)) revert ZeroAddressReceiver();
         if (!_isFinalized() && block.timestamp < expiration) revert Forbidden();
-        if (_isExpired()) revert Expired();
         uint256 _burned = registeredBurn[msg.sender];
         if (_burned == 0) revert Forbidden();
         for (uint8 _i = 0; _i < collaterals.length; _i++) {
