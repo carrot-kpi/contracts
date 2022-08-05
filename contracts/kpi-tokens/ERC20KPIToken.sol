@@ -127,7 +127,7 @@ contract ERC20KPIToken is
     /// creator, containing the initialization parameters for the chosen oracle templates.
     /// In particular the structure is formed in the following way:
     /// - `OracleData[] memory _oracleDatas`: data about the oracle, such as:
-    ///     - `uint256 _templateId`: The id of the chosed oracle template.
+    ///     - `uint256 _templateId`: The id of the chosen oracle template.
     ///     - `uint256 _lowerBound`: The number at which the oracle's reported result is
     ///       interpreted in a failed KPI (not reached). If the oracle linked to this lower
     ///       bound reports a final number above this, we know the KPI is at least partially
@@ -421,7 +421,7 @@ contract ERC20KPIToken is
     /// @dev Handles collateral state changes in case an oracle reported a low or invalid
     /// answer. In particular:
     /// - If an "all or none" approach has been chosen at the KPI token initialization
-    /// level, all the collateral minus any minimum payour is marked to be recovered
+    /// level, all the collateral minus any minimum payout is marked to be recovered
     /// by the KPI token creator. From the KPI token holder's point of view, the token
     /// expires worthless on the spot.
     /// - If no "all or none" condition has been set, the KPI contract calculates how
@@ -436,20 +436,20 @@ contract ERC20KPIToken is
     ) internal {
         for (uint256 _i = 0; _i < collaterals.length; _i++) {
             Collateral storage _collateral = collaterals[_i];
-            uint256 _reimboursement;
+            uint256 _reimbursement;
             if (_allOrNone) {
                 unchecked {
-                    _reimboursement =
+                    _reimbursement =
                         _collateral.amount -
                         _collateral.minimumPayout;
                 }
             } else {
                 uint256 _numerator = ((_collateral.amount -
                     _collateral.minimumPayout) * _oracle.weight) << MULTIPLIER;
-                _reimboursement = (_numerator / totalWeight) >> MULTIPLIER;
+                _reimbursement = (_numerator / totalWeight) >> MULTIPLIER;
             }
             unchecked {
-                _collateral.amount -= _reimboursement;
+                _collateral.amount -= _reimbursement;
             }
         }
     }
@@ -490,10 +490,10 @@ contract ERC20KPIToken is
                     _oracle.weight *
                     (_oracleFullRange - _finalOracleProgress)) << MULTIPLIER;
                 uint256 _denominator = _oracleFullRange * totalWeight;
-                uint256 _reimboursement = (_numerator / _denominator) >>
+                uint256 _reimbursement = (_numerator / _denominator) >>
                     MULTIPLIER;
                 unchecked {
-                    _collateral.amount -= _reimboursement;
+                    _collateral.amount -= _reimbursement;
                 }
             }
         }
@@ -549,12 +549,12 @@ contract ERC20KPIToken is
                 return;
             }
         }
-        uint256 _reimboursement = IERC20Upgradeable(_token).balanceOf(
+        uint256 _reimbursement = IERC20Upgradeable(_token).balanceOf(
             address(this)
         );
-        if (_reimboursement == 0) revert NothingToRecover();
-        IERC20Upgradeable(_token).safeTransfer(_receiver, _reimboursement);
-        emit RecoverERC20(_token, _reimboursement, _receiver);
+        if (_reimbursement == 0) revert NothingToRecover();
+        IERC20Upgradeable(_token).safeTransfer(_receiver, _reimbursement);
+        emit RecoverERC20(_token, _reimbursement, _receiver);
     }
 
     /// @dev Given a collateral amount, calculates the protocol fee as a percentage of it.
