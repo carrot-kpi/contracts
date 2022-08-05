@@ -17,6 +17,9 @@ contract CreateManualRealityEthERC20KpiToken {
         KPITokensManager kpiTokensManager;
         address collateralToken;
         uint256 collateralAmount;
+        uint256 minimumPayout;
+        uint256 lowerBound;
+        uint256 higherBound;
         address reality;
         address arbitrator;
         string question;
@@ -37,6 +40,9 @@ contract CreateManualRealityEthERC20KpiToken {
         KPITokensManager _kpiTokensManager,
         address _collateralToken,
         uint256 _collateralAmount,
+        uint256 _minimumPayout,
+        uint256 _lowerBound,
+        uint256 _higherBound,
         address _reality,
         address _arbitrator,
         string calldata _question,
@@ -50,6 +56,9 @@ contract CreateManualRealityEthERC20KpiToken {
             kpiTokensManager: _kpiTokensManager,
             collateralToken: _collateralToken,
             collateralAmount: _collateralAmount,
+            minimumPayout: _minimumPayout,
+            lowerBound: _lowerBound,
+            higherBound: _higherBound,
             reality: _reality,
             arbitrator: _arbitrator,
             question: _question,
@@ -64,7 +73,7 @@ contract CreateManualRealityEthERC20KpiToken {
         _collaterals[0] = IERC20KPIToken.Collateral({
             token: _args.collateralToken,
             amount: _args.collateralAmount,
-            minimumPayout: 0
+            minimumPayout: _args.minimumPayout
         });
         bytes memory _kpiTokenInitializationData = abi.encode(
             _collaterals,
@@ -77,8 +86,8 @@ contract CreateManualRealityEthERC20KpiToken {
             memory _oraclesData = new IERC20KPIToken.OracleData[](1);
         _oraclesData[0] = IERC20KPIToken.OracleData({
             templateId: 1,
-            lowerBound: 0,
-            higherBound: 1,
+            lowerBound: _args.lowerBound,
+            higherBound: _args.higherBound,
             weight: 1,
             value: 0,
             data: abi.encode(
