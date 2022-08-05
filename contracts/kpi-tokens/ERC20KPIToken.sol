@@ -585,9 +585,7 @@ contract ERC20KPIToken is
         pure
         returns (uint256)
     {
-        unchecked {
-            return (_amount * 3_000) / 1_000_000;
-        }
+        return (_amount * 3_000) / 1_000_000;
     }
 
     /// @dev Only callable by KPI token holders, lets them redeem any collateral
