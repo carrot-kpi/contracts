@@ -21,7 +21,6 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
     mapping(address => bool) public allowOraclesCreation;
     address[] internal kpiTokens;
 
-    error Forbidden();
     error ZeroAddressKpiTokensManager();
     error ZeroAddressOraclesManager();
     error ZeroAddressFeeReceiver();
