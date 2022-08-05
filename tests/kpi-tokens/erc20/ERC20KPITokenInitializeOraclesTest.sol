@@ -31,11 +31,25 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
             minimumPayout: 1 ether
         });
 
-        vm.mockCall(
-            oraclesManager,
-            abi.encodeWithSignature("instantiate(address,uint256,bytes)"),
-            abi.encode(address(2))
+        (IERC20KPIToken.OracleData[] memory _oracleDatas, ) = abi.decode(
+            oracleData,
+            (IERC20KPIToken.OracleData[], bool)
         );
+        for (uint256 _i = 0; _i < _oracleDatas.length; _i++) {
+            IERC20KPIToken.OracleData memory _oracleData = _oracleDatas[_i];
+            vm.mockCall(
+                oraclesManager,
+                abi.encodeWithSignature(
+                    "instantiate(address,uint256,bytes)",
+                    address(this),
+                    _oracleData.templateId,
+                    _oracleData.data
+                ),
+                abi.encode(
+                    address(bytes20(keccak256(abi.encodePacked(100 + _i))))
+                )
+            );
+        }
 
         if (bytes(expectedErrorSignature).length > 0) {
             vm.expectRevert(abi.encodeWithSignature(expectedErrorSignature));
@@ -262,7 +276,6 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         assertEq(onChainFinalizableOracles.length, 1);
         IERC20KPIToken.FinalizableOracle
             memory finalizableOracle = onChainFinalizableOracles[0];
-        assertEq(finalizableOracle.addrezz, address(2));
         assertEq(finalizableOracle.lowerBound, 0);
         assertEq(finalizableOracle.higherBound, 1);
         assertEq(finalizableOracle.finalResult, 0);
@@ -321,7 +334,6 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         assertEq(onChainFinalizableOracles.length, 1);
         IERC20KPIToken.FinalizableOracle
             memory finalizableOracle = onChainFinalizableOracles[0];
-        assertEq(finalizableOracle.addrezz, address(2));
         assertEq(finalizableOracle.lowerBound, 0);
         assertEq(finalizableOracle.higherBound, 1);
         assertEq(finalizableOracle.finalResult, 0);
@@ -395,14 +407,12 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
 
         assertEq(onChainFinalizableOracles.length, 2);
 
-        assertEq(onChainFinalizableOracles[0].addrezz, address(2));
         assertEq(onChainFinalizableOracles[0].lowerBound, 0);
         assertEq(onChainFinalizableOracles[0].higherBound, 1);
         assertEq(onChainFinalizableOracles[0].finalResult, 0);
         assertEq(onChainFinalizableOracles[0].weight, 1);
         assertTrue(!onChainFinalizableOracles[0].finalized);
 
-        assertEq(onChainFinalizableOracles[1].addrezz, address(2));
         assertEq(onChainFinalizableOracles[1].lowerBound, 5 ether);
         assertEq(onChainFinalizableOracles[1].higherBound, 10 ether);
         assertEq(onChainFinalizableOracles[1].finalResult, 0);
@@ -477,14 +487,12 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
 
         assertEq(onChainFinalizableOracles.length, 2);
 
-        assertEq(onChainFinalizableOracles[0].addrezz, address(2));
         assertEq(onChainFinalizableOracles[0].lowerBound, 0);
         assertEq(onChainFinalizableOracles[0].higherBound, 1);
         assertEq(onChainFinalizableOracles[0].finalResult, 0);
         assertEq(onChainFinalizableOracles[0].weight, 1);
         assertTrue(!onChainFinalizableOracles[0].finalized);
 
-        assertEq(onChainFinalizableOracles[1].addrezz, address(2));
         assertEq(onChainFinalizableOracles[1].lowerBound, 5 ether);
         assertEq(onChainFinalizableOracles[1].higherBound, 10 ether);
         assertEq(onChainFinalizableOracles[1].finalResult, 0);

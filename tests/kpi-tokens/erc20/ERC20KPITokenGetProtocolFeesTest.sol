@@ -47,8 +47,8 @@ contract ERC20KPITokenGetProtocolFeesTest is BaseTestSetup {
             Clones.clone(address(erc20KpiTokenTemplate))
         );
 
-        TokenAmount[] memory collaterals = new TokenAmount[](1);
-        collaterals[0] = TokenAmount({token: address(firstErc20), amount: 0});
+        uint256[] memory collaterals = new uint256[](1);
+        collaterals[0] = 0;
 
         vm.expectRevert(abi.encodeWithSignature("InvalidCollateral()"));
         kpiTokenInstance.protocolFee(abi.encode(collaterals));
@@ -66,43 +66,22 @@ contract ERC20KPITokenGetProtocolFeesTest is BaseTestSetup {
         kpiTokenInstance.protocolFee(abi.encode(collaterals));
     }
 
-    function testDuplicateCollateral() external {
-        ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
-            Clones.clone(address(erc20KpiTokenTemplate))
-        );
-
-        TokenAmount[] memory collaterals = new TokenAmount[](2);
-        collaterals[0] = TokenAmount({
-            token: address(firstErc20),
-            amount: 10 ether
-        });
-        collaterals[1] = TokenAmount({
-            token: address(firstErc20),
-            amount: 10 ether
-        });
-
-        vm.expectRevert(abi.encodeWithSignature("DuplicatedCollateral()"));
-        kpiTokenInstance.protocolFee(abi.encode(collaterals));
-    }
-
     function testSuccess() external {
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             Clones.clone(address(erc20KpiTokenTemplate))
         );
 
-        TokenAmount[] memory collaterals = new TokenAmount[](2);
-        collaterals[0] = TokenAmount({token: address(1), amount: 10 ether});
-        collaterals[1] = TokenAmount({token: address(2), amount: 5 ether});
+        uint256[] memory collaterals = new uint256[](2);
+        collaterals[0] = 10 ether;
+        collaterals[1] = 5 ether;
 
-        TokenAmount[] memory fees = abi.decode(
+        uint256[] memory fees = abi.decode(
             kpiTokenInstance.protocolFee(abi.encode(collaterals)),
-            (TokenAmount[])
+            (uint256[])
         );
 
         assertEq(fees.length, 2);
-        assertEq(fees[0].token, collaterals[0].token);
-        assertEq(fees[0].amount, 30000000000000000);
-        assertEq(fees[1].token, collaterals[1].token);
-        assertEq(fees[1].amount, 15000000000000000);
+        assertEq(fees[0], 30000000000000000);
+        assertEq(fees[1], 15000000000000000);
     }
 }
