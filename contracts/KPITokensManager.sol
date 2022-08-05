@@ -28,7 +28,6 @@ contract KPITokensManager is Ownable, IKPITokensManager {
     error ZeroAddressTemplate();
     error InvalidSpecification();
     error InvalidVersionBump();
-    error NoKeyForTemplate();
     error NonExistentTemplate();
     error InvalidIndices();
 
