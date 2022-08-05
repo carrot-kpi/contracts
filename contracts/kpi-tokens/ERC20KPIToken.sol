@@ -663,7 +663,7 @@ contract ERC20KPIToken is
         if (_redeemableAmount == 0) revert Forbidden();
         _collateral.redeemedBy[msg.sender] += _redeemableAmount;
         IERC20Upgradeable(_token).safeTransfer(_receiver, _redeemableAmount);
-        emit RedeemCollateral(msg.sender, _token, _receiver, _redeemableAmount);
+        emit RedeemCollateral(msg.sender, _receiver, _token, _redeemableAmount);
     }
 
     /// @dev Given ABI-encoded data about the collaterals a user intends to use
