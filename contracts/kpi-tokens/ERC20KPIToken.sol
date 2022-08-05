@@ -383,8 +383,6 @@ contract ERC20KPIToken is
     /// finalize, the remaining collateral, if any, becomes redeemable by KPI token holders.
     /// @param _result The oracle end result.
     function finalize(uint256 _result) external override nonReentrant {
-        if (!_isInitialized()) revert NotInitialized();
-
         FinalizableOracleWithoutAddress storage _oracle = finalizableOracle(
             msg.sender
         );

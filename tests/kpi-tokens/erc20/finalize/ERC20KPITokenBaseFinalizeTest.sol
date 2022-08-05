@@ -14,7 +14,7 @@ contract ERC20KPITokenBaseFinalizeTest is BaseTestSetup {
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             Clones.clone(address(erc20KpiTokenTemplate))
         );
-        vm.expectRevert(abi.encodeWithSignature("NotInitialized()"));
+        vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
         kpiTokenInstance.finalize(0);
     }
 
