@@ -47,11 +47,6 @@ interface IERC20KPIToken is IKPIToken, IERC20Upgradeable {
         bool finalized;
     }
 
-    struct RedeemedCollateral {
-        address token;
-        uint256 amount;
-    }
-
     function recoverERC20(address _token, address _receiver) external;
 
     function registerRedemption() external;

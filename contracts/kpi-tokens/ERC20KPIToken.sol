@@ -77,9 +77,10 @@ contract ERC20KPIToken is
     error NothingToRecover();
 
     event Initialize();
-    event CollectProtocolFees(
-        TokenAmount[] collected,
-        address indexed _receiver
+    event CollectProtocolFee(
+        address indexed token,
+        uint256 amount,
+        address indexed receiver
     );
     event Finalize(address indexed oracle, uint256 result);
     event RecoverERC20(
@@ -87,16 +88,12 @@ contract ERC20KPIToken is
         uint256 amount,
         address indexed receiver
     );
-    event Redeem(
-        address indexed account,
-        uint256 burned,
-        RedeemedCollateral[] redeemed
-    );
+    event Redeem(address indexed account, uint256 burned);
     event RegisterRedemption(address indexed account, uint256 burned);
     event RedeemCollateral(
         address indexed account,
         address indexed receiver,
-        address collateral,
+        address token,
         uint256 amount
     );
 
@@ -240,9 +237,6 @@ contract ERC20KPIToken is
 
         collateralsAmount = uint8(_collaterals.length);
 
-        TokenAmount[] memory _collectedFees = new TokenAmount[](
-            _collaterals.length
-        );
         for (uint8 _i = 0; _i < _collaterals.length; _i++) {
             Collateral memory _collateral = _collaterals[_i];
             uint256 _collateralAmountBeforeFee = _collateral.amount;
@@ -279,14 +273,9 @@ contract ERC20KPIToken is
                     _feeReceiver,
                     _fee
                 );
+                emit CollectProtocolFee(_collateral.token, _fee, _feeReceiver);
             }
-            _collectedFees[_i] = TokenAmount({
-                token: _collateral.token,
-                amount: _fee
-            });
         }
-
-        emit CollectProtocolFees(_collectedFees, _feeReceiver);
     }
 
     /// @dev Initializes the oracles tied to this KPI token (both the actual oracle
@@ -581,10 +570,6 @@ contract ERC20KPIToken is
         uint256 _kpiTokenBalance = balanceOf(msg.sender);
         if (_kpiTokenBalance == 0) revert Forbidden();
         _burn(msg.sender, _kpiTokenBalance);
-        RedeemedCollateral[]
-            memory _redeemedCollaterals = new RedeemedCollateral[](
-                collateralsAmount
-            );
         bool _expired = _isExpired();
         uint256 _initialSupply = initialSupply;
         for (uint8 _i = 0; _i < collateralsAmount; _i++) {
@@ -607,12 +592,8 @@ contract ERC20KPIToken is
                 _receiver,
                 _redeemableAmount
             );
-            _redeemedCollaterals[_i] = RedeemedCollateral({
-                token: _collateralAddress,
-                amount: _redeemableAmount
-            });
         }
-        emit Redeem(msg.sender, _kpiTokenBalance, _redeemedCollaterals);
+        emit Redeem(msg.sender, _kpiTokenBalance);
     }
 
     /// @dev Only callable by KPI token holders, lets them register their redemption
