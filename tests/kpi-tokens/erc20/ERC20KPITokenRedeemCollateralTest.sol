@@ -54,7 +54,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
         vm.prank(kpiTokenInstance.oracles()[0]);
         kpiTokenInstance.finalize(0);
         kpiTokenInstance.registerRedemption();
-        vm.expectRevert(abi.encodeWithSignature("InvalidCollateral()"));
+        vm.expectRevert(abi.encodeWithSignature("NothingToRedeem()"));
         kpiTokenInstance.redeemCollateral(address(1999292929), address(2));
     }
 

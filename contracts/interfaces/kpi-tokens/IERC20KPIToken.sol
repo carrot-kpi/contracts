@@ -23,6 +23,13 @@ interface IERC20KPIToken is IKPIToken, IERC20Upgradeable {
         uint256 minimumPayout;
     }
 
+    struct CollateralWithoutToken {
+        uint256 amount;
+        uint256 minimumPayout;
+        uint256 postFinalizationAmount;
+        mapping(address => uint256) redeemedBy;
+    }
+
     struct FinalizableOracle {
         address addrezz;
         uint256 lowerBound;
@@ -31,7 +38,7 @@ interface IERC20KPIToken is IKPIToken, IERC20Upgradeable {
         uint256 weight;
         bool finalized;
     }
-    
+
     struct FinalizableOracleWithoutAddress {
         uint256 lowerBound;
         uint256 higherBound;

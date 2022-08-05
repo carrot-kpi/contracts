@@ -38,7 +38,7 @@ contract ERC20KPIToken is
     uint16 internal toBeFinalized;
     address public creator;
     uint8 internal oraclesAmount;
-    Collateral[] internal collaterals;
+    uint8 internal collateralsAmount;
     string public description;
     uint256 public expiration;
     IKPITokensManager.Template internal kpiTokenTemplate;
@@ -46,11 +46,10 @@ contract ERC20KPIToken is
     uint256 internal totalWeight;
     mapping(address => FinalizableOracleWithoutAddress)
         internal finalizableOracleByAddress;
-    mapping(uint256 => address) public finalizableOracleAddressByIndex;
+    mapping(uint256 => address) internal finalizableOracleAddressByIndex;
+    mapping(address => CollateralWithoutToken) internal collateral;
+    mapping(uint256 => address) internal collateralAddressByIndex;
     mapping(address => uint256) internal registeredBurn;
-    mapping(address => uint256) internal postFinalizationCollateralAmount;
-    mapping(address => mapping(address => uint256))
-        internal redeemedCollateralOf;
 
     error Forbidden();
     error NotInitialized();
@@ -241,6 +240,8 @@ contract ERC20KPIToken is
         if (_collaterals.length > 5) revert TooManyCollaterals();
         if (_feeReceiver == address(0)) revert InvalidFeeReceiver();
 
+        collateralsAmount = uint8(_collaterals.length);
+
         TokenAmount[] memory _collectedFees = new TokenAmount[](
             _collaterals.length
         );
@@ -265,7 +266,11 @@ contract ERC20KPIToken is
             unchecked {
                 _collateral.amount = _amountMinusFees;
             }
-            collaterals.push(_collateral);
+            collateral[_collateral.token].amount = _collateral.amount;
+            collateral[_collateral.token].minimumPayout = _collateral
+                .minimumPayout;
+            collateral[_collateral.token].postFinalizationAmount = 0;
+            collateralAddressByIndex[_i] = _collateral.token;
             IERC20Upgradeable(_collateral.token).safeTransferFrom(
                 _creator,
                 address(this),
@@ -432,8 +437,10 @@ contract ERC20KPIToken is
         FinalizableOracleWithoutAddress storage _oracle,
         bool _allOrNone
     ) internal {
-        for (uint256 _i = 0; _i < collaterals.length; _i++) {
-            Collateral storage _collateral = collaterals[_i];
+        for (uint256 _i = 0; _i < collateralsAmount; _i++) {
+            CollateralWithoutToken storage _collateral = collateral[
+                collateralAddressByIndex[_i]
+            ];
             uint256 _reimbursement;
             if (_allOrNone) {
                 unchecked {
@@ -481,8 +488,10 @@ contract ERC20KPIToken is
         }
         _oracle.finalResult = _result;
         if (_finalOracleProgress < _oracleFullRange) {
-            for (uint8 _i = 0; _i < collaterals.length; _i++) {
-                Collateral storage _collateral = collaterals[_i];
+            for (uint8 _i = 0; _i < collateralsAmount; _i++) {
+                CollateralWithoutToken storage _collateral = collateral[
+                    collateralAddressByIndex[_i]
+                ];
                 uint256 _numerator = ((_collateral.amount -
                     _collateral.minimumPayout) *
                     _oracle.weight *
@@ -503,10 +512,11 @@ contract ERC20KPIToken is
     /// solution (a subset of malicious/unresponsive tokens will not be enough to jeopardize
     /// the whole campaign).
     function registerPostFinalizationCollateralAmounts() internal {
-        for (uint8 _i = 0; _i < collaterals.length; _i++) {
-            Collateral memory _collateral = collaterals[_i];
-            postFinalizationCollateralAmount[_collateral.token] = _collateral
-                .amount;
+        for (uint8 _i = 0; _i < collateralsAmount; _i++) {
+            CollateralWithoutToken storage _collateral = collateral[
+                collateralAddressByIndex[_i]
+            ];
+            _collateral.postFinalizationAmount = _collateral.amount;
         }
     }
 
@@ -525,27 +535,22 @@ contract ERC20KPIToken is
         if (_receiver == address(0)) revert ZeroAddressReceiver();
         if (msg.sender != creator) revert Forbidden();
         bool _expired = _isExpired();
-        for (uint8 _i = 0; _i < collaterals.length; _i++) {
-            Collateral memory _collateral = collaterals[_i];
-            if (_collateral.token == _token) {
-                uint256 _balance = IERC20Upgradeable(_token).balanceOf(
-                    address(this)
-                );
-                uint256 _unneededBalance = _balance;
-                if (_expired) {
-                    _collateral.amount = _collateral.minimumPayout;
-                }
-                unchecked {
-                    _unneededBalance -= _collateral.amount;
-                }
-                if (_unneededBalance == 0) revert NothingToRecover();
-                IERC20Upgradeable(_token).safeTransfer(
-                    _receiver,
-                    _unneededBalance
-                );
-                emit RecoverERC20(_token, _unneededBalance, _receiver);
-                return;
+        CollateralWithoutToken storage _collateral = collateral[_token];
+        if (_collateral.amount > 0) {
+            uint256 _balance = IERC20Upgradeable(_token).balanceOf(
+                address(this)
+            );
+            uint256 _unneededBalance = _balance;
+            if (_expired) {
+                _collateral.amount = _collateral.minimumPayout;
             }
+            unchecked {
+                _unneededBalance -= _collateral.amount;
+            }
+            if (_unneededBalance == 0) revert NothingToRecover();
+            IERC20Upgradeable(_token).safeTransfer(_receiver, _unneededBalance);
+            emit RecoverERC20(_token, _unneededBalance, _receiver);
+            return;
         }
         uint256 _reimbursement = IERC20Upgradeable(_token).balanceOf(
             address(this)
@@ -582,31 +587,32 @@ contract ERC20KPIToken is
         _burn(msg.sender, _kpiTokenBalance);
         RedeemedCollateral[]
             memory _redeemedCollaterals = new RedeemedCollateral[](
-                collaterals.length
+                collateralsAmount
             );
         bool _expired = _isExpired();
         uint256 _initialSupply = initialSupply;
-        for (uint8 _i = 0; _i < collaterals.length; _i++) {
-            Collateral storage _collateral = collaterals[_i];
+        for (uint8 _i = 0; _i < collateralsAmount; _i++) {
+            address _collateralAddress = collateralAddressByIndex[_i];
+            CollateralWithoutToken storage _collateral = collateral[
+                _collateralAddress
+            ];
             uint256 _redeemableAmount = 0;
             unchecked {
                 _redeemableAmount =
                     ((
                         _expired
                             ? _collateral.minimumPayout
-                            : postFinalizationCollateralAmount[
-                                _collateral.token
-                            ]
+                            : _collateral.postFinalizationAmount
                     ) * _kpiTokenBalance) /
                     _initialSupply;
                 _collateral.amount -= _redeemableAmount;
             }
-            IERC20Upgradeable(_collateral.token).safeTransfer(
+            IERC20Upgradeable(_collateralAddress).safeTransfer(
                 _receiver,
                 _redeemableAmount
             );
             _redeemedCollaterals[_i] = RedeemedCollateral({
-                token: _collateral.token,
+                token: _collateralAddress,
                 amount: _redeemableAmount
             });
         }
@@ -639,40 +645,25 @@ contract ERC20KPIToken is
         if (!_isFinalized() && block.timestamp < expiration) revert Forbidden();
         uint256 _burned = registeredBurn[msg.sender];
         if (_burned == 0) revert Forbidden();
-        for (uint8 _i = 0; _i < collaterals.length; _i++) {
-            Collateral storage _collateral = collaterals[_i];
-            if (_collateral.token == _token) {
-                uint256 _redeemableAmount;
-                unchecked {
-                    _redeemableAmount =
-                        ((
-                            _isExpired()
-                                ? _collateral.minimumPayout
-                                : postFinalizationCollateralAmount[
-                                    _collateral.token
-                                ]
-                        ) * _burned) /
-                        initialSupply -
-                        redeemedCollateralOf[msg.sender][_token];
-                    if (_redeemableAmount == 0) revert NothingToRedeem();
-                    _collateral.amount -= _redeemableAmount;
-                }
-                if (_redeemableAmount == 0) revert Forbidden();
-                redeemedCollateralOf[msg.sender][_token] += _redeemableAmount;
-                IERC20Upgradeable(_token).safeTransfer(
-                    _receiver,
-                    _redeemableAmount
-                );
-                emit RedeemCollateral(
-                    msg.sender,
-                    _token,
-                    _receiver,
-                    _redeemableAmount
-                );
-                return;
-            }
+        CollateralWithoutToken storage _collateral = collateral[_token];
+        if (_collateral.amount == 0) revert NothingToRedeem();
+        uint256 _redeemableAmount;
+        unchecked {
+            _redeemableAmount =
+                ((
+                    _isExpired()
+                        ? _collateral.minimumPayout
+                        : _collateral.postFinalizationAmount
+                ) * _burned) /
+                initialSupply -
+                _collateral.redeemedBy[msg.sender];
+            if (_redeemableAmount == 0) revert NothingToRedeem();
+            _collateral.amount -= _redeemableAmount;
         }
-        revert InvalidCollateral();
+        if (_redeemableAmount == 0) revert Forbidden();
+        _collateral.redeemedBy[msg.sender] += _redeemableAmount;
+        IERC20Upgradeable(_token).safeTransfer(_receiver, _redeemableAmount);
+        emit RedeemCollateral(msg.sender, _token, _receiver, _redeemableAmount);
     }
 
     /// @dev Given ABI-encoded data about the collaterals a user intends to use
@@ -764,9 +755,21 @@ contract ERC20KPIToken is
                 finalized: _finalizableOracle.finalized
             });
         }
+        Collateral[] memory _collaterals = new Collateral[](collateralsAmount);
+        for (uint256 _i = 0; _i < _collaterals.length; _i++) {
+            address _collateralAddress = collateralAddressByIndex[_i];
+            CollateralWithoutToken storage _collateral = collateral[
+                _collateralAddress
+            ];
+            _collaterals[_i] = Collateral({
+                token: _collateralAddress,
+                amount: _collateral.amount,
+                minimumPayout: _collateral.minimumPayout
+            });
+        }
         return
             abi.encode(
-                collaterals,
+                _collaterals,
                 _finalizableOracles,
                 allOrNone,
                 initialSupply,
