@@ -34,9 +34,7 @@ contract KpiTokensManagerAddTemplateTest is BaseTestSetup {
             _addedTemplateId
         );
         assertEq(_template.addrezz, _templateAddress);
-        assertEq(_template.version.major, 1);
-        assertEq(_template.version.minor, 0);
-        assertEq(_template.version.patch, 0);
+        assertEq(_template.version, 1);
         assertEq(_template.specification, _specification);
     }
 }

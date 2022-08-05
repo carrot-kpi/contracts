@@ -11,8 +11,7 @@ import {Clones} from "oz/proxy/Clones.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract OraclesManagerEnumerateTest is BaseTestSetup {
     function testNoTemplates() external {
-        oraclesManager = new OraclesManager();
-        oraclesManager.initialize(address(factory));
+        oraclesManager = new OraclesManager(address(factory));
         vm.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
         oraclesManager.enumerate(0, 1);
     }
@@ -22,15 +21,15 @@ contract OraclesManagerEnumerateTest is BaseTestSetup {
     }
 
     function testMultipleTemplatesSuccess() external {
-        oraclesManager.addTemplate(address(10), false, "a");
-        oraclesManager.addTemplate(address(11), false, "b");
-        oraclesManager.addTemplate(address(12), false, "c");
-        oraclesManager.addTemplate(address(12), false, "d");
-        oraclesManager.addTemplate(address(12), false, "e");
-        oraclesManager.addTemplate(address(12), false, "f");
-        oraclesManager.addTemplate(address(12), false, "g");
-        oraclesManager.addTemplate(address(12), false, "h");
-        oraclesManager.addTemplate(address(12), false, "i");
+        oraclesManager.addTemplate(address(10), "a");
+        oraclesManager.addTemplate(address(11), "b");
+        oraclesManager.addTemplate(address(12), "c");
+        oraclesManager.addTemplate(address(12), "d");
+        oraclesManager.addTemplate(address(12), "e");
+        oraclesManager.addTemplate(address(12), "f");
+        oraclesManager.addTemplate(address(12), "g");
+        oraclesManager.addTemplate(address(12), "h");
+        oraclesManager.addTemplate(address(12), "i");
         assertEq(oraclesManager.enumerate(0, 10).length, 10);
     }
 

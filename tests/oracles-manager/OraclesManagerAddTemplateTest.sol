@@ -13,33 +13,30 @@ contract OraclesManagerAddTemplateTest is BaseTestSetup {
     function testNonOwner() external {
         vm.prank(address(1));
         vm.expectRevert("Ownable: caller is not the owner");
-        oraclesManager.addTemplate(address(2), false, "");
+        oraclesManager.addTemplate(address(2), "");
     }
 
     function testZeroAddressTemplate() external {
         vm.expectRevert(abi.encodeWithSignature("ZeroAddressTemplate()"));
-        oraclesManager.addTemplate(address(0), false, "");
+        oraclesManager.addTemplate(address(0), "");
     }
 
     function testEmptySpecification() external {
         vm.expectRevert(abi.encodeWithSignature("InvalidSpecification()"));
-        oraclesManager.addTemplate(address(1), false, "");
+        oraclesManager.addTemplate(address(1), "");
     }
 
     function testSuccess() external {
         string memory _specification = "test";
         address _templateAddress = address(1);
-        oraclesManager.addTemplate(_templateAddress, false, _specification);
+        oraclesManager.addTemplate(_templateAddress, _specification);
         uint256 _addedTemplateId = oraclesManager.templatesAmount();
         IOraclesManager.Template memory _template = oraclesManager.template(
             _addedTemplateId
         );
         assertEq(_template.addrezz, _templateAddress);
-        assertEq(_template.version.major, 1);
-        assertEq(_template.version.minor, 0);
-        assertEq(_template.version.patch, 0);
+        assertEq(_template.version, 1);
         assertEq(_template.specification, _specification);
-        assertTrue(!_template.automatable);
         assertEq(_template.id, _addedTemplateId);
     }
 }

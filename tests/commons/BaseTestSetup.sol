@@ -48,19 +48,9 @@ abstract contract BaseTestSetup is Test {
         );
 
         manualRealityOracleTemplate = new ManualRealityOracle();
-        oraclesManagerImplementation = address(new OraclesManager());
-
-        oraclesManagerProxyAdmin = new ProxyAdmin();
-        oraclesManagerProxy = new TransparentUpgradeableProxy(
-            oraclesManagerImplementation,
-            address(oraclesManagerProxyAdmin),
-            abi.encodeWithSignature("initialize(address)", address(factory))
-        );
-        oraclesManager = OraclesManager(address(oraclesManagerProxy));
-
+        oraclesManager = new OraclesManager(address(factory));
         oraclesManager.addTemplate(
             address(manualRealityOracleTemplate),
-            false,
             MANUAL_REALITY_ETH_SPECIFICATION
         );
 

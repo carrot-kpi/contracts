@@ -26,11 +26,9 @@ contract FactoryKpiTokensAmountTest is BaseTestSetup {
         );
 
         manualRealityOracleTemplate = new ManualRealityOracle();
-        oraclesManager = new OraclesManager();
-        oraclesManager.initialize(address(factory));
+        oraclesManager = new OraclesManager(address(factory));
         oraclesManager.addTemplate(
             address(manualRealityOracleTemplate),
-            false,
             MANUAL_REALITY_ETH_SPECIFICATION
         );
 

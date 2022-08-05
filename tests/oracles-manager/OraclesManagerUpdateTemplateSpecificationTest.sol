@@ -28,7 +28,7 @@ contract OraclesManagerUpdateTemplateSpecificationTest is BaseTestSetup {
 
     function testSuccess() external {
         string memory _oldSpecification = "a";
-        oraclesManager.addTemplate(address(2), false, _oldSpecification);
+        oraclesManager.addTemplate(address(2), _oldSpecification);
         uint256 _templateId = oraclesManager.templatesAmount();
         IOraclesManager.Template memory _template = oraclesManager.template(
             _templateId

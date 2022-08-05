@@ -11,8 +11,7 @@ import {Clones} from "oz/proxy/Clones.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract OraclesManagerTemplatesAmountTest is BaseTestSetup {
     function testNoTemplates() external {
-        oraclesManager = new OraclesManager();
-        oraclesManager.initialize(address(factory));
+        oraclesManager = new OraclesManager(address(factory));
         assertEq(oraclesManager.templatesAmount(), 0);
     }
 
@@ -21,9 +20,9 @@ contract OraclesManagerTemplatesAmountTest is BaseTestSetup {
     }
 
     function testMultipleTemplates() external {
-        oraclesManager.addTemplate(address(10), false, "a");
-        oraclesManager.addTemplate(address(11), false, "b");
-        oraclesManager.addTemplate(address(12), false, "c");
+        oraclesManager.addTemplate(address(10), "a");
+        oraclesManager.addTemplate(address(11), "b");
+        oraclesManager.addTemplate(address(12), "c");
         assertEq(oraclesManager.templatesAmount(), 4);
     }
 }

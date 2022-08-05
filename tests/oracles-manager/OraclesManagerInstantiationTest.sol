@@ -9,8 +9,7 @@ import {OraclesManager} from "../../contracts/OraclesManager.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract OraclesManagerInstantiationTest is BaseTestSetup {
     function testZeroAddressFactory() external {
-        oraclesManager = new OraclesManager();
         vm.expectRevert(abi.encodeWithSignature("ZeroAddressFactory()"));
-        oraclesManager.initialize(address(0));
+        oraclesManager = new OraclesManager(address(0));
     }
 }

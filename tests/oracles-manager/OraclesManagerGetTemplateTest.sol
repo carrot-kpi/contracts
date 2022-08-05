@@ -22,10 +22,7 @@ contract OraclesManagerGetTemplateTest is BaseTestSetup {
         );
         assertEq(_template.id, _templateId);
         assertEq(_template.addrezz, address(manualRealityOracleTemplate));
-        assertEq(_template.version.major, 1);
-        assertEq(_template.version.minor, 0);
-        assertEq(_template.version.patch, 0);
+        assertEq(_template.version, 1);
         assertEq(_template.specification, MANUAL_REALITY_ETH_SPECIFICATION);
-        assertTrue(!_template.automatable);
     }
 }
