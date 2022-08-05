@@ -71,49 +71,6 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         return (kpiTokenInstance);
     }
 
-    function testZeroAddressOraclesManager() external {
-        IERC20KPIToken.OracleData[]
-            memory oracleData = new IERC20KPIToken.OracleData[](2);
-        bytes memory firstManualRealityEthInitializationData = abi.encode(
-            address(2), // fake reality.eth address
-            address(this), // arbitrator
-            0, // template id
-            "a", // question
-            200, // question timeout
-            block.timestamp + 200 // expiry
-        );
-        bytes memory secondManualRealityEthInitializationData = abi.encode(
-            address(2), // fake reality.eth address
-            address(this), // arbitrator
-            0, // template id
-            "b", // question
-            300, // question timeout
-            block.timestamp + 300 // expiry
-        );
-        oracleData[0] = IERC20KPIToken.OracleData({
-            templateId: 1,
-            lowerBound: 0,
-            higherBound: 1,
-            weight: 1,
-            value: 0,
-            data: firstManualRealityEthInitializationData
-        });
-        oracleData[1] = IERC20KPIToken.OracleData({
-            templateId: 1,
-            lowerBound: 5 ether,
-            higherBound: 10 ether,
-            weight: 3,
-            value: 0,
-            data: secondManualRealityEthInitializationData
-        });
-
-        initializeKpiToken(
-            address(0),
-            abi.encode(oracleData, true),
-            "InvalidOraclesManager()"
-        );
-    }
-
     function testTooManyOracles() external {
         IERC20KPIToken.OracleData[]
             memory oracleData = new IERC20KPIToken.OracleData[](6);

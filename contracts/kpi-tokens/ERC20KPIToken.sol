@@ -196,8 +196,6 @@ contract ERC20KPIToken is
         uint256 _expiration,
         bytes memory _data
     ) internal onlyInitializing {
-        if (_creator == address(0)) revert InvalidCreator();
-        if (_kpiTokensManager == address(0)) revert InvalidKpiTokensManager();
         if (bytes(_description).length == 0) revert InvalidDescription();
         if (_expiration <= block.timestamp) revert InvalidExpiration();
 
@@ -304,8 +302,6 @@ contract ERC20KPIToken is
         address _oraclesManager,
         bytes memory _data
     ) internal onlyInitializing {
-        if (_oraclesManager == address(0)) revert InvalidOraclesManager();
-
         (OracleData[] memory _oracleDatas, bool _allOrNone) = abi.decode(
             _data,
             (OracleData[], bool)
