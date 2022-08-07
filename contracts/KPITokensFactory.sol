@@ -126,8 +126,9 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
     }
 
     /// @dev Gets a KPI tokens slice based on indexes.
-    /// @param _fromIndex The index from which to get KPI tokens.
-    /// @param _toIndex The maximum index to which to get KPI tokens.
+    /// @param _fromIndex The index from which to get KPI tokens (inclusive).
+    /// @param _toIndex The maximum index to which to get KPI tokens (the element 
+    /// at this index won't be included).
     /// @return An address array representing the slice taken between the given indexes.
     function enumerate(uint256 _fromIndex, uint256 _toIndex)
         external

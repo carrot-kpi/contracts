@@ -184,8 +184,8 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
     /// ordered and due to how templates are removed, it could happen to have 2
     /// disjointed slices with the same template being in both, even though it
     /// should be rare.
-    /// @param _fromIndex The index from which to get templates.
-    /// @param _toIndex The maximum index to which to get templates.
+    /// @param _fromIndex The index from which to get templates (inclusive).
+    /// @param _toIndex The maximum index to which to get templates (the element at this index won't be included).
     /// @return A templates array representing the slice taken through the given indexes.
     function enumerate(uint256 _fromIndex, uint256 _toIndex)
         external
