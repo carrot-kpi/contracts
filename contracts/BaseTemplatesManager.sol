@@ -86,16 +86,12 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
     function removeTemplate(uint256 _id) external override onlyOwner {
         uint256 _index = templateIdToIndex[_id];
         if (_index == 0) revert NonExistentTemplate();
-        unchecked {
-            _index--;
-        }
         Template storage _lastTemplate = templates[templates.length - 1];
         if (_lastTemplate.id != _id) {
-            templates[_index] = _lastTemplate;
+            templates[_index - 1] = _lastTemplate;
             templateIdToIndex[_lastTemplate.id] = _index;
-        } else {
-            delete templateIdToIndex[_id];
         }
+        delete templateIdToIndex[_id];
         templates.pop();
         emit RemoveTemplate(_id);
     }

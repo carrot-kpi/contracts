@@ -3,6 +3,7 @@ pragma solidity 0.8.15;
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 import {OraclesManager1} from "../../contracts/oracles-managers/OraclesManager1.sol";
 import {IKPITokensManager1} from "../../contracts/interfaces/kpi-tokens-managers/IKPITokensManager1.sol";
+import {IBaseTemplatesManager} from "../../contracts/interfaces/IBaseTemplatesManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 import "forge-std/console.sol";
 import {stdStorage, StdStorage} from "forge-std/Test.sol";
@@ -23,6 +24,25 @@ contract KpiTokensManagerRemoveTemplateTest is BaseTestSetup {
     function testNonExistentTemplate() external {
         vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
         kpiTokensManager.removeTemplate(10);
+    }
+
+    function testMultipleDeletionSameId() external {
+        assertEq(kpiTokensManager.templatesAmount(), 1);
+        kpiTokensManager.removeTemplate(1);
+        assertEq(kpiTokensManager.templatesAmount(), 0);
+        vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
+        kpiTokensManager.removeTemplate(1);
+    }
+
+    function testMultipleDeletionSameIdMultipleTemplate() external {
+        kpiTokensManager.addTemplate(address(101), "1");
+        kpiTokensManager.addTemplate(address(102), "2");
+        kpiTokensManager.addTemplate(address(103), "3");
+        assertEq(kpiTokensManager.templatesAmount(), 4);
+        kpiTokensManager.removeTemplate(1);
+        assertEq(kpiTokensManager.templatesAmount(), 3);
+        vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
+        kpiTokensManager.removeTemplate(1);
     }
 
     function testSuccess() external {
