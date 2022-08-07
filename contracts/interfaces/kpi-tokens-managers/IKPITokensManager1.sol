@@ -1,12 +1,12 @@
 pragma solidity >=0.8.0;
 
-import {IBaseTemplatesManager} from "./IBaseTemplatesManager.sol";
+import {IBaseTemplatesManager} from "../IBaseTemplatesManager.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI tokens manager interface
 /// @dev Interface for the KPI tokens manager contract.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
-interface IKPITokensManager is IBaseTemplatesManager {
+interface IKPITokensManager1 is IBaseTemplatesManager {
     function predictInstanceAddress(
         address _creator,
         uint256 _id,

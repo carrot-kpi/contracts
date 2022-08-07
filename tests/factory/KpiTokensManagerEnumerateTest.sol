@@ -1,8 +1,8 @@
 pragma solidity 0.8.15;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
-import {KPITokensManager} from "../../contracts/KPITokensManager.sol";
-import {IKPITokensManager} from "../../contracts/interfaces/IKPITokensManager.sol";
+import {KPITokensManager1} from "../../contracts/kpi-tokens-managers/KPITokensManager1.sol";
+import {IKPITokensManager1} from "../../contracts/interfaces/kpi-tokens-managers/IKPITokensManager1.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
@@ -11,7 +11,7 @@ import {Clones} from "oz/proxy/Clones.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract KpiTokensManagerEnumerateTest is BaseTestSetup {
     function testNoTemplates() external {
-        kpiTokensManager = new KPITokensManager(address(factory));
+        kpiTokensManager = new KPITokensManager1(address(factory));
         vm.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
         kpiTokensManager.enumerate(0, 1);
     }

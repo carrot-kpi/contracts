@@ -2,7 +2,7 @@ pragma solidity 0.8.15;
 
 import {Initializable} from "oz/proxy/utils/Initializable.sol";
 import {IOracle} from "../interfaces/oracles/IOracle.sol";
-import {IOraclesManager} from "../interfaces/IOraclesManager.sol";
+import {IOraclesManager1} from "../interfaces/oracles-managers/IOraclesManager1.sol";
 import {IKPIToken} from "../interfaces/kpi-tokens/IKPIToken.sol";
 import {IReality} from "../interfaces/external/IReality.sol";
 
@@ -21,7 +21,7 @@ contract ManualRealityOracle is IOracle, Initializable {
     address public kpiToken;
     address internal oraclesManager;
     address internal reality;
-    IOraclesManager.Template internal oracleTemplate;
+    IOraclesManager1.Template internal oracleTemplate;
     bytes32 internal questionId;
     string internal question;
 
@@ -87,7 +87,7 @@ contract ManualRealityOracle is IOracle, Initializable {
         oraclesManager = msg.sender;
         kpiToken = _kpiToken;
         reality = _reality;
-        oracleTemplate = IOraclesManager(msg.sender).template(_templateId);
+        oracleTemplate = IOraclesManager1(msg.sender).template(_templateId);
         question = _question;
         questionId = IReality(_reality).askQuestionWithMinBond{
             value: msg.value
@@ -138,7 +138,7 @@ contract ManualRealityOracle is IOracle, Initializable {
         external
         view
         override
-        returns (IOraclesManager.Template memory)
+        returns (IOraclesManager1.Template memory)
     {
         return oracleTemplate;
     }

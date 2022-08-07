@@ -1,8 +1,8 @@
 pragma solidity 0.8.15;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
-import {OraclesManager} from "../../contracts/OraclesManager.sol";
-import {IOraclesManager} from "../../contracts/interfaces/IOraclesManager.sol";
+import {OraclesManager1} from "../../contracts/oracles-managers/OraclesManager1.sol";
+import {IOraclesManager1} from "../../contracts/interfaces/oracles-managers/IOraclesManager1.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
@@ -17,7 +17,7 @@ contract OraclesManagerGetTemplateTest is BaseTestSetup {
 
     function testSuccess() external {
         uint256 _templateId = 1;
-        IOraclesManager.Template memory _template = oraclesManager.template(
+        IOraclesManager1.Template memory _template = oraclesManager.template(
             _templateId
         );
         assertEq(_template.id, _templateId);

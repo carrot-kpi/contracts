@@ -1,10 +1,10 @@
 pragma solidity 0.8.15;
 
 import {ClonesUpgradeable} from "oz-upgradeable/proxy/ClonesUpgradeable.sol";
-import {IOracle} from "./interfaces/oracles/IOracle.sol";
-import {BaseTemplatesManager} from "./BaseTemplatesManager.sol";
-import {IKPITokensFactory} from "./interfaces/IKPITokensFactory.sol";
-import {IOraclesManager} from "./interfaces/IOraclesManager.sol";
+import {IOracle} from "../interfaces/oracles/IOracle.sol";
+import {BaseTemplatesManager} from "../BaseTemplatesManager.sol";
+import {IKPITokensFactory} from "../interfaces/IKPITokensFactory.sol";
+import {IOraclesManager1} from "../interfaces/oracles-managers/IOraclesManager1.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Oracles manager
@@ -16,7 +16,7 @@ import {IOraclesManager} from "./interfaces/IOraclesManager.sol";
 /// (addition, removal, upgrade of templates and more) and the
 /// governance contract must be the owner of the oracles manager.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
-contract OraclesManager is BaseTemplatesManager, IOraclesManager {
+contract OraclesManager1 is BaseTemplatesManager, IOraclesManager1 {
     constructor(address _factory) BaseTemplatesManager(_factory) {}
 
     /// @dev Calculates the salt value used in CREATE2 when

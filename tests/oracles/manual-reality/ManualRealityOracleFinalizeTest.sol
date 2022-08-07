@@ -3,7 +3,7 @@ pragma solidity 0.8.15;
 import {BaseTestSetup} from "../../commons/BaseTestSetup.sol";
 import {ManualRealityOracle} from "../../../contracts/oracles/ManualRealityOracle.sol";
 import {ERC20KPIToken} from "../../../contracts/kpi-tokens/ERC20KPIToken.sol";
-import {IOraclesManager} from "../../../contracts/interfaces/IOraclesManager.sol";
+import {IOraclesManager1} from "../../../contracts/interfaces/oracles-managers/IOraclesManager1.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
@@ -15,7 +15,7 @@ contract ManualRealityOracleFinalizeTest is BaseTestSetup {
         ManualRealityOracle oracleInstance = ManualRealityOracle(
             Clones.clone(address(manualRealityOracleTemplate))
         );
-        IOraclesManager.Template memory _template = oraclesManager.template(1);
+        IOraclesManager1.Template memory _template = oraclesManager.template(1);
         address _realityAddress = address(1234);
         bytes32 _questionId = bytes32("questionId");
         vm.mockCall(

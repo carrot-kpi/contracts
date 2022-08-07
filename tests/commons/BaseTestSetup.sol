@@ -5,9 +5,9 @@ import {TransparentUpgradeableProxy} from "oz/proxy/transparent/TransparentUpgra
 import {ProxyAdmin} from "oz/proxy/transparent/ProxyAdmin.sol";
 import {ERC20PresetMinterPauser} from "oz/token/ERC20/presets/ERC20PresetMinterPauser.sol";
 import {ERC20KPIToken} from "../../contracts/kpi-tokens/ERC20KPIToken.sol";
-import {KPITokensManager} from "../../contracts/KPITokensManager.sol";
+import {KPITokensManager1} from "../../contracts/kpi-tokens-managers/KPITokensManager1.sol";
 import {ManualRealityOracle} from "../../contracts/oracles/ManualRealityOracle.sol";
-import {OraclesManager} from "../../contracts/OraclesManager.sol";
+import {OraclesManager1} from "../../contracts/oracles-managers/OraclesManager1.sol";
 import {KPITokensFactory} from "../../contracts/KPITokensFactory.sol";
 import {IERC20KPIToken} from "../../contracts/interfaces/kpi-tokens/IERC20KPIToken.sol";
 
@@ -26,10 +26,10 @@ abstract contract BaseTestSetup is Test {
     address internal feeReceiver;
     KPITokensFactory internal factory;
     ERC20KPIToken internal erc20KpiTokenTemplate;
-    KPITokensManager internal kpiTokensManager;
+    KPITokensManager1 internal kpiTokensManager;
     ManualRealityOracle internal manualRealityOracleTemplate;
     address internal oraclesManagerImplementation;
-    OraclesManager internal oraclesManager;
+    OraclesManager1 internal oraclesManager;
     ProxyAdmin internal oraclesManagerProxyAdmin;
     TransparentUpgradeableProxy internal oraclesManagerProxy;
 
@@ -41,14 +41,14 @@ abstract contract BaseTestSetup is Test {
         factory = new KPITokensFactory(address(1), address(1), feeReceiver);
 
         erc20KpiTokenTemplate = new ERC20KPIToken();
-        kpiTokensManager = new KPITokensManager(address(factory));
+        kpiTokensManager = new KPITokensManager1(address(factory));
         kpiTokensManager.addTemplate(
             address(erc20KpiTokenTemplate),
             ERC20_KPI_TOKEN_SPECIFICATION
         );
 
         manualRealityOracleTemplate = new ManualRealityOracle();
-        oraclesManager = new OraclesManager(address(factory));
+        oraclesManager = new OraclesManager1(address(factory));
         oraclesManager.addTemplate(
             address(manualRealityOracleTemplate),
             MANUAL_REALITY_ETH_SPECIFICATION

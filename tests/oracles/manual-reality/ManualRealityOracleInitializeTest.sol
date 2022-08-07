@@ -2,7 +2,7 @@ pragma solidity 0.8.15;
 
 import {BaseTestSetup} from "../../commons/BaseTestSetup.sol";
 import {ManualRealityOracle} from "../../../contracts/oracles/ManualRealityOracle.sol";
-import {IOraclesManager} from "../../../contracts/interfaces/IOraclesManager.sol";
+import {IOraclesManager1} from "../../../contracts/interfaces/oracles-managers/IOraclesManager1.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
@@ -14,7 +14,7 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         ManualRealityOracle oracleInstance = ManualRealityOracle(
             Clones.clone(address(manualRealityOracleTemplate))
         );
-        IOraclesManager.Template memory _template = oraclesManager.template(1);
+        IOraclesManager1.Template memory _template = oraclesManager.template(1);
         vm.expectRevert(abi.encodeWithSignature("ZeroAddressKpiToken()"));
         vm.prank(address(oraclesManager));
         oracleInstance.initialize(
@@ -41,7 +41,7 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         ManualRealityOracle oracleInstance = ManualRealityOracle(
             Clones.clone(address(manualRealityOracleTemplate))
         );
-        IOraclesManager.Template memory _template = oraclesManager.template(1);
+        IOraclesManager1.Template memory _template = oraclesManager.template(1);
         vm.expectRevert(abi.encodeWithSignature("ZeroAddressReality()"));
         vm.prank(address(oraclesManager));
         oracleInstance.initialize(
@@ -55,7 +55,7 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         ManualRealityOracle oracleInstance = ManualRealityOracle(
             Clones.clone(address(manualRealityOracleTemplate))
         );
-        IOraclesManager.Template memory _template = oraclesManager.template(1);
+        IOraclesManager1.Template memory _template = oraclesManager.template(1);
         vm.expectRevert(abi.encodeWithSignature("ZeroAddressArbitrator()"));
         vm.prank(address(oraclesManager));
         oracleInstance.initialize(
@@ -69,7 +69,7 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         ManualRealityOracle oracleInstance = ManualRealityOracle(
             Clones.clone(address(manualRealityOracleTemplate))
         );
-        IOraclesManager.Template memory _template = oraclesManager.template(1);
+        IOraclesManager1.Template memory _template = oraclesManager.template(1);
         vm.expectRevert(abi.encodeWithSignature("InvalidQuestion()"));
         vm.prank(address(oraclesManager));
         oracleInstance.initialize(
@@ -83,7 +83,7 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         ManualRealityOracle oracleInstance = ManualRealityOracle(
             Clones.clone(address(manualRealityOracleTemplate))
         );
-        IOraclesManager.Template memory _template = oraclesManager.template(1);
+        IOraclesManager1.Template memory _template = oraclesManager.template(1);
         vm.expectRevert(abi.encodeWithSignature("InvalidQuestionTimeout()"));
         vm.prank(address(oraclesManager));
         oracleInstance.initialize(
@@ -97,7 +97,7 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         ManualRealityOracle oracleInstance = ManualRealityOracle(
             Clones.clone(address(manualRealityOracleTemplate))
         );
-        IOraclesManager.Template memory _template = oraclesManager.template(1);
+        IOraclesManager1.Template memory _template = oraclesManager.template(1);
         vm.expectRevert(abi.encodeWithSignature("InvalidOpeningTimestamp()"));
         vm.prank(address(oraclesManager));
         oracleInstance.initialize(
@@ -111,7 +111,7 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         ManualRealityOracle oracleInstance = ManualRealityOracle(
             Clones.clone(address(manualRealityOracleTemplate))
         );
-        IOraclesManager.Template memory _template = oraclesManager.template(1);
+        IOraclesManager1.Template memory _template = oraclesManager.template(1);
         address _realityAddress = address(1234);
         bytes32 _questionId = bytes32("questionId");
         vm.mockCall(

@@ -1,6 +1,6 @@
 pragma solidity >=0.8.0;
 
-import {IOraclesManager} from "../IOraclesManager.sol";
+import {IOraclesManager1} from "../oracles-managers/IOraclesManager1.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Oracle interface
@@ -15,7 +15,7 @@ interface IOracle {
 
     function kpiToken() external returns (address);
 
-    function template() external view returns (IOraclesManager.Template memory);
+    function template() external view returns (IOraclesManager1.Template memory);
 
     function finalized() external returns (bool);
 

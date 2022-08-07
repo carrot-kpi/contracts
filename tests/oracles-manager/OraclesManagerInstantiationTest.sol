@@ -1,7 +1,7 @@
 pragma solidity 0.8.15;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
-import {OraclesManager} from "../../contracts/OraclesManager.sol";
+import {OraclesManager1} from "../../contracts/oracles-managers/OraclesManager1.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Oracles manager instantiation test
@@ -10,6 +10,6 @@ import {OraclesManager} from "../../contracts/OraclesManager.sol";
 contract OraclesManagerInstantiationTest is BaseTestSetup {
     function testZeroAddressFactory() external {
         vm.expectRevert(abi.encodeWithSignature("ZeroAddressFactory()"));
-        oraclesManager = new OraclesManager(address(0));
+        oraclesManager = new OraclesManager1(address(0));
     }
 }

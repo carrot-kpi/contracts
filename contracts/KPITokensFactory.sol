@@ -2,7 +2,7 @@ pragma solidity 0.8.15;
 
 import {Ownable} from "oz/access/Ownable.sol";
 import {IKPITokensFactory} from "./interfaces/IKPITokensFactory.sol";
-import {IKPITokensManager} from "./interfaces/IKPITokensManager.sol";
+import {IKPITokensManager1} from "./interfaces/kpi-tokens-managers/IKPITokensManager1.sol";
 import {IKPIToken} from "./interfaces/kpi-tokens/IKPIToken.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
@@ -61,7 +61,7 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
         bytes calldata _initializationData,
         bytes calldata _oraclesInitializationData
     ) external payable override {
-        address _instance = IKPITokensManager(kpiTokensManager).instantiate(
+        address _instance = IKPITokensManager1(kpiTokensManager).instantiate(
             msg.sender,
             _id,
             _description,

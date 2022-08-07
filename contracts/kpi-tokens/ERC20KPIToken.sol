@@ -3,8 +3,8 @@ pragma solidity 0.8.15;
 import {IERC20Upgradeable, ERC20Upgradeable} from "oz-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import {SafeERC20Upgradeable} from "oz-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import {ReentrancyGuardUpgradeable} from "oz-upgradeable/security/ReentrancyGuardUpgradeable.sol";
-import {IOraclesManager} from "../interfaces/IOraclesManager.sol";
-import {IKPITokensManager} from "../interfaces/IKPITokensManager.sol";
+import {IOraclesManager1} from "../interfaces/oracles-managers/IOraclesManager1.sol";
+import {IKPITokensManager1} from "../interfaces/kpi-tokens-managers/IKPITokensManager1.sol";
 import {IERC20KPIToken} from "../interfaces/kpi-tokens/IERC20KPIToken.sol";
 import {TokenAmount} from "../commons/Types.sol";
 
@@ -41,7 +41,7 @@ contract ERC20KPIToken is
     uint8 internal collateralsAmount;
     string public description;
     uint256 public expiration;
-    IKPITokensManager.Template internal kpiTokenTemplate;
+    IKPITokensManager1.Template internal kpiTokenTemplate;
     uint256 internal initialSupply;
     uint256 internal totalWeight;
     mapping(address => FinalizableOracleWithoutAddress)
@@ -215,7 +215,7 @@ contract ERC20KPIToken is
         creator = _creator;
         description = _description;
         expiration = _expiration;
-        kpiTokenTemplate = IKPITokensManager(_kpiTokensManager).template(
+        kpiTokenTemplate = IKPITokensManager1(_kpiTokensManager).template(
             _kpiTokenTemplateId
         );
     }
@@ -306,7 +306,7 @@ contract ERC20KPIToken is
                 revert InvalidOracleBounds();
             if (_oracleData.weight == 0) revert InvalidOracleWeights();
             totalWeight += _oracleData.weight;
-            address _instance = IOraclesManager(_oraclesManager).instantiate{
+            address _instance = IOraclesManager1(_oraclesManager).instantiate{
                 value: _oracleData.value
             }(_creator, _oracleData.templateId, _oracleData.data);
             finalizableOracleByAddress[
@@ -761,7 +761,7 @@ contract ERC20KPIToken is
         external
         view
         override
-        returns (IKPITokensManager.Template memory)
+        returns (IKPITokensManager1.Template memory)
     {
         return kpiTokenTemplate;
     }

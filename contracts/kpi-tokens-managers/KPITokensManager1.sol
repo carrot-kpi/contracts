@@ -2,9 +2,9 @@ pragma solidity 0.8.15;
 
 import {Ownable} from "oz/access/Ownable.sol";
 import {Clones} from "oz/proxy/Clones.sol";
-import {IKPIToken} from "./interfaces/kpi-tokens/IKPIToken.sol";
-import {BaseTemplatesManager} from "./BaseTemplatesManager.sol";
-import {IKPITokensManager} from "./interfaces/IKPITokensManager.sol";
+import {IKPIToken} from "../interfaces/kpi-tokens/IKPIToken.sol";
+import {BaseTemplatesManager} from "../BaseTemplatesManager.sol";
+import {IKPITokensManager1} from "../interfaces/kpi-tokens-managers/IKPITokensManager1.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI tokens manager
@@ -16,7 +16,7 @@ import {IKPITokensManager} from "./interfaces/IKPITokensManager.sol";
 /// (addition, removal, upgrade of templates and more) and the
 /// governance contract must be the owner of the KPI tokens manager.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
-contract KPITokensManager is BaseTemplatesManager, IKPITokensManager {
+contract KPITokensManager1 is BaseTemplatesManager, IKPITokensManager1 {
     constructor(address _factory) BaseTemplatesManager(_factory) {}
 
     /// @dev Calculates the salt value used in CREATE2 when
