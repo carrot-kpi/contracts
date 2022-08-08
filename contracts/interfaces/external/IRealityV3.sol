@@ -1,10 +1,10 @@
 pragma solidity >=0.8.0;
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
-/// @title Reality interface
-/// @dev Interface for the Reality contract.
+/// @title Reality.eth v3 interface
+/// @dev Interface for the Reality.eth v3 contract.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
-interface IReality {
+interface IRealityV3 {
     function askQuestionWithMinBond(
         uint256 _templateId,
         string memory _question,
@@ -15,13 +15,11 @@ interface IReality {
         uint256 _minimumBond
     ) external payable returns (bytes32);
 
-    function isFinalized(bytes32 _id) external view returns (bool);
-
     function getArbitrator(bytes32 _id) external view returns (address);
 
     function getOpeningTS(bytes32 _id) external view returns (uint32);
 
     function getTimeout(bytes32 _id) external view returns (uint32);
 
-    function resultFor(bytes32 _id) external view returns (bytes32);
+    function resultForOnceSettled(bytes32 _id) external view returns (bytes32);
 }

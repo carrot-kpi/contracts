@@ -43,7 +43,7 @@ contract ERC20KPITokenGetOraclesTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -59,7 +59,7 @@ contract ERC20KPITokenGetOraclesTest is BaseTestSetup {
             higherBound: 1,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -100,7 +100,7 @@ contract ERC20KPITokenGetOraclesTest is BaseTestSetup {
             oraclesManager.predictInstanceAddress(
                 address(this),
                 1,
-                _manualRealityOracleInitializationData
+                realityV3OracleInitializationData
             )
         );
     }

@@ -83,7 +83,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -100,7 +100,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 11,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -187,7 +187,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData1 = abi.encode(
+        bytes memory realityV3OracleInitializationData1 = abi.encode(
             _reality,
             address(this),
             1,
@@ -195,7 +195,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             60,
             block.timestamp + 60
         );
-        bytes memory _manualRealityOracleInitializationData2 = abi.encode(
+        bytes memory realityV3OracleInitializationData2 = abi.encode(
             _reality,
             address(this),
             1,
@@ -211,7 +211,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 11,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData1
+            data: realityV3OracleInitializationData1
         });
         _oracleDatas[1] = IERC20KPIToken.OracleData({
             templateId: 1,
@@ -219,7 +219,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 11,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData2
+            data: realityV3OracleInitializationData2
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -342,7 +342,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData1 = abi.encode(
+        bytes memory realityV3OracleInitializationData1 = abi.encode(
             _reality,
             address(this),
             1,
@@ -350,7 +350,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             60,
             block.timestamp + 60
         );
-        bytes memory _manualRealityOracleInitializationData2 = abi.encode(
+        bytes memory realityV3OracleInitializationData2 = abi.encode(
             _reality,
             address(this),
             1,
@@ -366,7 +366,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 11,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData1
+            data: realityV3OracleInitializationData1
         });
         _oracleDatas[1] = IERC20KPIToken.OracleData({
             templateId: 1,
@@ -374,7 +374,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 11,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData2
+            data: realityV3OracleInitializationData2
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -494,7 +494,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -511,7 +511,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 11,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -583,7 +583,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -600,7 +600,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 11,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -687,7 +687,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -704,7 +704,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 11,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -778,7 +778,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -795,7 +795,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 11,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -885,7 +885,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -902,7 +902,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 11,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -993,7 +993,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -1010,7 +1010,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 11,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -1102,7 +1102,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -1119,7 +1119,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 11,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -1231,7 +1231,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -1248,7 +1248,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 11,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -1348,7 +1348,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -1365,7 +1365,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 11,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -1454,7 +1454,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -1471,7 +1471,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 13,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -1576,7 +1576,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -1593,7 +1593,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 13,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -1682,7 +1682,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -1699,7 +1699,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 13,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -1775,7 +1775,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -1792,7 +1792,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 11,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -1893,7 +1893,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -1910,7 +1910,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 11,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -1987,7 +1987,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -2004,7 +2004,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 11,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -2105,7 +2105,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -2122,7 +2122,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 11,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -2206,7 +2206,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -2223,7 +2223,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 11,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -2324,7 +2324,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -2341,7 +2341,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 11,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -2446,7 +2446,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -2463,7 +2463,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 11,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -2556,7 +2556,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -2573,7 +2573,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 13,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -2675,7 +2675,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -2692,7 +2692,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 13,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -2798,7 +2798,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -2815,7 +2815,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 13,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -2901,7 +2901,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -2918,7 +2918,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 13,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -3038,7 +3038,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -3055,7 +3055,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 13,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -3177,7 +3177,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -3194,7 +3194,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 13,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,
@@ -3279,7 +3279,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -3296,7 +3296,7 @@ contract ERC20KPITokenRedeemCollateralTest is BaseTestSetup {
             higherBound: 13,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,

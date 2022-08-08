@@ -4,7 +4,7 @@ import {Clones} from "oz/proxy/Clones.sol";
 import {TransparentUpgradeableProxy} from "oz/proxy/transparent/TransparentUpgradeableProxy.sol";
 import {ProxyAdmin} from "oz/proxy/transparent/ProxyAdmin.sol";
 import {ERC20KPIToken} from "../contracts/kpi-tokens/ERC20KPIToken.sol";
-import {ManualRealityOracle} from "../contracts/oracles/ManualRealityOracle.sol";
+import {RealityV3Oracle} from "../contracts/oracles/RealityV3Oracle.sol";
 import {OraclesManager} from "../contracts/OraclesManager.sol";
 import {KPITokensManager} from "../contracts/KPITokensManager.sol";
 import {KPITokensFactory} from "../contracts/KPITokensFactory.sol";
@@ -75,12 +75,12 @@ contract Deploy {
         emit log_string("Oracles manager proxy deployed at address");
         emit log_address(address(_proxy));
 
-        ManualRealityOracle _manualRealityOracleTemplate = new ManualRealityOracle();
+        RealityV3Oracle _realityV3OracleTemplate = new RealityV3Oracle();
         emit log_string("Manual Reality oracle template deployed at address");
-        emit log_address(address(_manualRealityOracleTemplate));
+        emit log_address(address(_realityV3OracleTemplate));
 
         _oraclesManager.addTemplate(
-            address(_manualRealityOracleTemplate),
+            address(_realityV3OracleTemplate),
             false,
             MANUAL_REALITY_ETH_ORACLE_SPECIFICATION
         );

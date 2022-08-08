@@ -4,7 +4,7 @@ import {Initializable} from "oz/proxy/utils/Initializable.sol";
 import {IOracle} from "../interfaces/oracles/IOracle.sol";
 import {IOraclesManager1} from "../interfaces/oracles-managers/IOraclesManager1.sol";
 import {IKPIToken} from "../interfaces/kpi-tokens/IKPIToken.sol";
-import {IReality} from "../interfaces/external/IReality.sol";
+import {IRealityV3} from "../interfaces/external/IRealityV3.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Manual Reality oracle
@@ -16,7 +16,7 @@ import {IReality} from "../interfaces/external/IReality.sol";
 /// of the solution (question timeout, opening timestamp, arbitrator atc must be set
 /// with care to avoid unwanted results).
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
-contract ManualRealityOracle is IOracle, Initializable {
+contract RealityV3Oracle is IOracle, Initializable {
     bool public finalized;
     address public kpiToken;
     address internal oraclesManager;
@@ -29,15 +29,12 @@ contract ManualRealityOracle is IOracle, Initializable {
     error ZeroAddressKpiToken();
     error ZeroAddressReality();
     error ZeroAddressArbitrator();
+    error InvalidRealityTemplate();
     error InvalidQuestion();
     error InvalidQuestionTimeout();
     error InvalidOpeningTimestamp();
 
-    event Initialize(
-        address indexed kpiToken,
-        uint256 indexed templateId,
-        bytes data
-    );
+    event Initialize(address indexed kpiToken, uint256 indexed templateId);
     event Finalize(uint256 result);
 
     /// @dev Initializes the template through the passed in data. This function is
@@ -79,6 +76,7 @@ contract ManualRealityOracle is IOracle, Initializable {
 
         if (_reality == address(0)) revert ZeroAddressReality();
         if (_arbitrator == address(0)) revert ZeroAddressArbitrator();
+        if (_realityTemplateId > 4) revert InvalidRealityTemplate();
         if (bytes(_question).length == 0) revert InvalidQuestion();
         if (_questionTimeout == 0) revert InvalidQuestionTimeout();
         if (_openingTimestamp <= block.timestamp)
@@ -89,7 +87,7 @@ contract ManualRealityOracle is IOracle, Initializable {
         reality = _reality;
         oracleTemplate = IOraclesManager1(msg.sender).template(_templateId);
         question = _question;
-        questionId = IReality(_reality).askQuestionWithMinBond{
+        questionId = IRealityV3(_reality).askQuestionWithMinBond{
             value: msg.value
         }(
             _realityTemplateId,
@@ -101,7 +99,7 @@ contract ManualRealityOracle is IOracle, Initializable {
             _minimumBond
         );
 
-        emit Initialize(_kpiToken, _templateId, _data);
+        emit Initialize(_kpiToken, _templateId);
     }
 
     /// @dev Once the question is finalized on Reality.eth, this must be manually called to
@@ -109,7 +107,9 @@ contract ManualRealityOracle is IOracle, Initializable {
     function finalize() external {
         if (finalized) revert Forbidden();
         finalized = true;
-        uint256 _result = uint256(IReality(reality).resultFor(questionId));
+        uint256 _result = uint256(
+            IRealityV3(reality).resultForOnceSettled(questionId)
+        );
         IKPIToken(kpiToken).finalize(_result);
         emit Finalize(_result);
     }
@@ -125,10 +125,10 @@ contract ManualRealityOracle is IOracle, Initializable {
             abi.encode(
                 _reality,
                 _questionId,
-                IReality(_reality).getArbitrator(_questionId),
+                IRealityV3(_reality).getArbitrator(_questionId),
                 question,
-                IReality(_reality).getTimeout(_questionId),
-                IReality(_reality).getOpeningTS(_questionId)
+                IRealityV3(_reality).getTimeout(_questionId),
+                IRealityV3(_reality).getOpeningTS(_questionId)
             );
     }
 

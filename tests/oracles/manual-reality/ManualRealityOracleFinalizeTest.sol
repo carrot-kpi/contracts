@@ -1,7 +1,7 @@
 pragma solidity 0.8.15;
 
 import {BaseTestSetup} from "../../commons/BaseTestSetup.sol";
-import {ManualRealityOracle} from "../../../contracts/oracles/ManualRealityOracle.sol";
+import {RealityV3Oracle} from "../../../contracts/oracles/RealityV3Oracle.sol";
 import {ERC20KPIToken} from "../../../contracts/kpi-tokens/ERC20KPIToken.sol";
 import {IOraclesManager1} from "../../../contracts/interfaces/oracles-managers/IOraclesManager1.sol";
 import {Clones} from "oz/proxy/Clones.sol";
@@ -12,8 +12,8 @@ import {Clones} from "oz/proxy/Clones.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract ManualRealityOracleFinalizeTest is BaseTestSetup {
     function testRealityQuestionNotFinalized() external {
-        ManualRealityOracle oracleInstance = ManualRealityOracle(
-            Clones.clone(address(manualRealityOracleTemplate))
+        RealityV3Oracle oracleInstance = RealityV3Oracle(
+            Clones.clone(address(realityV3OracleTemplate))
         );
         IOraclesManager1.Template memory _template = oraclesManager.template(1);
         address _realityAddress = address(1234);
@@ -41,7 +41,7 @@ contract ManualRealityOracleFinalizeTest is BaseTestSetup {
 
         vm.mockCall(
             _realityAddress,
-            abi.encodeWithSignature("resultFor(bytes32)"),
+            abi.encodeWithSignature("resultForOnceSettled(bytes32)"),
             abi.encode("")
         );
 
@@ -54,13 +54,13 @@ contract ManualRealityOracleFinalizeTest is BaseTestSetup {
     function testSuccess() external {
         ERC20KPIToken _kpiToken = createKpiToken("a", "b");
 
-        ManualRealityOracle _oracleInstance = ManualRealityOracle(
+        RealityV3Oracle _oracleInstance = RealityV3Oracle(
             _kpiToken.oracles()[0]
         );
 
         vm.mockCall(
             address(42),
-            abi.encodeWithSignature("resultFor(bytes32)"),
+            abi.encodeWithSignature("resultForOnceSettled(bytes32)"),
             abi.encode(bytes32("1234"))
         );
         vm.mockCall(

@@ -6,7 +6,7 @@ import {ProxyAdmin} from "oz/proxy/transparent/ProxyAdmin.sol";
 import {ERC20PresetMinterPauser} from "oz/token/ERC20/presets/ERC20PresetMinterPauser.sol";
 import {ERC20KPIToken} from "../../contracts/kpi-tokens/ERC20KPIToken.sol";
 import {KPITokensManager1} from "../../contracts/kpi-tokens-managers/KPITokensManager1.sol";
-import {ManualRealityOracle} from "../../contracts/oracles/ManualRealityOracle.sol";
+import {RealityV3Oracle} from "../../contracts/oracles/RealityV3Oracle.sol";
 import {OraclesManager1} from "../../contracts/oracles-managers/OraclesManager1.sol";
 import {KPITokensFactory} from "../../contracts/KPITokensFactory.sol";
 import {IERC20KPIToken} from "../../contracts/interfaces/kpi-tokens/IERC20KPIToken.sol";
@@ -27,7 +27,7 @@ abstract contract BaseTestSetup is Test {
     KPITokensFactory internal factory;
     ERC20KPIToken internal erc20KpiTokenTemplate;
     KPITokensManager1 internal kpiTokensManager;
-    ManualRealityOracle internal manualRealityOracleTemplate;
+    RealityV3Oracle internal realityV3OracleTemplate;
     address internal oraclesManagerImplementation;
     OraclesManager1 internal oraclesManager;
     ProxyAdmin internal oraclesManagerProxyAdmin;
@@ -47,10 +47,10 @@ abstract contract BaseTestSetup is Test {
             ERC20_KPI_TOKEN_SPECIFICATION
         );
 
-        manualRealityOracleTemplate = new ManualRealityOracle();
+        realityV3OracleTemplate = new RealityV3Oracle();
         oraclesManager = new OraclesManager1(address(factory));
         oraclesManager.addTemplate(
-            address(manualRealityOracleTemplate),
+            address(realityV3OracleTemplate),
             MANUAL_REALITY_ETH_SPECIFICATION
         );
 
@@ -84,7 +84,7 @@ abstract contract BaseTestSetup is Test {
             ),
             abi.encode(bytes32("question id"))
         );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
+        bytes memory realityV3OracleInitializationData = abi.encode(
             _reality,
             address(this),
             1,
@@ -100,7 +100,7 @@ abstract contract BaseTestSetup is Test {
             higherBound: 1,
             weight: 1,
             value: 0,
-            data: _manualRealityOracleInitializationData
+            data: realityV3OracleInitializationData
         });
         bytes memory _oraclesInitializationData = abi.encode(
             _oracleDatas,

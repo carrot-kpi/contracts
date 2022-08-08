@@ -4,7 +4,7 @@ import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 import {KPITokensFactory} from "../../contracts/KPITokensFactory.sol";
 import {ERC20KPIToken} from "../../contracts/kpi-tokens/ERC20KPIToken.sol";
 import {KPITokensManager1} from "../../contracts/kpi-tokens-managers/KPITokensManager1.sol";
-import {ManualRealityOracle} from "../../contracts/oracles/ManualRealityOracle.sol";
+import {RealityV3Oracle} from "../../contracts/oracles/RealityV3Oracle.sol";
 import {OraclesManager1} from "../../contracts/oracles-managers/OraclesManager1.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
@@ -25,10 +25,10 @@ contract FactoryKpiTokensAmountTest is BaseTestSetup {
             ERC20_KPI_TOKEN_SPECIFICATION
         );
 
-        manualRealityOracleTemplate = new ManualRealityOracle();
+        realityV3OracleTemplate = new RealityV3Oracle();
         oraclesManager = new OraclesManager1(address(factory));
         oraclesManager.addTemplate(
-            address(manualRealityOracleTemplate),
+            address(realityV3OracleTemplate),
             MANUAL_REALITY_ETH_SPECIFICATION
         );
 

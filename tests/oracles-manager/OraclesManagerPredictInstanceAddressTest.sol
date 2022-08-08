@@ -16,7 +16,7 @@ contract OraclesManagerPredictInstanceAddressTest is BaseTestSetup {
             uint256(3)
         );
         address _predicatedAddress = Clones.predictDeterministicAddress(
-            address(manualRealityOracleTemplate),
+            address(realityV3OracleTemplate),
             keccak256(abi.encodePacked(address(this), _initializationData)),
             address(oraclesManager)
         );

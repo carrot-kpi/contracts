@@ -25,7 +25,7 @@ contract OraclesManagerInstantiateTest is BaseTestSetup {
             block.timestamp + 200 // expiry
         );
         address _predictedInstanceAddress = Clones.predictDeterministicAddress(
-            address(manualRealityOracleTemplate),
+            address(realityV3OracleTemplate),
             keccak256(abi.encodePacked(address(this), _initializationData)),
             address(oraclesManager)
         );
