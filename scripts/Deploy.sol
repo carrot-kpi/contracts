@@ -5,22 +5,17 @@ import {TransparentUpgradeableProxy} from "oz/proxy/transparent/TransparentUpgra
 import {ProxyAdmin} from "oz/proxy/transparent/ProxyAdmin.sol";
 import {ERC20KPIToken} from "../contracts/kpi-tokens/ERC20KPIToken.sol";
 import {RealityV3Oracle} from "../contracts/oracles/RealityV3Oracle.sol";
-import {OraclesManager} from "../contracts/OraclesManager.sol";
-import {KPITokensManager} from "../contracts/KPITokensManager.sol";
+import {OraclesManager1} from "../contracts/oracles-managers/OraclesManager1.sol";
+import {KPITokensManager1} from "../contracts/kpi-tokens-managers/KPITokensManager1.sol";
 import {KPITokensFactory} from "../contracts/KPITokensFactory.sol";
-import {Vm} from "forge-std/Vm.sol";
+import {Script} from "forge-std/Script.sol";
+import {console2} from "forge-std/console2.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Deploy
 /// @dev Deploys the platform on a target network.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
-contract Deploy {
-    event log_string(string);
-    event log_address(address);
-    event log_uint(uint256);
-
-    Vm internal constant vm =
-        Vm(address(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D));
+contract Deploy is Script {
     string internal constant ERC20_KPI_TOKEN_SPECIFICATION =
         "QmXU4G418hZLL8yxXdjkTFSoH2FdSe6ELgUuSm5fHHJMMN";
     string internal constant MANUAL_REALITY_ETH_ORACLE_SPECIFICATION =
@@ -37,51 +32,43 @@ contract Deploy {
             address(1),
             _feeReceiver
         );
-        emit log_string("Factory deployed at address");
-        emit log_address(address(_factory));
+        console2.log("Factory deployed at address: ", address(_factory));
 
-        KPITokensManager _kpiTokensManager = new KPITokensManager(
+        KPITokensManager1 _kpiTokensManager = new KPITokensManager1(
             address(_factory)
         );
-        emit log_string("KPI tokens manager deployed at address");
-        emit log_address(address(_kpiTokensManager));
+        console2.log(
+            "KPI tokens manager deployed at address: ",
+            address(_kpiTokensManager)
+        );
 
         ERC20KPIToken _erc20KpiTokenTemplate = new ERC20KPIToken();
-        emit log_string("ERC20 KPI token template deployed at address");
-        emit log_address(address(_erc20KpiTokenTemplate));
+        console2.log(
+            "ERC20 KPI token template deployed at address: ",
+            address(_erc20KpiTokenTemplate)
+        );
 
         _kpiTokensManager.addTemplate(
             address(_erc20KpiTokenTemplate),
             ERC20_KPI_TOKEN_SPECIFICATION
         );
 
-        OraclesManager _oraclesManager = new OraclesManager();
-
-        // deploy a proxy for the oracle manager
-        ProxyAdmin _proxyAdmin = new ProxyAdmin();
-        TransparentUpgradeableProxy _proxy = new TransparentUpgradeableProxy(
-            address(_oraclesManager),
-            address(_proxyAdmin),
-            abi.encodeWithSignature("initialize(address)", address(_factory))
+        OraclesManager1 _oraclesManager = new OraclesManager1(
+            address(_factory)
         );
-        _oraclesManager = OraclesManager(address(_proxy));
-
-        emit log_string("Oracles manager deployed at address");
-        emit log_address(address(_oraclesManager));
-
-        emit log_string("Oracles manager proxy admin deployed at address");
-        emit log_address(address(_proxyAdmin));
-
-        emit log_string("Oracles manager proxy deployed at address");
-        emit log_address(address(_proxy));
+        console2.log(
+            "Oracles manager deployed at address: ",
+            address(_oraclesManager)
+        );
 
         RealityV3Oracle _realityV3OracleTemplate = new RealityV3Oracle();
-        emit log_string("Manual Reality oracle template deployed at address");
-        emit log_address(address(_realityV3OracleTemplate));
+        console2.log(
+            "Manual Reality oracle template deployed at address: ",
+            address(_realityV3OracleTemplate)
+        );
 
         _oraclesManager.addTemplate(
             address(_realityV3OracleTemplate),
-            false,
             MANUAL_REALITY_ETH_ORACLE_SPECIFICATION
         );
 
