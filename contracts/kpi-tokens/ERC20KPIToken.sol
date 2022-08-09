@@ -75,6 +75,7 @@ contract ERC20KPIToken is
     error ZeroAddressToken();
     error ZeroAddressReceiver();
     error NothingToRecover();
+    error NotEnoughValue();
 
     event Initialize();
     event CollectProtocolFee(
@@ -299,6 +300,11 @@ contract ERC20KPIToken is
         if (_oracleDatas.length == 0) revert NoOracles();
         if (_oracleDatas.length > 5) revert TooManyOracles();
         oraclesAmount = uint8(_oracleDatas.length);
+
+        uint256 _totalValue = 0;
+        for (uint16 _i = 0; _i < _oracleDatas.length; _i++)
+            _totalValue += _oracleDatas[_i].value;
+        if (msg.value < _totalValue) revert NotEnoughValue();
 
         for (uint16 _i = 0; _i < _oracleDatas.length; _i++) {
             OracleData memory _oracleData = _oracleDatas[_i];

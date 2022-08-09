@@ -14,12 +14,41 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
     function initializeKpiToken(
         address oraclesManager,
         bytes memory oracleData,
-        string memory expectedErrorSignature
+        string memory expectedErrorSignature,
+        uint256 value
     ) internal returns (ERC20KPIToken) {
         ERC20KPIToken kpiTokenInstance = ERC20KPIToken(
             Clones.clone(address(erc20KpiTokenTemplate))
         );
 
+        IERC20KPIToken.Collateral[] memory collaterals = prepareCollateral(
+            address(kpiTokenInstance)
+        );
+        mockCalls(oracleData, oraclesManager);
+
+        if (bytes(expectedErrorSignature).length > 0) {
+            vm.expectRevert(abi.encodeWithSignature(expectedErrorSignature));
+        }
+
+        kpiTokenInstance.initialize{value: value}(
+            address(this),
+            address(kpiTokensManager),
+            oraclesManager,
+            address(1234),
+            1,
+            "a",
+            block.timestamp + 60,
+            abi.encode(collaterals, "Token", "TKN", 100 ether),
+            oracleData
+        );
+
+        return (kpiTokenInstance);
+    }
+
+    function prepareCollateral(address kpiTokenInstance)
+        internal
+        returns (IERC20KPIToken.Collateral[] memory)
+    {
         firstErc20.mint(address(this), 10 ether);
         firstErc20.approve(address(kpiTokenInstance), 10 ether);
 
@@ -31,6 +60,12 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
             minimumPayout: 1 ether
         });
 
+        return collaterals;
+    }
+
+    function mockCalls(bytes memory oracleData, address oraclesManager)
+        internal
+    {
         (IERC20KPIToken.OracleData[] memory _oracleDatas, ) = abi.decode(
             oracleData,
             (IERC20KPIToken.OracleData[], bool)
@@ -50,25 +85,6 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
                 )
             );
         }
-
-        if (bytes(expectedErrorSignature).length > 0) {
-            vm.expectRevert(abi.encodeWithSignature(expectedErrorSignature));
-        }
-
-        address feeReceiver = address(1234);
-        kpiTokenInstance.initialize(
-            address(this),
-            address(kpiTokensManager),
-            oraclesManager,
-            feeReceiver,
-            1,
-            "a",
-            block.timestamp + 60,
-            abi.encode(collaterals, "Token", "TKN", 100 ether),
-            oracleData
-        );
-
-        return (kpiTokenInstance);
     }
 
     function testTooManyOracles() external {
@@ -95,7 +111,8 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         initializeKpiToken(
             address(123),
             abi.encode(oracleData, true),
-            "TooManyOracles()"
+            "TooManyOracles()",
+            0
         );
     }
 
@@ -105,7 +122,8 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         initializeKpiToken(
             address(123),
             abi.encode(oracleData, true),
-            "NoOracles()"
+            "NoOracles()",
+            0
         );
     }
 
@@ -131,7 +149,8 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         initializeKpiToken(
             address(123),
             abi.encode(oracleData, true),
-            "InvalidOracleBounds()"
+            "InvalidOracleBounds()",
+            0
         );
     }
 
@@ -156,7 +175,8 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         initializeKpiToken(
             address(123),
             abi.encode(oracleData, true),
-            "InvalidOracleBounds()"
+            "InvalidOracleBounds()",
+            0
         );
     }
 
@@ -181,7 +201,8 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         initializeKpiToken(
             address(123),
             abi.encode(oracleData, true),
-            "InvalidOracleWeights()"
+            "InvalidOracleWeights()",
+            0
         );
     }
 
@@ -208,7 +229,8 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         ERC20KPIToken kpiTokenInstance = initializeKpiToken(
             oraclesManager,
             abi.encode(oracleData, true),
-            ""
+            "",
+            0
         );
 
         (
@@ -239,8 +261,6 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         assertEq(finalizableOracle.weight, 1);
         assertTrue(!finalizableOracle.finalized);
         assertTrue(andRelationship);
-
-        vm.clearMockedCalls();
     }
 
     function testSuccessNoAndSingleOracle() external {
@@ -266,7 +286,8 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         ERC20KPIToken kpiTokenInstance = initializeKpiToken(
             oraclesManager,
             abi.encode(oracleData, false),
-            ""
+            "",
+            0
         );
 
         (
@@ -297,8 +318,6 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         assertEq(finalizableOracle.weight, 1);
         assertTrue(!finalizableOracle.finalized);
         assertTrue(!andRelationship);
-
-        vm.clearMockedCalls();
     }
 
     function testSuccessAndMultipleOracles() external {
@@ -340,7 +359,8 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         ERC20KPIToken kpiTokenInstance = initializeKpiToken(
             oraclesManager,
             abi.encode(oracleData, true),
-            ""
+            "",
+            0
         );
 
         (
@@ -377,8 +397,234 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         assertTrue(!onChainFinalizableOracles[1].finalized);
 
         assertTrue(andRelationship);
+    }
 
-        vm.clearMockedCalls();
+    function testFailureZeroValueSingleOracle() external {
+        IERC20KPIToken.OracleData[]
+            memory oracleData = new IERC20KPIToken.OracleData[](1);
+        bytes memory firstManualRealityEthInitializationData = abi.encode(
+            address(2), // fake reality.eth address
+            address(this), // arbitrator
+            0, // template id
+            "a", // question
+            200, // question timeout
+            block.timestamp + 200, // expiry
+            10 ether // minimum bond
+        );
+        oracleData[0] = IERC20KPIToken.OracleData({
+            templateId: 1,
+            lowerBound: 0,
+            higherBound: 1,
+            weight: 1,
+            value: 10 ether,
+            data: firstManualRealityEthInitializationData
+        });
+        address oraclesManager = address(2);
+        vm.expectRevert(abi.encodeWithSignature("NotEnoughValue()"));
+        initializeKpiToken(
+            oraclesManager,
+            abi.encode(oracleData, false),
+            "NotEnoughValue()",
+            0
+        );
+    }
+
+    function testFailureSomeValueSingleOracle() external {
+        IERC20KPIToken.OracleData[]
+            memory oracleData = new IERC20KPIToken.OracleData[](1);
+        bytes memory firstManualRealityEthInitializationData = abi.encode(
+            address(2), // fake reality.eth address
+            address(this), // arbitrator
+            0, // template id
+            "a", // question
+            200, // question timeout
+            block.timestamp + 200, // expiry
+            10 ether // minimum bond
+        );
+        oracleData[0] = IERC20KPIToken.OracleData({
+            templateId: 1,
+            lowerBound: 0,
+            higherBound: 1,
+            weight: 1,
+            value: 10 ether,
+            data: firstManualRealityEthInitializationData
+        });
+        address oraclesManager = address(2);
+        vm.expectRevert(abi.encodeWithSignature("NotEnoughValue()"));
+        initializeKpiToken(
+            oraclesManager,
+            abi.encode(oracleData, false),
+            "NotEnoughValue()",
+            2 ether
+        );
+    }
+
+    function testSuccessValueSingleOracle() external {
+        IERC20KPIToken.OracleData[]
+            memory oracleData = new IERC20KPIToken.OracleData[](1);
+        bytes memory firstManualRealityEthInitializationData = abi.encode(
+            address(2), // fake reality.eth address
+            address(this), // arbitrator
+            0, // template id
+            "a", // question
+            200, // question timeout
+            block.timestamp + 200, // expiry
+            1 ether // minimum bond
+        );
+        oracleData[0] = IERC20KPIToken.OracleData({
+            templateId: 1,
+            lowerBound: 0,
+            higherBound: 1,
+            weight: 1,
+            value: 1 ether,
+            data: firstManualRealityEthInitializationData
+        });
+        initializeKpiToken(
+            address(3),
+            abi.encode(oracleData, false),
+            "",
+            10 ether
+        );
+    }
+
+    function testFailureZeroValueMultipleOracles() external {
+        IERC20KPIToken.OracleData[]
+            memory oracleData = new IERC20KPIToken.OracleData[](2);
+        bytes memory firstManualRealityEthInitializationData = abi.encode(
+            address(2), // fake reality.eth address
+            address(this), // arbitrator
+            0, // template id
+            "a", // question
+            200, // question timeout
+            block.timestamp + 200, // expiry
+            10 ether // minimum bond
+        );
+        bytes memory secondManualRealityEthInitializationData = abi.encode(
+            address(2), // fake reality.eth address
+            address(this), // arbitrator
+            0, // template id
+            "a", // question
+            200, // question timeout
+            block.timestamp + 200, // expiry
+            12.28 ether // minimum bond
+        );
+        oracleData[0] = IERC20KPIToken.OracleData({
+            templateId: 1,
+            lowerBound: 0,
+            higherBound: 1,
+            weight: 1,
+            value: 10 ether,
+            data: firstManualRealityEthInitializationData
+        });
+        oracleData[1] = IERC20KPIToken.OracleData({
+            templateId: 1,
+            lowerBound: 0,
+            higherBound: 1,
+            weight: 1,
+            value: 12.28 ether,
+            data: secondManualRealityEthInitializationData
+        });
+        address oraclesManager = address(2);
+        vm.expectRevert(abi.encodeWithSignature("NotEnoughValue()"));
+        initializeKpiToken(
+            oraclesManager,
+            abi.encode(oracleData, false),
+            "NotEnoughValue()",
+            0
+        );
+    }
+
+    function testFailureSomeValueMultipleOracles() external {
+        IERC20KPIToken.OracleData[]
+            memory oracleData = new IERC20KPIToken.OracleData[](2);
+        bytes memory firstManualRealityEthInitializationData = abi.encode(
+            address(2), // fake reality.eth address
+            address(this), // arbitrator
+            0, // template id
+            "a", // question
+            200, // question timeout
+            block.timestamp + 200, // expiry
+            10 ether // minimum bond
+        );
+        bytes memory secondManualRealityEthInitializationData = abi.encode(
+            address(2), // fake reality.eth address
+            address(this), // arbitrator
+            0, // template id
+            "a", // question
+            200, // question timeout
+            block.timestamp + 200, // expiry
+            12.28 ether // minimum bond
+        );
+        oracleData[0] = IERC20KPIToken.OracleData({
+            templateId: 1,
+            lowerBound: 0,
+            higherBound: 1,
+            weight: 1,
+            value: 10 ether,
+            data: firstManualRealityEthInitializationData
+        });
+        oracleData[1] = IERC20KPIToken.OracleData({
+            templateId: 1,
+            lowerBound: 0,
+            higherBound: 1,
+            weight: 1,
+            value: 12.28 ether,
+            data: secondManualRealityEthInitializationData
+        });
+        address oraclesManager = address(2);
+        vm.expectRevert(abi.encodeWithSignature("NotEnoughValue()"));
+        initializeKpiToken(
+            oraclesManager,
+            abi.encode(oracleData, false),
+            "NotEnoughValue()",
+            10 ether
+        );
+    }
+
+    function testSuccessWithValueMultipleOracles() external {
+        IERC20KPIToken.OracleData[]
+            memory oracleData = new IERC20KPIToken.OracleData[](2);
+        bytes memory firstManualRealityEthInitializationData = abi.encode(
+            address(2), // fake reality.eth address
+            address(this), // arbitrator
+            0, // template id
+            "a", // question
+            200, // question timeout
+            block.timestamp + 200, // expiry
+            10 ether // minimum bond
+        );
+        bytes memory secondManualRealityEthInitializationData = abi.encode(
+            address(2), // fake reality.eth address
+            address(this), // arbitrator
+            0, // template id
+            "a", // question
+            200, // question timeout
+            block.timestamp + 200, // expiry
+            12.28 ether // minimum bond
+        );
+        oracleData[0] = IERC20KPIToken.OracleData({
+            templateId: 1,
+            lowerBound: 0,
+            higherBound: 1,
+            weight: 1,
+            value: 10 ether,
+            data: firstManualRealityEthInitializationData
+        });
+        oracleData[1] = IERC20KPIToken.OracleData({
+            templateId: 1,
+            lowerBound: 0,
+            higherBound: 1,
+            weight: 1,
+            value: 12.28 ether,
+            data: secondManualRealityEthInitializationData
+        });
+        address oraclesManager = address(2);
+        initializeKpiToken(
+            oraclesManager,
+            abi.encode(oracleData, false),
+            "",
+            22.28 ether
+        );
     }
 
     function testSuccessNoAndMultipleOracles() external {
@@ -420,7 +666,8 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         ERC20KPIToken kpiTokenInstance = initializeKpiToken(
             oraclesManager,
             abi.encode(oracleData, false),
-            ""
+            "",
+            0
         );
 
         (
@@ -457,7 +704,5 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         assertTrue(!onChainFinalizableOracles[1].finalized);
 
         assertTrue(!andRelationship);
-
-        vm.clearMockedCalls();
     }
 }
