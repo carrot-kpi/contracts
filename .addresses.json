@@ -1,9 +1,16 @@
 {
     "rinkeby": {
-        "factory": "0x31c7fa4cf12f99f28eaa4cc5ba377cc6f93c6ee2",
-        "kpiTokensManager": "0x85b83e8eb21356f034a1112198da45a7542af7b0",
-        "oraclesManager": "0x9fc1dbff484ad130f7c1fb1d0dbafdaea7eda465",
-        "erc20KpiTokensTemplate": "0x08618cb466c62de556f56506d18e5e5807bac0fa",
-        "manualRealityEthOracleTemplate": "0x3a7863a0511783bdebb8c2650e7ac65f388da06f"
+        "factory": "0x3396099B67946F5c5e5EBd5F9674102bce91D051",
+        "kpiTokensManager": "0x6006EDbA3716B9DE10f7EB90BAc96cB8a088aE6f",
+        "oraclesManager": "0x9AEc467e6f23c2A91A0bD6AfA368E110c7356D4B",
+        "erc20KpiTokensTemplate": "0x9494D38ef63103B84b8921888820DfDe1f9EC32C",
+        "manualRealityEthOracleTemplate": "0x343c8F75244706eADe9CC0F04c6C588C00E6a747"
+    },
+    "goerli": {
+        "factory": "0x29Dd4a751A90a9522Fca9f2fbaDb24Dda686dCaa",
+        "kpiTokensManager": "0x0278a05397d6E7CC01Ff0D5CD5588c898cd709A2",
+        "oraclesManager": "0x38A9B2a80332e9eAA42b6e69Cb829c6264225DCf",
+        "erc20KpiTokensTemplate": "0xaD4d5F2836e0aEcbEA31a732306D04b49acEF719",
+        "manualRealityEthOracleTemplate": "0x07e6527504Fc12b810F30b510D4A900D26a116bE"
     }
 }
