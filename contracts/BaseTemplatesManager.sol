@@ -4,7 +4,7 @@ import {Ownable} from "oz/access/Ownable.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 import {IKPIToken} from "./interfaces/kpi-tokens/IKPIToken.sol";
 import {IOracle} from "./interfaces/oracles/IOracle.sol";
-import {IBaseTemplatesManager} from "./interfaces/IBaseTemplatesManager.sol";
+import {IBaseTemplatesManager, Template} from "./interfaces/IBaseTemplatesManager.sol";
 import {IKPITokensFactory} from "./interfaces/IKPITokensFactory.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later

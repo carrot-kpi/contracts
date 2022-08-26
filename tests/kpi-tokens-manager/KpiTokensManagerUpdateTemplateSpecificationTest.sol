@@ -2,6 +2,7 @@ pragma solidity 0.8.15;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 import {KPITokensManager1} from "../../contracts/kpi-tokens-managers/KPITokensManager1.sol";
+import {Template} from "../../contracts/BaseTemplatesManager.sol";
 import {IKPITokensManager1} from "../../contracts/interfaces/kpi-tokens-managers/IKPITokensManager1.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
@@ -30,8 +31,7 @@ contract KpiTokensManagerUpdateTemplateSpecificationTest is BaseTestSetup {
         string memory _oldSpecification = "a";
         kpiTokensManager.addTemplate(address(2), _oldSpecification);
         uint256 _templateId = kpiTokensManager.templatesAmount();
-        IKPITokensManager1.Template memory _template = kpiTokensManager
-            .template(_templateId);
+        Template memory _template = kpiTokensManager.template(_templateId);
         assertEq(_template.id, _templateId);
         assertEq(_template.specification, _oldSpecification);
         string memory _newSpecification = "b";

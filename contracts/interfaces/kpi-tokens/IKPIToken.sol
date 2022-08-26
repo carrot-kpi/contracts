@@ -1,6 +1,7 @@
 pragma solidity >=0.8.0;
 
 import {IKPITokensManager1} from "../kpi-tokens-managers/IKPITokensManager1.sol";
+import {Template} from "../IBaseTemplatesManager.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI token interface
@@ -28,7 +29,7 @@ interface IKPIToken {
     function template()
         external
         view
-        returns (IKPITokensManager1.Template memory);
+        returns (Template memory);
 
     function description() external view returns (string memory);
 

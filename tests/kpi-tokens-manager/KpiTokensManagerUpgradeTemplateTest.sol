@@ -3,6 +3,7 @@ pragma solidity 0.8.15;
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 import {KPITokensManager1} from "../../contracts/kpi-tokens-managers/KPITokensManager1.sol";
 import {IKPITokensManager1} from "../../contracts/interfaces/kpi-tokens-managers/IKPITokensManager1.sol";
+import {Template} from "../../contracts/interfaces/IBaseTemplatesManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
@@ -33,8 +34,7 @@ contract KpiTokensManagerUpgradeTemplateTest is BaseTestSetup {
 
     function testSameSpecification() external {
         uint256 _templateId = 1;
-        IKPITokensManager1.Template memory _template = kpiTokensManager
-            .template(_templateId);
+        Template memory _template = kpiTokensManager.template(_templateId);
         vm.expectRevert(abi.encodeWithSignature("InvalidSpecification()"));
         kpiTokensManager.upgradeTemplate(
             _templateId,
@@ -45,8 +45,7 @@ contract KpiTokensManagerUpgradeTemplateTest is BaseTestSetup {
 
     function testSuccess() external {
         uint256 _templateId = 1;
-        IKPITokensManager1.Template memory _template = kpiTokensManager
-            .template(_templateId);
+        Template memory _template = kpiTokensManager.template(_templateId);
         assertEq(_template.id, _templateId);
         assertEq(_template.version, 1);
         string memory _newSpecification = "b";

@@ -2,7 +2,7 @@ pragma solidity 0.8.15;
 
 import {ClonesUpgradeable} from "oz-upgradeable/proxy/ClonesUpgradeable.sol";
 import {IOracle} from "../interfaces/oracles/IOracle.sol";
-import {BaseTemplatesManager} from "../BaseTemplatesManager.sol";
+import {BaseTemplatesManager, Template} from "../BaseTemplatesManager.sol";
 import {IKPITokensFactory} from "../interfaces/IKPITokensFactory.sol";
 import {IOraclesManager1} from "../interfaces/oracles-managers/IOraclesManager1.sol";
 

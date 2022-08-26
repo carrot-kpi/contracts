@@ -1,17 +1,17 @@
 pragma solidity >=0.8.0;
 
+struct Template {
+    uint256 id;
+    address addrezz;
+    uint256 version;
+    string specification;
+}
+
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Base templates manager interface
 /// @dev Interface for the base templates manager contract.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 interface IBaseTemplatesManager {
-    struct Template {
-        uint256 id;
-        address addrezz;
-        uint256 version;
-        string specification;
-    }
-
     function addTemplate(address _template, string calldata _specification)
         external;
 

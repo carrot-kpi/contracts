@@ -3,9 +3,8 @@ pragma solidity 0.8.15;
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 import {OraclesManager1} from "../../contracts/oracles-managers/OraclesManager1.sol";
 import {IKPITokensManager1} from "../../contracts/interfaces/kpi-tokens-managers/IKPITokensManager1.sol";
-import {IBaseTemplatesManager} from "../../contracts/interfaces/IBaseTemplatesManager.sol";
+import {IBaseTemplatesManager, Template} from "../../contracts/interfaces/IBaseTemplatesManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
-import "forge-std/console.sol";
 import {stdStorage, StdStorage} from "forge-std/Test.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
@@ -46,8 +45,7 @@ contract KpiTokensManagerRemoveTemplateTest is BaseTestSetup {
     }
 
     function testSuccess() external {
-        IKPITokensManager1.Template memory _template = kpiTokensManager
-            .template(1);
+        Template memory _template = kpiTokensManager.template(1);
         assertEq(_template.id, 1);
         kpiTokensManager.removeTemplate(1);
         vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));

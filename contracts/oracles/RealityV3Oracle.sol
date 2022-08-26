@@ -5,6 +5,7 @@ import {IOracle} from "../interfaces/oracles/IOracle.sol";
 import {IOraclesManager1} from "../interfaces/oracles-managers/IOraclesManager1.sol";
 import {IKPIToken} from "../interfaces/kpi-tokens/IKPIToken.sol";
 import {IRealityV3} from "../interfaces/external/IRealityV3.sol";
+import {Template} from "../interfaces/IBaseTemplatesManager.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Manual Reality oracle
@@ -21,7 +22,7 @@ contract RealityV3Oracle is IOracle, Initializable {
     address public kpiToken;
     address internal oraclesManager;
     address internal reality;
-    IOraclesManager1.Template internal oracleTemplate;
+    Template internal oracleTemplate;
     bytes32 internal questionId;
     string internal question;
 
@@ -134,12 +135,7 @@ contract RealityV3Oracle is IOracle, Initializable {
 
     /// @dev View function returning info about the template used to instantiate this oracle.
     /// @return The template struct.
-    function template()
-        external
-        view
-        override
-        returns (IOraclesManager1.Template memory)
-    {
+    function template() external view override returns (Template memory) {
         return oracleTemplate;
     }
 }

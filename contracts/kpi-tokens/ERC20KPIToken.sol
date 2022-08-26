@@ -5,6 +5,7 @@ import {SafeERC20Upgradeable} from "oz-upgradeable/token/ERC20/utils/SafeERC20Up
 import {ReentrancyGuardUpgradeable} from "oz-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import {IOraclesManager1} from "../interfaces/oracles-managers/IOraclesManager1.sol";
 import {IKPITokensManager1} from "../interfaces/kpi-tokens-managers/IKPITokensManager1.sol";
+import {Template} from "../interfaces/IBaseTemplatesManager.sol";
 import {IERC20KPIToken} from "../interfaces/kpi-tokens/IERC20KPIToken.sol";
 import {TokenAmount} from "../commons/Types.sol";
 
@@ -41,7 +42,7 @@ contract ERC20KPIToken is
     uint8 internal collateralsAmount;
     string public description;
     uint256 public expiration;
-    IKPITokensManager1.Template internal kpiTokenTemplate;
+    Template internal kpiTokenTemplate;
     uint256 internal initialSupply;
     uint256 internal totalWeight;
     mapping(address => FinalizableOracleWithoutAddress)
@@ -763,12 +764,7 @@ contract ERC20KPIToken is
 
     /// @dev View function returning info about the template used to instantiate this KPI token.
     /// @return The template struct.
-    function template()
-        external
-        view
-        override
-        returns (IKPITokensManager1.Template memory)
-    {
+    function template() external view override returns (Template memory) {
         return kpiTokenTemplate;
     }
 }

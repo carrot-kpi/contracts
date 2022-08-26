@@ -3,6 +3,7 @@ pragma solidity 0.8.15;
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 import {OraclesManager1} from "../../contracts/oracles-managers/OraclesManager1.sol";
 import {IOraclesManager1} from "../../contracts/interfaces/oracles-managers/IOraclesManager1.sol";
+import {Template} from "../../contracts/interfaces/IBaseTemplatesManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
@@ -30,9 +31,7 @@ contract OraclesManagerUpdateTemplateSpecificationTest is BaseTestSetup {
         string memory _oldSpecification = "a";
         oraclesManager.addTemplate(address(2), _oldSpecification);
         uint256 _templateId = oraclesManager.templatesAmount();
-        IOraclesManager1.Template memory _template = oraclesManager.template(
-            _templateId
-        );
+        Template memory _template = oraclesManager.template(_templateId);
         assertEq(_template.id, _templateId);
         assertEq(_template.specification, _oldSpecification);
         string memory _newSpecification = "b";

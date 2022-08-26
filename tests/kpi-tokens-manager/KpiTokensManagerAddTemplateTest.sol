@@ -2,6 +2,7 @@ pragma solidity 0.8.15;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 import {IKPITokensManager1} from "../../contracts/interfaces/kpi-tokens-managers/IKPITokensManager1.sol";
+import {Template} from "../../contracts/interfaces/IBaseTemplatesManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
@@ -30,8 +31,7 @@ contract KpiTokensManagerAddTemplateTest is BaseTestSetup {
         address _templateAddress = address(1);
         kpiTokensManager.addTemplate(_templateAddress, _specification);
         uint256 _addedTemplateId = kpiTokensManager.templatesAmount();
-        IKPITokensManager1.Template memory _template = kpiTokensManager
-            .template(_addedTemplateId);
+        Template memory _template = kpiTokensManager.template(_addedTemplateId);
         assertEq(_template.addrezz, _templateAddress);
         assertEq(_template.version, 1);
         assertEq(_template.specification, _specification);
