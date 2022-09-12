@@ -3,7 +3,7 @@ pragma solidity 0.8.15;
 import {IERC20} from "oz/token/ERC20/IERC20.sol";
 import {ERC20KPIToken} from "../contracts/kpi-tokens/ERC20KPIToken.sol";
 import {IERC20KPIToken} from "../contracts/interfaces/kpi-tokens/IERC20KPIToken.sol";
-import {KPITokensManager} from "../contracts/KPITokensManager.sol";
+import {KPITokensManager1} from "../contracts/kpi-tokens-managers/KPITokensManager1.sol";
 import {KPITokensFactory} from "../contracts/KPITokensFactory.sol";
 import {Vm} from "forge-std/Vm.sol";
 
@@ -14,7 +14,7 @@ import {Vm} from "forge-std/Vm.sol";
 contract CreateManualRealityEthERC20KpiToken {
     struct Args {
         KPITokensFactory factory;
-        KPITokensManager kpiTokensManager;
+        KPITokensManager1 kpiTokensManager;
         address collateralToken;
         uint256 collateralAmount;
         uint256 minimumPayout;
@@ -32,12 +32,12 @@ contract CreateManualRealityEthERC20KpiToken {
     event log_string(string);
     event log_address(address);
 
-    Vm internal constant vm =
+    Vm internal constant VM =
         Vm(address(0x7109709ECfa91a80626fF3989D68f67F5b1DD12D));
 
     function run(
         KPITokensFactory _factory,
-        KPITokensManager _kpiTokensManager,
+        KPITokensManager1 _kpiTokensManager,
         address _collateralToken,
         uint256 _collateralAmount,
         uint256 _minimumPayout,
@@ -117,7 +117,7 @@ contract CreateManualRealityEthERC20KpiToken {
         emit log_string("KPI token will be deployed at address");
         emit log_address(_predictedKpiTokenAddress);
 
-        vm.startBroadcast();
+        VM.startBroadcast();
         IERC20(_args.collateralToken).approve(
             _predictedKpiTokenAddress,
             _args.collateralAmount
@@ -130,6 +130,6 @@ contract CreateManualRealityEthERC20KpiToken {
             _kpiTokenInitializationData,
             _oraclesInitializationData
         );
-        vm.stopBroadcast();
+        VM.stopBroadcast();
     }
 }
