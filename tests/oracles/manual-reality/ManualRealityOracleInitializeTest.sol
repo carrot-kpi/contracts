@@ -1,4 +1,4 @@
-pragma solidity 0.8.15;
+pragma solidity 0.8.17;
 
 import {BaseTestSetup} from "../../commons/BaseTestSetup.sol";
 import {RealityV3Oracle} from "../../../contracts/oracles/RealityV3Oracle.sol";

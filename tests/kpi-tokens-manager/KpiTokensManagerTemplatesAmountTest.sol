@@ -1,4 +1,4 @@
-pragma solidity 0.8.15;
+pragma solidity 0.8.17;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 import {KPITokensManager1} from "../../contracts/kpi-tokens-managers/KPITokensManager1.sol";

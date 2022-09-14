@@ -1,4 +1,4 @@
-pragma solidity 0.8.15;
+pragma solidity 0.8.17;
 
 import {IERC20} from "oz/token/ERC20/IERC20.sol";
 import {ERC20KPIToken} from "../contracts/kpi-tokens/ERC20KPIToken.sol";

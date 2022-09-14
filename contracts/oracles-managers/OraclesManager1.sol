@@ -1,4 +1,4 @@
-pragma solidity 0.8.15;
+pragma solidity 0.8.17;
 
 import {ClonesUpgradeable} from "oz-upgradeable/proxy/ClonesUpgradeable.sol";
 import {IOracle} from "../interfaces/oracles/IOracle.sol";

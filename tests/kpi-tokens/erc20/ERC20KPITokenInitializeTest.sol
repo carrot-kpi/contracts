@@ -1,4 +1,4 @@
-pragma solidity 0.8.15;
+pragma solidity 0.8.17;
 
 import {InitializeKPITokenParams} from "../../../contracts/commons/Types.sol";
 import {BaseTestSetup} from "../../commons/BaseTestSetup.sol";
