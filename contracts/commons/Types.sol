@@ -13,7 +13,7 @@ struct TokenAmount {
 struct InitializeKPITokenParams {
     address creator;
     address oraclesManager;
-    address factory;
+    address kpiTokensManager;
     address feeReceiver;
     uint256 kpiTokenTemplateId;
     uint128 kpiTokenTemplateVersion;

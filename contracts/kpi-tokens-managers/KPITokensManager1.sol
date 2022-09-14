@@ -3,7 +3,6 @@ pragma solidity 0.8.17;
 import {Ownable} from "oz/access/Ownable.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 import {IKPIToken} from "../interfaces/kpi-tokens/IKPIToken.sol";
-import {InitializeKPITokenParams} from "../commons/Types.sol";
 import {BaseTemplatesManager} from "../BaseTemplatesManager.sol";
 import {Template} from "../interfaces/IBaseTemplatesManager.sol";
 import {IKPITokensManager1} from "../interfaces/kpi-tokens-managers/IKPITokensManager1.sol";
@@ -92,14 +91,12 @@ contract KPITokensManager1 is BaseTemplatesManager, IKPITokensManager1 {
     /// parameters has been instantiated.
     function instantiate(
         address _creator,
-        address _oraclesManager,
-        address _feeReceiver,
         uint256 _templateId,
         string memory _description,
         uint256 _expiration,
         bytes memory _initializationData,
         bytes memory _oraclesInitializationData
-    ) external payable override returns (address) {
+    ) external override returns (address, uint128) {
         if (msg.sender != factory) revert Forbidden();
         Template memory _template = latestVersionStorageTemplate(_templateId);
         address _instance = Clones.cloneDeterministic(
@@ -113,20 +110,6 @@ contract KPITokensManager1 is BaseTemplatesManager, IKPITokensManager1 {
                 _oraclesInitializationData
             )
         );
-        IKPIToken(_instance).initialize{value: msg.value}(
-            InitializeKPITokenParams({
-                creator: _creator,
-                oraclesManager: _oraclesManager,
-                factory: msg.sender,
-                feeReceiver: _feeReceiver,
-                kpiTokenTemplateId: _templateId,
-                kpiTokenTemplateVersion: _template.version,
-                description: _description,
-                expiration: _expiration,
-                kpiTokenData: _initializationData,
-                oraclesData: _oraclesInitializationData
-            })
-        );
-        return _instance;
+        return (_instance, _template.version);
     }
 }

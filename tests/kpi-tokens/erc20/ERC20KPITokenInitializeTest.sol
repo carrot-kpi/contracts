@@ -30,7 +30,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
             InitializeKPITokenParams({
                 creator: address(1),
                 oraclesManager: address(oraclesManager),
-                factory: address(factory),
+                kpiTokensManager: address(kpiTokensManager),
                 feeReceiver: address(0),
                 kpiTokenTemplateId: 1,
                 kpiTokenTemplateVersion: 1,
@@ -57,7 +57,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
             InitializeKPITokenParams({
                 creator: address(1),
                 oraclesManager: address(1),
-                factory: address(1),
+                kpiTokensManager: address(kpiTokensManager),
                 feeReceiver: address(1),
                 kpiTokenTemplateId: 1,
                 kpiTokenTemplateVersion: 1,
@@ -78,7 +78,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
             InitializeKPITokenParams({
                 creator: address(1),
                 oraclesManager: address(1),
-                factory: address(1),
+                kpiTokensManager: address(kpiTokensManager),
                 feeReceiver: address(1),
                 kpiTokenTemplateId: 1,
                 kpiTokenTemplateVersion: 1,
@@ -100,7 +100,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
             InitializeKPITokenParams({
                 creator: address(1),
                 oraclesManager: address(1),
-                factory: address(1),
+                kpiTokensManager: address(kpiTokensManager),
                 feeReceiver: address(1),
                 kpiTokenTemplateId: 1,
                 kpiTokenTemplateVersion: 1,
@@ -121,7 +121,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
             InitializeKPITokenParams({
                 creator: address(1),
                 oraclesManager: address(1),
-                factory: address(1),
+                kpiTokensManager: address(kpiTokensManager),
                 feeReceiver: address(1),
                 kpiTokenTemplateId: 1,
                 kpiTokenTemplateVersion: 1,
@@ -152,7 +152,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
             InitializeKPITokenParams({
                 creator: address(1),
                 oraclesManager: address(oraclesManager),
-                factory: address(1),
+                kpiTokensManager: address(kpiTokensManager),
                 feeReceiver: address(1),
                 kpiTokenTemplateId: 1,
                 kpiTokenTemplateVersion: 1,
@@ -177,7 +177,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
             InitializeKPITokenParams({
                 creator: address(1),
                 oraclesManager: address(oraclesManager),
-                factory: address(1),
+                kpiTokensManager: address(kpiTokensManager),
                 feeReceiver: address(1),
                 kpiTokenTemplateId: 1,
                 kpiTokenTemplateVersion: 1,
@@ -208,7 +208,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
             InitializeKPITokenParams({
                 creator: address(1),
                 oraclesManager: address(1),
-                factory: address(1),
+                kpiTokensManager: address(kpiTokensManager),
                 feeReceiver: address(1),
                 kpiTokenTemplateId: 1,
                 kpiTokenTemplateVersion: 1,
@@ -239,7 +239,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
             InitializeKPITokenParams({
                 creator: address(1),
                 oraclesManager: address(1),
-                factory: address(1),
+                kpiTokensManager: address(kpiTokensManager),
                 feeReceiver: address(1),
                 kpiTokenTemplateId: 1,
                 kpiTokenTemplateVersion: 1,
@@ -270,7 +270,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
             InitializeKPITokenParams({
                 creator: address(1),
                 oraclesManager: address(1),
-                factory: address(1),
+                kpiTokensManager: address(kpiTokensManager),
                 feeReceiver: address(1),
                 kpiTokenTemplateId: 1,
                 kpiTokenTemplateVersion: 1,
@@ -305,7 +305,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
             InitializeKPITokenParams({
                 creator: address(1),
                 oraclesManager: address(1),
-                factory: address(1),
+                kpiTokensManager: address(kpiTokensManager),
                 feeReceiver: address(1),
                 kpiTokenTemplateId: 1,
                 kpiTokenTemplateVersion: 1,
@@ -335,7 +335,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
             InitializeKPITokenParams({
                 creator: address(1),
                 oraclesManager: address(oraclesManager),
-                factory: address(1),
+                kpiTokensManager: address(kpiTokensManager),
                 feeReceiver: address(1),
                 kpiTokenTemplateId: 1,
                 kpiTokenTemplateVersion: 1,
@@ -365,7 +365,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
             InitializeKPITokenParams({
                 creator: address(1),
                 oraclesManager: address(1),
-                factory: address(1),
+                kpiTokensManager: address(kpiTokensManager),
                 feeReceiver: address(1),
                 kpiTokenTemplateId: 1,
                 kpiTokenTemplateVersion: 1,
@@ -395,7 +395,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
             InitializeKPITokenParams({
                 creator: address(1),
                 oraclesManager: address(1),
-                factory: address(1),
+                kpiTokensManager: address(kpiTokensManager),
                 feeReceiver: address(1),
                 kpiTokenTemplateId: 1,
                 kpiTokenTemplateVersion: 1,
@@ -425,7 +425,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
             InitializeKPITokenParams({
                 creator: address(1),
                 oraclesManager: address(1),
-                factory: address(1),
+                kpiTokensManager: address(kpiTokensManager),
                 feeReceiver: address(1),
                 kpiTokenTemplateId: 1,
                 kpiTokenTemplateVersion: 1,
@@ -482,7 +482,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
             InitializeKPITokenParams({
                 creator: address(this),
                 oraclesManager: address(oraclesManager),
-                factory: address(factory),
+                kpiTokensManager: address(kpiTokensManager),
                 feeReceiver: feeReceiver,
                 kpiTokenTemplateId: 1,
                 kpiTokenTemplateVersion: 1,

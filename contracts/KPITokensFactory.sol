@@ -4,6 +4,7 @@ import {Ownable} from "oz/access/Ownable.sol";
 import {IKPITokensFactory} from "./interfaces/IKPITokensFactory.sol";
 import {IKPITokensManager1} from "./interfaces/kpi-tokens-managers/IKPITokensManager1.sol";
 import {IKPIToken} from "./interfaces/kpi-tokens/IKPIToken.sol";
+import {InitializeKPITokenParams} from "./commons/Types.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI tokens factory
@@ -61,8 +62,9 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
         bytes calldata _initializationData,
         bytes calldata _oraclesInitializationData
     ) external payable override {
-        address _instance = IKPITokensManager1(kpiTokensManager)
-            .predictInstanceAddress(
+        (address _instance, uint128 _templateVersion) = IKPITokensManager1(
+            kpiTokensManager
+        ).instantiate(
                 msg.sender,
                 _id,
                 _description,
@@ -71,15 +73,19 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
                 _oraclesInitializationData
             );
         allowOraclesCreation[_instance] = true;
-        IKPITokensManager1(kpiTokensManager).instantiate{value: msg.value}(
-            msg.sender,
-            oraclesManager,
-            feeReceiver,
-            _id,
-            _description,
-            _expiration,
-            _initializationData,
-            _oraclesInitializationData
+        IKPIToken(_instance).initialize{value: msg.value}(
+            InitializeKPITokenParams({
+                creator: msg.sender,
+                oraclesManager: oraclesManager,
+                kpiTokensManager: kpiTokensManager,
+                feeReceiver: feeReceiver,
+                kpiTokenTemplateId: _id,
+                kpiTokenTemplateVersion: _templateVersion,
+                description: _description,
+                expiration: _expiration,
+                kpiTokenData: _initializationData,
+                oraclesData: _oraclesInitializationData
+            })
         );
         allowOraclesCreation[_instance] = false;
         kpiTokens.push(_instance);
@@ -128,7 +134,7 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
 
     /// @dev Gets a KPI tokens slice based on indexes.
     /// @param _fromIndex The index from which to get KPI tokens (inclusive).
-    /// @param _toIndex The maximum index to which to get KPI tokens (the element 
+    /// @param _toIndex The maximum index to which to get KPI tokens (the element
     /// at this index won't be included).
     /// @return An address array representing the slice taken between the given indexes.
     function enumerate(uint256 _fromIndex, uint256 _toIndex)

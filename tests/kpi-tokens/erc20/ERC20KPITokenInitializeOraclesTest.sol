@@ -35,7 +35,7 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
             InitializeKPITokenParams({
                 creator: address(this),
                 oraclesManager: address(oraclesManager),
-                factory: address(factory),
+                kpiTokensManager: address(kpiTokensManager),
                 feeReceiver: address(1234),
                 kpiTokenTemplateId: 1,
                 kpiTokenTemplateVersion: 1,

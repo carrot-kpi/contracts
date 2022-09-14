@@ -14,8 +14,6 @@ contract KpiTokensManagerInstantiateTest is BaseTestSetup {
         vm.expectRevert();
         kpiTokensManager.instantiate(
             address(this),
-            address(oraclesManager),
-            address(1),
             1,
             "a",
             block.timestamp + 60,
@@ -116,10 +114,8 @@ contract KpiTokensManagerInstantiateTest is BaseTestSetup {
         );
 
         vm.prank(address(factory));
-        address _instance = kpiTokensManager.instantiate(
+        (address _instance, ) = kpiTokensManager.instantiate(
             address(this),
-            address(oraclesManager),
-            address(1),
             1,
             _description,
             block.timestamp + 60,

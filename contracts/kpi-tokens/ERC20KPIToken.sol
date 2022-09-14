@@ -109,6 +109,7 @@ contract ERC20KPIToken is
     /// - `_creator`: since the factory is assumed to be the caller of this function,
     ///   it must forward the original caller (msg.sender, the KPI token creator) here.
     /// - `_oraclesManager`: the factory-forwarded address of the oracles manager.
+    /// - `_kpiTokensManager`: the factory-forwarded address of the KPI tokens manager.
     /// - `_feeReceiver`: the factory-forwarded address of the fee receiver.
     /// - `_kpiTokenTemplateId`: the id of the template.
     /// - `_description`: an IPFS cid pointing to a structured JSON describing what the
@@ -157,7 +158,7 @@ contract ERC20KPIToken is
     {
         initializeState(
             _params.creator,
-            msg.sender,
+            _params.kpiTokensManager,
             _params.kpiTokenTemplateId,
             _params.kpiTokenTemplateVersion,
             _params.description,
