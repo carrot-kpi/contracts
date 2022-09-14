@@ -10,7 +10,6 @@ import {Clones} from "oz/proxy/Clones.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract OraclesManagerInstantiateTest is BaseTestSetup {
     function testFailNotFromCreatedKpiToken() external {
-        // FIXME: why does this fail if I uncomment stuff?
         vm.expectRevert(); /* abi.encodeWithSignature("Forbidden()") */
         oraclesManager.instantiate(address(this), 0, bytes(""));
     }

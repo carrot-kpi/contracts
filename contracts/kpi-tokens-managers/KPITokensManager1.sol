@@ -101,7 +101,6 @@ contract KPITokensManager1 is BaseTemplatesManager, IKPITokensManager1 {
         bytes memory _oraclesInitializationData
     ) external payable override returns (address) {
         if (msg.sender != factory) revert Forbidden();
-        // FIXME: this could very well be a memory template
         Template memory _template = latestVersionStorageTemplate(_templateId);
         address _instance = Clones.cloneDeterministic(
             _template.addrezz,
