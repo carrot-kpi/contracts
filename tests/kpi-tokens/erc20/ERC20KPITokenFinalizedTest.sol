@@ -64,6 +64,7 @@ contract ERC20KPITokenFinalizedTest is BaseTestSetup {
                 address(this),
                 1,
                 "d",
+                block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );
@@ -132,6 +133,7 @@ contract ERC20KPITokenFinalizedTest is BaseTestSetup {
                 address(this),
                 1,
                 "d",
+                block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );
@@ -219,6 +221,7 @@ contract ERC20KPITokenFinalizedTest is BaseTestSetup {
                 address(this),
                 1,
                 "d",
+                block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );
@@ -303,6 +306,7 @@ contract ERC20KPITokenFinalizedTest is BaseTestSetup {
                 address(this),
                 1,
                 "d",
+                block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );
@@ -390,6 +394,7 @@ contract ERC20KPITokenFinalizedTest is BaseTestSetup {
                 address(this),
                 1,
                 "d",
+                block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );

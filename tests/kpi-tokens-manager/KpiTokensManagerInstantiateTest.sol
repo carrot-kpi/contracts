@@ -11,12 +11,27 @@ import {Clones} from "oz/proxy/Clones.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract KpiTokensManagerInstantiateTest is BaseTestSetup {
     function testFailNotFromFactory() external {
-        // FIXME: why does this fail if I uncomment stuff?
-        vm.expectRevert(); /* abi.encodeWithSignature("Forbidden()") */
-        oraclesManager.instantiate(address(this), 0, bytes(""));
+        vm.expectRevert();
+        kpiTokensManager.instantiate(
+            address(this),
+            address(oraclesManager),
+            address(1),
+            1,
+            "a",
+            block.timestamp + 60,
+            abi.encode(""),
+            abi.encode("")
+        );
     }
 
-    function testSuccessERC20() external {
+    function initialize()
+        internal
+        returns (
+            string memory,
+            bytes memory,
+            bytes memory
+        )
+    {
         IERC20KPIToken.Collateral[]
             memory _collaterals = new IERC20KPIToken.Collateral[](1);
         _collaterals[0] = IERC20KPIToken.Collateral({
@@ -64,25 +79,50 @@ contract KpiTokensManagerInstantiateTest is BaseTestSetup {
             _oracleDatas,
             false
         );
+        return (
+            _description,
+            _erc20KpiTokenInitializationData,
+            _oraclesInitializationData
+        );
+    }
 
-        address _predictedInstanceAddress = Clones.predictDeterministicAddress(
-            address(erc20KpiTokenTemplate),
-            keccak256(
-                abi.encodePacked(
-                    address(this),
-                    _description,
-                    _erc20KpiTokenInitializationData,
-                    _oraclesInitializationData
-                )
+    function testSuccessERC20() external {
+        (
+            string memory _description,
+            bytes memory _erc20KpiTokenInitializationData,
+            bytes memory _oraclesInitializationData
+        ) = initialize();
+
+        vm.prank(address(factory));
+        address _predictedInstanceAddress = kpiTokensManager
+            .predictInstanceAddress(
+                address(this),
+                1,
+                _description,
+                block.timestamp + 60,
+                _erc20KpiTokenInitializationData,
+                _oraclesInitializationData
+            );
+
+        firstErc20.mint(address(this), 2);
+        firstErc20.approve(_predictedInstanceAddress, 2);
+        vm.mockCall(
+            address(factory),
+            abi.encodeWithSignature(
+                "allowOraclesCreation(address)",
+                _predictedInstanceAddress
             ),
-            address(kpiTokensManager)
+            abi.encode(true)
         );
 
         vm.prank(address(factory));
         address _instance = kpiTokensManager.instantiate(
             address(this),
+            address(oraclesManager),
+            address(1),
             1,
             _description,
+            block.timestamp + 60,
             _erc20KpiTokenInitializationData,
             _oraclesInitializationData
         );

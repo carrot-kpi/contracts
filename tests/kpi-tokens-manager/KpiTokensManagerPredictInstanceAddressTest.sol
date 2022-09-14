@@ -26,7 +26,9 @@ contract KpiTokensManagerPredictInstanceAddressTest is BaseTestSetup {
             keccak256(
                 abi.encodePacked(
                     address(this),
+                    uint256(1),
                     _description,
+                    block.timestamp + 60,
                     _initializationData,
                     _oraclesInitializationData
                 )
@@ -39,6 +41,7 @@ contract KpiTokensManagerPredictInstanceAddressTest is BaseTestSetup {
                 address(this),
                 1,
                 _description,
+                block.timestamp + 60,
                 _initializationData,
                 _oraclesInitializationData
             )

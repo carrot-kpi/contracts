@@ -3,7 +3,9 @@ pragma solidity 0.8.15;
 import {Ownable} from "oz/access/Ownable.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 import {IKPIToken} from "../interfaces/kpi-tokens/IKPIToken.sol";
+import {InitializeKPITokenParams} from "../commons/Types.sol";
 import {BaseTemplatesManager} from "../BaseTemplatesManager.sol";
+import {Template} from "../interfaces/IBaseTemplatesManager.sol";
 import {IKPITokensManager1} from "../interfaces/kpi-tokens-managers/IKPITokensManager1.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
@@ -29,15 +31,19 @@ contract KPITokensManager1 is BaseTemplatesManager, IKPITokensManager1 {
     /// @return The salt value.
     function salt(
         address _creator,
-        string calldata _description,
-        bytes calldata _initializationData,
-        bytes calldata _oraclesInitializationData
+        uint256 _id,
+        string memory _description,
+        uint256 _expiration,
+        bytes memory _initializationData,
+        bytes memory _oraclesInitializationData
     ) internal pure returns (bytes32) {
         return
             keccak256(
                 abi.encodePacked(
                     _creator,
+                    _id,
                     _description,
+                    _expiration,
                     _initializationData,
                     _oraclesInitializationData
                 )
@@ -55,16 +61,19 @@ contract KPITokensManager1 is BaseTemplatesManager, IKPITokensManager1 {
     function predictInstanceAddress(
         address _creator,
         uint256 _id,
-        string calldata _description,
-        bytes calldata _initializationData,
-        bytes calldata _oraclesInitializationData
+        string memory _description,
+        uint256 _expiration,
+        bytes memory _initializationData,
+        bytes memory _oraclesInitializationData
     ) external view override returns (address) {
         return
             Clones.predictDeterministicAddress(
-                storageTemplate(_id).addrezz,
+                latestVersionStorageTemplate(_id).addrezz,
                 salt(
                     _creator,
+                    _id,
                     _description,
+                    _expiration,
                     _initializationData,
                     _oraclesInitializationData
                 )
@@ -74,7 +83,7 @@ contract KPITokensManager1 is BaseTemplatesManager, IKPITokensManager1 {
     /// @dev Instantiates a given template using EIP 1167 minimal proxies.
     /// The input data will both be used to choose the instantiated template
     /// and to feed it initialization data.
-    /// @param _id The id of the template that is to be instantiated.
+    /// @param _templateId The id of the template that is to be instantiated.
     /// @param _description An IPFS cid pointing to a structured JSON describing what the KPI token is about.
     /// @param _initializationData The template-specific ABI-encoded initialization data.
     /// @param _oraclesInitializationData The initialization data required by the template to initialize
@@ -83,21 +92,42 @@ contract KPITokensManager1 is BaseTemplatesManager, IKPITokensManager1 {
     /// parameters has been instantiated.
     function instantiate(
         address _creator,
-        uint256 _id,
-        string calldata _description,
-        bytes calldata _initializationData,
-        bytes calldata _oraclesInitializationData
-    ) external override returns (address) {
+        address _oraclesManager,
+        address _feeReceiver,
+        uint256 _templateId,
+        string memory _description,
+        uint256 _expiration,
+        bytes memory _initializationData,
+        bytes memory _oraclesInitializationData
+    ) external payable override returns (address) {
         if (msg.sender != factory) revert Forbidden();
-        return
-            Clones.cloneDeterministic(
-                storageTemplate(_id).addrezz,
-                salt(
-                    _creator,
-                    _description,
-                    _initializationData,
-                    _oraclesInitializationData
-                )
-            );
+        // FIXME: this could very well be a memory template
+        Template memory _template = latestVersionStorageTemplate(_templateId);
+        address _instance = Clones.cloneDeterministic(
+            _template.addrezz,
+            salt(
+                _creator,
+                _templateId,
+                _description,
+                _expiration,
+                _initializationData,
+                _oraclesInitializationData
+            )
+        );
+        IKPIToken(_instance).initialize{value: msg.value}(
+            InitializeKPITokenParams({
+                creator: _creator,
+                oraclesManager: _oraclesManager,
+                factory: msg.sender,
+                feeReceiver: _feeReceiver,
+                kpiTokenTemplateId: _templateId,
+                kpiTokenTemplateVersion: _template.version,
+                description: _description,
+                expiration: _expiration,
+                kpiTokenData: _initializationData,
+                oraclesData: _oraclesInitializationData
+            })
+        );
+        return _instance;
     }
 }

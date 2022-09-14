@@ -1,9 +1,9 @@
 pragma solidity >=0.8.0;
 
 struct Template {
-    uint256 id;
     address addrezz;
-    uint256 version;
+    uint128 version;
+    uint256 id;
     string specification;
 }
 
@@ -29,6 +29,11 @@ interface IBaseTemplatesManager {
     ) external;
 
     function template(uint256 _id) external view returns (Template memory);
+
+    function template(uint256 _id, uint128 _version)
+        external
+        view
+        returns (Template memory);
 
     function exists(uint256 _id) external view returns (bool);
 

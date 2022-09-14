@@ -61,6 +61,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
                 address(this),
                 1,
                 "a",
+                block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );
@@ -144,6 +145,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
                 address(this),
                 1,
                 "a",
+                block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );
@@ -247,6 +249,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
                 address(this),
                 1,
                 "a",
+                block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );
@@ -348,6 +351,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
                 address(this),
                 1,
                 "a",
+                block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );
@@ -442,6 +446,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
                 address(this),
                 1,
                 "a",
+                block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );
@@ -525,6 +530,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
                 address(this),
                 1,
                 "a",
+                block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );
@@ -629,6 +635,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
                 address(this),
                 1,
                 "a",
+                block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );
@@ -731,6 +738,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
                 address(this),
                 1,
                 "a",
+                block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );
@@ -831,6 +839,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
                 address(this),
                 1,
                 "a",
+                block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );
@@ -924,6 +933,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
                 address(this),
                 1,
                 "a",
+                block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );
@@ -1019,6 +1029,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
                 address(this),
                 1,
                 "a",
+                block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );
@@ -1133,6 +1144,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
                 address(this),
                 1,
                 "a",
+                block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );
@@ -1244,6 +1256,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
                 address(this),
                 1,
                 "a",
+                block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );
@@ -1342,6 +1355,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
                 address(this),
                 1,
                 "a",
+                block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );
@@ -1437,6 +1451,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
                 address(this),
                 1,
                 "a",
+                block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );
@@ -1551,6 +1566,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
                 address(this),
                 1,
                 "a",
+                block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );
@@ -1662,6 +1678,7 @@ contract ERC20KPITokenAboveHigherBoundRecoverTest is BaseTestSetup {
                 address(this),
                 1,
                 "a",
+                block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );

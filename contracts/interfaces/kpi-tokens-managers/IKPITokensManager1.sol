@@ -11,15 +11,19 @@ interface IKPITokensManager1 is IBaseTemplatesManager {
         address _creator,
         uint256 _id,
         string memory _description,
+        uint256 _expiration,
         bytes memory _initializationData,
         bytes memory _oraclesInitializationData
     ) external view returns (address);
 
     function instantiate(
         address _creator,
-        uint256 _id,
+        address _oraclesManager,
+        address _feeReceiver,
+        uint256 _templateId,
         string memory _description,
+        uint256 _expiration,
         bytes memory _initializationData,
         bytes memory _oraclesInitializationData
-    ) external returns (address);
+    ) external payable returns (address);
 }

@@ -9,3 +9,16 @@ struct TokenAmount {
     address token;
     uint256 amount;
 }
+
+struct InitializeKPITokenParams {
+    address creator;
+    address oraclesManager;
+    address factory;
+    address feeReceiver;
+    uint256 kpiTokenTemplateId;
+    uint128 kpiTokenTemplateVersion;
+    string description;
+    uint256 expiration;
+    bytes kpiTokenData;
+    bytes oraclesData;
+}

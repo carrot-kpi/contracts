@@ -87,6 +87,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralFinalizeTest2 is
                 address(this),
                 1,
                 "a",
+block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );
@@ -225,6 +226,7 @@ contract ERC20KPITokenIntermediateAnswerMultiCollateralFinalizeTest2 is
                 address(this),
                 1,
                 "a",
+block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );

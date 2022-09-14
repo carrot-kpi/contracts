@@ -46,7 +46,7 @@ contract OraclesManager1 is BaseTemplatesManager, IOraclesManager1 {
     ) external view override returns (address) {
         return
             ClonesUpgradeable.predictDeterministicAddress(
-                storageTemplate(_id).addrezz,
+                latestVersionStorageTemplate(_id).addrezz,
                 salt(_creator, _initializationData),
                 address(this)
             );
@@ -68,7 +68,7 @@ contract OraclesManager1 is BaseTemplatesManager, IOraclesManager1 {
     ) external payable override returns (address) {
         if (!IKPITokensFactory(factory).allowOraclesCreation(msg.sender))
             revert Forbidden();
-        Template storage _template = storageTemplate(_id);
+        Template storage _template = latestVersionStorageTemplate(_id);
         address _instance = ClonesUpgradeable.cloneDeterministic(
             _template.addrezz,
             salt(_creator, _initializationData)

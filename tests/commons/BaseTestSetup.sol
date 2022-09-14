@@ -113,6 +113,7 @@ abstract contract BaseTestSetup is Test {
                 address(this),
                 1,
                 _description,
+                block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );

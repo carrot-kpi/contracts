@@ -1,5 +1,6 @@
 pragma solidity >=0.8.0;
 
+import {InitializeKPITokenParams} from "../../commons/Types.sol";
 import {IKPITokensManager1} from "../kpi-tokens-managers/IKPITokensManager1.sol";
 import {Template} from "../IBaseTemplatesManager.sol";
 
@@ -8,17 +9,9 @@ import {Template} from "../IBaseTemplatesManager.sol";
 /// @dev KPI token interface.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 interface IKPIToken {
-    function initialize(
-        address _creator,
-        address _kpiTokensManager,
-        address _oraclesManager,
-        address _feeReceiver,
-        uint256 _kpiTokenTemplateId,
-        string memory _description,
-        uint256 _expiration,
-        bytes memory _kpiTokenData,
-        bytes memory _oraclesData
-    ) external payable;
+    function initialize(InitializeKPITokenParams memory _params)
+        external
+        payable;
 
     function finalize(uint256 _result) external;
 
@@ -26,10 +19,7 @@ interface IKPIToken {
 
     function creator() external view returns (address);
 
-    function template()
-        external
-        view
-        returns (Template memory);
+    function template() external view returns (Template memory);
 
     function description() external view returns (string memory);
 

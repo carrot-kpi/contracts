@@ -5,9 +5,9 @@ import {SafeERC20Upgradeable} from "oz-upgradeable/token/ERC20/utils/SafeERC20Up
 import {ReentrancyGuardUpgradeable} from "oz-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import {IOraclesManager1} from "../interfaces/oracles-managers/IOraclesManager1.sol";
 import {IKPITokensManager1} from "../interfaces/kpi-tokens-managers/IKPITokensManager1.sol";
-import {Template} from "../interfaces/IBaseTemplatesManager.sol";
+import {Template, IBaseTemplatesManager} from "../interfaces/IBaseTemplatesManager.sol";
 import {IERC20KPIToken} from "../interfaces/kpi-tokens/IERC20KPIToken.sol";
-import {TokenAmount} from "../commons/Types.sol";
+import {TokenAmount, InitializeKPITokenParams} from "../commons/Types.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title ERC20 KPI token template implementation
@@ -40,9 +40,11 @@ contract ERC20KPIToken is
     address public creator;
     uint8 internal oraclesAmount;
     uint8 internal collateralsAmount;
+    address internal kpiTokensManager;
+    uint128 internal kpiTokenTemplateVersion;
+    uint256 internal kpiTokenTemplateId;
     string public description;
     uint256 public expiration;
-    Template internal kpiTokenTemplate;
     uint256 internal initialSupply;
     uint256 internal totalWeight;
     mapping(address => FinalizableOracleWithoutAddress)
@@ -100,79 +102,84 @@ contract ERC20KPIToken is
     );
 
     /// @dev Initializes the template through the passed in data. This function is
-    /// generally invoked by the factory,
-    /// in turn invoked by a KPI token creator.
-    /// @param _creator Since the factory is assumed to be the caller of this function,
-    /// it must forward the original caller (msg.sender, the KPI token creator) here.
-    /// @param _kpiTokensManager The factory-forwarded address of the KPI tokens manager.
-    /// @param _oraclesManager The factory-forwarded address of the oracles manager.
-    /// @param _feeReceiver The factory-forwarded address of the fee receiver.
-    /// @param _kpiTokenTemplateId The id of the template.
-    /// @param _description An IPFS cid pointing to a structured JSON describing what the
-    /// @param _expiration A timestamp determining the expiration date of the KPI token (the
-    /// expiration date is used to avoid a malicious/unresponsive oracle from locking up the
-    /// funds and should be set accordingly).
-    /// @param _kpiTokenData An ABI-encoded structure forwarded by the factory from the KPI token
-    /// creator, containing the initialization parameters for the ERC20 KPI token template.
-    /// In particular the structure is formed in the following way:
-    /// - `Collateral[] memory _collaterals`: an array of `Collateral` structs conveying
-    ///   information about the collaterals to be used (a limit of maximum 5 different
-    ///   collateral is enforced, and duplicates are not allowed).
-    /// - `string memory _erc20Name`: The `name` of the created ERC20 token.
-    /// - `string memory _erc20Symbol`: The `symbol` of the created ERC20 token.
-    /// - `string memory _erc20Supply`: The initial supply of the created ERC20 token.
-    /// @param _oraclesData An ABI-encoded structure forwarded by the factory from the KPI token
-    /// creator, containing the initialization parameters for the chosen oracle templates.
-    /// In particular the structure is formed in the following way:
-    /// - `OracleData[] memory _oracleDatas`: data about the oracle, such as:
-    ///     - `uint256 _templateId`: The id of the chosen oracle template.
-    ///     - `uint256 _lowerBound`: The number at which the oracle's reported result is
-    ///       interpreted in a failed KPI (not reached). If the oracle linked to this lower
-    ///       bound reports a final number above this, we know the KPI is at least partially
-    ///       reached.
-    ///     - `uint256 _higherBound`: The number at which the oracle's reported result
-    ///       is interpreted in a full verification of the KPI (fully reached). If the
-    ///       oracle linked to this higher bound reports a final number equal or greater
-    ///       than this, we know the KPI has fully been reached.
-    ///     - `uint256 _weight`: The KPI weight determines the importance of it and how
-    ///       much of the collateral a specific KPI "governs". If for example we have 2
-    ///       KPIs A and B with respective weights 1 and 2, a third of the deposited
-    ///       collaterals goes towards incentivizing A, while the remaining 2/3rds go
-    ///       to B (i.e. B is valued as a more critical KPI to reach compared to A, and
-    ///       collaterals reflect this).
-    ///     - `uint256 _data`: ABI-encoded, oracle-specific data used to effectively
-    ///       instantiate the oracle in charge of monitoring this KPI and reporting the
-    ///       final result on-chain.
-    /// - `bool _allOrNone`: Whether all KPIs should be at least partly reached in
-    ///   order to unlock collaterals for KPI token holders to redeem (minus the minimum
-    ///   payout amount, which is unlocked under any circumstance).
-    function initialize(
-        address _creator,
-        address _kpiTokensManager,
-        address _oraclesManager,
-        address _feeReceiver,
-        uint256 _kpiTokenTemplateId,
-        string memory _description,
-        uint256 _expiration,
-        bytes memory _kpiTokenData,
-        bytes memory _oraclesData
-    ) external payable override initializer {
+    /// generally invoked by the KPI tokens manager, in turn invoked by the factory,
+    /// in turn created by a KPI token creator.
+    /// @param _params The params are passed in a struct to make it less likely to encounter
+    /// stack too deep errors while developing new templates. The params struct contains:
+    /// - `_creator`: since the factory is assumed to be the caller of this function,
+    ///   it must forward the original caller (msg.sender, the KPI token creator) here.
+    /// - `_oraclesManager`: the factory-forwarded address of the oracles manager.
+    /// - `_feeReceiver`: the factory-forwarded address of the fee receiver.
+    /// - `_kpiTokenTemplateId`: the id of the template.
+    /// - `_description`: an IPFS cid pointing to a structured JSON describing what the
+    /// - `_expiration`: a timestamp determining the expiration date of the KPI token (the
+    ///   expiration date is used to avoid a malicious/unresponsive oracle from locking up the
+    ///   funds and should be set accordingly).
+    /// - `_kpiTokenData`: an ABI-encoded structure forwarded by the factory from the KPI token
+    ///   creator, containing the initialization parameters for the ERC20 KPI token template.
+    ///   In particular the structure is formed in the following way:
+    ///     - `Collateral[] memory _collaterals`: an array of `Collateral` structs conveying
+    ///       information about the collaterals to be used (a limit of maximum 5 different
+    ///       collateral is enforced, and duplicates are not allowed).
+    ///     - `string memory _erc20Name`: The `name` of the created ERC20 token.
+    ///     - `string memory _erc20Symbol`: The `symbol` of the created ERC20 token.
+    ///     - `string memory _erc20Supply`: The initial supply of the created ERC20 token.
+    /// - `_oraclesData`: an ABI-encoded structure forwarded by the factory from the KPI token
+    ///   creator, containing the initialization parameters for the chosen oracle templates.
+    ///   In particular the structure is formed in the following way:
+    ///   - `OracleData[] memory _oracleDatas`: data about the oracle, such as:
+    ///       - `uint256 _templateId`: The id of the chosen oracle template.
+    ///       - `uint256 _lowerBound`: The number at which the oracle's reported result is
+    ///         interpreted in a failed KPI (not reached). If the oracle linked to this lower
+    ///         bound reports a final number above this, we know the KPI is at least partially
+    ///         reached.
+    ///       - `uint256 _higherBound`: The number at which the oracle's reported result
+    ///         is interpreted in a full verification of the KPI (fully reached). If the
+    ///         oracle linked to this higher bound reports a final number equal or greater
+    ///         than this, we know the KPI has fully been reached.
+    ///       - `uint256 _weight`: The KPI weight determines the importance of it and how
+    ///         much of the collateral a specific KPI "governs". If for example we have 2
+    ///         KPIs A and B with respective weights 1 and 2, a third of the deposited
+    ///         collaterals goes towards incentivizing A, while the remaining 2/3rds go
+    ///         to B (i.e. B is valued as a more critical KPI to reach compared to A, and
+    ///         collaterals reflect this).
+    ///       - `uint256 _data`: ABI-encoded, oracle-specific data used to effectively
+    ///         instantiate the oracle in charge of monitoring this KPI and reporting the
+    ///         final result on-chain.
+    ///   - `bool _allOrNone`: Whether all KPIs should be at least partly reached in
+    ///     order to unlock collaterals for KPI token holders to redeem (minus the minimum
+    ///     payout amount, which is unlocked under any circumstance).
+    function initialize(InitializeKPITokenParams memory _params)
+        external
+        payable
+        override
+        initializer
+    {
         initializeState(
-            _creator,
-            _kpiTokensManager,
-            _kpiTokenTemplateId,
-            _description,
-            _expiration,
-            _kpiTokenData
+            _params.creator,
+            msg.sender,
+            _params.kpiTokenTemplateId,
+            _params.kpiTokenTemplateVersion,
+            _params.description,
+            _params.expiration,
+            _params.kpiTokenData
         );
 
         (Collateral[] memory _collaterals, , , ) = abi.decode(
-            _kpiTokenData,
+            _params.kpiTokenData,
             (Collateral[], string, string, uint256)
         );
 
-        collectCollateralsAndFees(_creator, _collaterals, _feeReceiver);
-        initializeOracles(_creator, _oraclesManager, _oraclesData);
+        collectCollateralsAndFees(
+            _params.creator,
+            _collaterals,
+            _params.feeReceiver
+        );
+        initializeOracles(
+            _params.creator,
+            _params.oraclesManager,
+            _params.oraclesData
+        );
 
         emit Initialize();
     }
@@ -191,6 +198,7 @@ contract ERC20KPIToken is
         address _creator,
         address _kpiTokensManager,
         uint256 _kpiTokenTemplateId,
+        uint128 _kpiTokenTemplateVersion,
         string memory _description,
         uint256 _expiration,
         bytes memory _data
@@ -217,9 +225,9 @@ contract ERC20KPIToken is
         creator = _creator;
         description = _description;
         expiration = _expiration;
-        kpiTokenTemplate = IKPITokensManager1(_kpiTokensManager).template(
-            _kpiTokenTemplateId
-        );
+        kpiTokensManager = _kpiTokensManager;
+        kpiTokenTemplateId = _kpiTokenTemplateId;
+        kpiTokenTemplateVersion = _kpiTokenTemplateVersion;
     }
 
     /// @dev Utility function used to collect collateral and fees from the KPI token
@@ -765,6 +773,10 @@ contract ERC20KPIToken is
     /// @dev View function returning info about the template used to instantiate this KPI token.
     /// @return The template struct.
     function template() external view override returns (Template memory) {
-        return kpiTokenTemplate;
+        return
+            IBaseTemplatesManager(kpiTokensManager).template(
+                kpiTokenTemplateId,
+                kpiTokenTemplateVersion
+            );
     }
 }

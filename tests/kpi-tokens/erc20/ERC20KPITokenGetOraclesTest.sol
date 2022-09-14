@@ -72,6 +72,7 @@ contract ERC20KPITokenGetOraclesTest is BaseTestSetup {
                 address(this),
                 1,
                 "d",
+                block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );
@@ -173,6 +174,7 @@ contract ERC20KPITokenGetOraclesTest is BaseTestSetup {
                 address(this),
                 1,
                 "d",
+                block.timestamp + 60,
                 _erc20KpiTokenInitializationData,
                 _oraclesInitializationData
             );

@@ -1,5 +1,6 @@
 pragma solidity 0.8.15;
 
+import {InitializeKPITokenParams} from "../../../contracts/commons/Types.sol";
 import {BaseTestSetup} from "../../commons/BaseTestSetup.sol";
 import {ERC20KPIToken} from "../../../contracts/kpi-tokens/ERC20KPIToken.sol";
 import {IOraclesManager1} from "../../../contracts/interfaces/oracles-managers/IOraclesManager1.sol";
@@ -70,15 +71,23 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
 
         address feeReceiver = address(1234);
         kpiTokenInstance.initialize(
-            address(this),
-            address(kpiTokensManager),
-            oraclesManager,
-            feeReceiver,
-            1,
-            "a",
-            block.timestamp + 60,
-            abi.encode(collaterals, "Token", "TKN", 100 ether),
-            abi.encode(oracleData, false)
+            InitializeKPITokenParams({
+                creator: address(this),
+                oraclesManager: address(oraclesManager),
+                factory: address(factory),
+                feeReceiver: feeReceiver,
+                kpiTokenTemplateId: 1,
+                kpiTokenTemplateVersion: 1,
+                description: "a",
+                expiration: block.timestamp + 60,
+                kpiTokenData: abi.encode(
+                    collaterals,
+                    "Token",
+                    "TKN",
+                    100 ether
+                ),
+                oraclesData: abi.encode(oracleData, false)
+            })
         );
 
         return (feeReceiver, kpiTokenInstance);
@@ -145,15 +154,23 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
             abi.encodeWithSignature("InvalidMinimumPayoutAfterFee()")
         );
         kpiTokenInstance.initialize(
-            address(this),
-            address(kpiTokensManager),
-            oraclesManager,
-            address(1234),
-            1,
-            "a",
-            block.timestamp + 60,
-            abi.encode(collaterals, "Token", "TKN", 100 ether),
-            abi.encode(oracleData, false)
+            InitializeKPITokenParams({
+                creator: address(this),
+                oraclesManager: address(oraclesManager),
+                factory: address(factory),
+                feeReceiver: address(1234),
+                kpiTokenTemplateId: 1,
+                kpiTokenTemplateVersion: 1,
+                description: "a",
+                expiration: block.timestamp + 60,
+                kpiTokenData: abi.encode(
+                    collaterals,
+                    "Token",
+                    "TKN",
+                    100 ether
+                ),
+                oraclesData: abi.encode(oracleData, false)
+            })
         );
     }
 
@@ -253,15 +270,23 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
 
         address feeReceiver = address(42);
         kpiTokenInstance.initialize(
-            address(this),
-            address(kpiTokensManager),
-            oraclesManager,
-            feeReceiver,
-            1,
-            "a",
-            block.timestamp + 60,
-            abi.encode(collaterals, "Token", "TKN", 100 ether),
-            abi.encode(oracleData, false)
+            InitializeKPITokenParams({
+                creator: address(this),
+                oraclesManager: address(oraclesManager),
+                factory: address(factory),
+                feeReceiver: address(1234),
+                kpiTokenTemplateId: 1,
+                kpiTokenTemplateVersion: 1,
+                description: "a",
+                expiration: block.timestamp + 60,
+                kpiTokenData: abi.encode(
+                    collaterals,
+                    "Token",
+                    "TKN",
+                    100 ether
+                ),
+                oraclesData: abi.encode(oracleData, false)
+            })
         );
 
         (IERC20KPIToken.Collateral[] memory onChainCollaterals, , , , , ) = abi

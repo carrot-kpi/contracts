@@ -1,5 +1,6 @@
 pragma solidity 0.8.15;
 
+import {InitializeKPITokenParams} from "../../../contracts/commons/Types.sol";
 import {BaseTestSetup} from "../../commons/BaseTestSetup.sol";
 import {ERC20KPIToken} from "../../../contracts/kpi-tokens/ERC20KPIToken.sol";
 import {IOraclesManager1} from "../../../contracts/interfaces/oracles-managers/IOraclesManager1.sol";
@@ -31,15 +32,23 @@ contract ERC20KPITokenInitializeOraclesTest is BaseTestSetup {
         }
 
         kpiTokenInstance.initialize{value: value}(
-            address(this),
-            address(kpiTokensManager),
-            oraclesManager,
-            address(1234),
-            1,
-            "a",
-            block.timestamp + 60,
-            abi.encode(collaterals, "Token", "TKN", 100 ether),
-            oracleData
+            InitializeKPITokenParams({
+                creator: address(this),
+                oraclesManager: address(oraclesManager),
+                factory: address(factory),
+                feeReceiver: address(1234),
+                kpiTokenTemplateId: 1,
+                kpiTokenTemplateVersion: 1,
+                description: "a",
+                expiration: block.timestamp + 60,
+                kpiTokenData: abi.encode(
+                    collaterals,
+                    "Token",
+                    "TKN",
+                    100 ether
+                ),
+                oraclesData: oracleData
+            })
         );
 
         return (kpiTokenInstance);

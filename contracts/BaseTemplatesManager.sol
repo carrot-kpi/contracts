@@ -12,16 +12,21 @@ import {IKPITokensFactory} from "./interfaces/IKPITokensFactory.sol";
 /// @dev The templates manager contract acts as a template
 /// registry for oracles/kpi token implementations. Additionally,
 /// templates can also only be instantiated by the manager itself,
-/// exclusively by request of a KPI token being created. All
-/// templates-related functions are governance-gated
+/// (exclusively by request of either the factory, in case of KPI
+/// tokens, or a KPI token being created in case of oracles). All
+/// template-related functions are governance-gated
 /// (addition, removal, upgrade of templates and more) and the
 /// governance contract must be the owner of the templates manager.
+/// The contract will keep track of all the versions of every template
+/// and will keep history of even deleted/unactive templates.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
     address public factory;
     uint256 internal templateId;
-    Template[] internal templates;
-    mapping(uint256 => uint256) internal templateIdToIndex;
+    Template[] internal latestVersionTemplates;
+    mapping(uint256 => uint256) internal templateIdToLatestVersionIndex;
+    mapping(uint256 => mapping(uint128 => Template))
+        internal templateByIdAndVersion;
 
     error NonExistentTemplate();
     error ZeroAddressFactory();
@@ -68,15 +73,19 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
         if (_template == address(0)) revert ZeroAddressTemplate();
         if (bytes(_specification).length == 0) revert InvalidSpecification();
         uint256 _id = ++templateId;
-        templates.push(
-            Template({
-                id: _id,
-                addrezz: _template,
-                version: 1,
-                specification: _specification
-            })
-        );
-        templateIdToIndex[_id] = templates.length;
+        Template memory _templateStruct = Template({
+            id: _id,
+            addrezz: _template,
+            version: 1,
+            specification: _specification
+        });
+        latestVersionTemplates.push(_templateStruct);
+        uint256 _latestVersionTemplatesLength = latestVersionTemplates.length;
+        templateIdToLatestVersionIndex[_id] = _latestVersionTemplatesLength;
+
+        // save an immutable copy of the template at this initial version for
+        // historical reasons
+        templateByIdAndVersion[_id][1] = _templateStruct;
         emit AddTemplate(_id, _template, _specification);
     }
 
@@ -84,19 +93,23 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
     /// by the contract owner (governance).
     /// @param _id The id of the template that must be removed.
     function removeTemplate(uint256 _id) external override onlyOwner {
-        uint256 _index = templateIdToIndex[_id];
+        uint256 _index = templateIdToLatestVersionIndex[_id];
         if (_index == 0) revert NonExistentTemplate();
-        Template storage _lastTemplate = templates[templates.length - 1];
-        if (_lastTemplate.id != _id) {
-            templates[_index - 1] = _lastTemplate;
-            templateIdToIndex[_lastTemplate.id] = _index;
+        Template storage _lastLatestVersionTemplate = latestVersionTemplates[
+            latestVersionTemplates.length - 1
+        ];
+        if (_lastLatestVersionTemplate.id != _id) {
+            latestVersionTemplates[_index - 1] = _lastLatestVersionTemplate;
+            templateIdToLatestVersionIndex[
+                _lastLatestVersionTemplate.id
+            ] = _index;
         }
-        delete templateIdToIndex[_id];
-        templates.pop();
+        delete templateIdToLatestVersionIndex[_id];
+        latestVersionTemplates.pop();
         emit RemoveTemplate(_id);
     }
 
-    /// @dev Updates a template specification. The specification is an IPFS cid
+    /// @dev Updates a template specification. The specification is a cid
     /// pointing to a structured JSON file containing data about the template.
     /// This function can only be called by the contract owner (governance).
     /// @param _id The template's id.
@@ -106,7 +119,7 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
         string calldata _newSpecification
     ) external override onlyOwner {
         if (bytes(_newSpecification).length == 0) revert InvalidSpecification();
-        storageTemplate(_id).specification = _newSpecification;
+        latestVersionStorageTemplate(_id).specification = _newSpecification;
         emit UpdateTemplateSpecification(_id, _newSpecification);
     }
 
@@ -121,69 +134,104 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
     ) external override onlyOwner {
         if (_newTemplate == address(0)) revert ZeroAddressTemplate();
         if (bytes(_newSpecification).length == 0) revert InvalidSpecification();
-        Template storage _templateFromStorage = storageTemplate(_id);
+        Template
+            storage _latestVersionTemplateFromStorage = latestVersionStorageTemplate(
+                _id
+            );
         if (
-            keccak256(bytes(_templateFromStorage.specification)) ==
+            keccak256(bytes(_latestVersionTemplateFromStorage.specification)) ==
             keccak256(bytes(_newSpecification))
         ) revert InvalidSpecification();
-        _templateFromStorage.addrezz = _newTemplate;
-        _templateFromStorage.specification = _newSpecification;
-        _templateFromStorage.version++;
+        _latestVersionTemplateFromStorage.addrezz = _newTemplate;
+        _latestVersionTemplateFromStorage.specification = _newSpecification;
+        uint128 _updatedVersion = _latestVersionTemplateFromStorage.version + 1;
+        _latestVersionTemplateFromStorage.version = _updatedVersion;
+
+        templateByIdAndVersion[_id][_updatedVersion] = Template({
+            id: _id,
+            addrezz: _newTemplate,
+            specification: _newSpecification,
+            version: _updatedVersion
+        });
         emit UpgradeTemplate(
             _id,
             _newTemplate,
-            _templateFromStorage.version,
+            _updatedVersion,
             _newSpecification
         );
     }
 
-    /// @dev Gets a template from storage.
+    /// @dev Gets a template from storage, in its latest, most up
+    /// to date version.
     /// @param _id The id of the template that needs to be fetched.
-    /// @return The template from storage with id `_id`.
-    function storageTemplate(uint256 _id)
+    /// @return The template from storage with id `_id` in its most
+    /// up to date version.
+    function latestVersionStorageTemplate(uint256 _id)
         internal
         view
         returns (Template storage)
     {
         if (_id == 0) revert NonExistentTemplate();
-        uint256 _index = templateIdToIndex[_id];
+        uint256 _index = templateIdToLatestVersionIndex[_id];
         if (_index == 0) revert NonExistentTemplate();
-        Template storage _template = templates[_index - 1];
+        Template storage _template = latestVersionTemplates[_index - 1];
         return _template;
     }
 
-    /// @dev Gets a template by id.
+    /// @dev Gets a template by id. This only works on latest-version
+    /// templates, so the latest version of the template with id `_id`
+    /// will be returned. To check out old versions use
+    /// `template(uint256 _id, uint128 _version)`.
     /// @param _id The id of the template that needs to be fetched.
-    /// @return The template with id `_id`.
+    /// @return The template with id `_id`, at its latest, most up to
+    /// date version.
     function template(uint256 _id)
         external
         view
         override
         returns (Template memory)
     {
-        return storageTemplate(_id);
+        return latestVersionStorageTemplate(_id);
     }
 
-    /// @dev Used to determine whether a template with a certain id exists or not.
+    /// @dev Gets a template by id and version. Can be used to fetch
+    /// old version templates to maximize transparency.
+    /// @param _id The id of the template that needs to be fetched.
+    /// @param _version The version at which the template should be fetched.
+    /// @return The template with id `_id` at version `_version`.
+    function template(uint256 _id, uint128 _version)
+        external
+        view
+        override
+        returns (Template memory)
+    {
+        return templateByIdAndVersion[_id][_version];
+    }
+
+    /// @dev Used to determine whether a template with a certain id exists
+    /// or not. This function checks existance on the latest version of each
+    /// template. I.e. if a template existed in the past and got deleted, this
+    /// will return false.
     /// @param _id The id of the template that needs to be checked.
     /// @return True if the template exists, false otherwise.
     function exists(uint256 _id) external view override returns (bool) {
         if (_id == 0) return false;
-        uint256 _index = templateIdToIndex[_id];
+        uint256 _index = templateIdToLatestVersionIndex[_id];
         if (_index == 0) return false;
-        return templates[_index - 1].id == _id;
+        return latestVersionTemplates[_index - 1].id == _id;
     }
 
-    /// @dev Gets the amount of all registered templates.
+    /// @dev Gets the amount of all registered templates (works on the latest
+    // versions template array and doesn't take into account deleted templates).
     /// @return The templates amount.
     function templatesAmount() external view override returns (uint256) {
-        return templates.length;
+        return latestVersionTemplates.length;
     }
 
-    /// @dev Gets a templates slice based on indexes. N.B.: the templates are not
-    /// ordered and due to how templates are removed, it could happen to have 2
-    /// disjointed slices with the same template being in both, even though it
-    /// should be rare.
+    /// @dev Gets a templates slice off of the latest version templates array based
+    /// on indexes. N.B.: the templates are not ordered and due to how templates are
+    /// removed, it could happen to have 2 disjointed slices with the same template
+    /// being in both, even though it should be rare.
     /// @param _fromIndex The index from which to get templates (inclusive).
     /// @param _toIndex The maximum index to which to get templates (the element at this index won't be included).
     /// @return A templates array representing the slice taken through the given indexes.
@@ -193,12 +241,12 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
         override
         returns (Template[] memory)
     {
-        if (_toIndex > templates.length || _fromIndex > _toIndex)
+        if (_toIndex > latestVersionTemplates.length || _fromIndex > _toIndex)
             revert InvalidIndices();
         uint256 _range = _toIndex - _fromIndex;
         Template[] memory _templates = new Template[](_range);
         for (uint256 _i = 0; _i < _range; _i++)
-            _templates[_i] = templates[_fromIndex + _i];
+            _templates[_i] = latestVersionTemplates[_fromIndex + _i];
         return _templates;
     }
 }
