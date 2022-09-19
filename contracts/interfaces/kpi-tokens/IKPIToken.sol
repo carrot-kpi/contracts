@@ -27,13 +27,6 @@ interface IKPIToken {
 
     function expiration() external view returns (uint256);
 
-    function expired() external view returns (bool);
-
-    function protocolFee(bytes memory _data)
-        external
-        view
-        returns (bytes memory);
-
     function data() external view returns (bytes memory);
 
     function oracles() external view returns (address[] memory);

@@ -274,7 +274,7 @@ contract ERC20KPITokenCollectProtocoFeeTest is BaseTestSetup {
                 creator: address(this),
                 oraclesManager: address(oraclesManager),
                 kpiTokensManager: address(kpiTokensManager),
-                feeReceiver: address(1234),
+                feeReceiver: feeReceiver,
                 kpiTokenTemplateId: 1,
                 kpiTokenTemplateVersion: 1,
                 description: "a",
