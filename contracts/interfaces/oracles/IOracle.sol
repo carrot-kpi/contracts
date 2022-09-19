@@ -11,6 +11,7 @@ interface IOracle {
     function initialize(
         address _kpiToken,
         uint256 _templateId,
+        uint128 _templateVersion,
         bytes memory _initializationData
     ) external payable;
 

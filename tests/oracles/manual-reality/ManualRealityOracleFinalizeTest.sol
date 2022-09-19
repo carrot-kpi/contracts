@@ -30,6 +30,7 @@ contract ManualRealityOracleFinalizeTest is BaseTestSetup {
         oracleInstance.initialize(
             address(1),
             _template.id,
+            _template.version,
             abi.encode(
                 _realityAddress,
                 address(1),
