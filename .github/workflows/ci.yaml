@@ -1,16 +1,32 @@
-on: [push]
-name: test
+name: CI
+on:
+    push:
+        branches:
+            - develop
+    pull_request:
+        types: [opened, synchronize, reopened]
 jobs:
-    check:
-        name: Foundry project
+    ci:
         runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-version: [16.x]
         steps:
-            - uses: actions/checkout@v3
+            - name: Checkout
+              uses: actions/checkout@v3
               with:
                   submodules: recursive
-            - name: Install Foundry
+            - name: Setup Node.js ${{matrix.node-version}}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{matrix.node-version}}
+            - name: Setup Foundry
               uses: foundry-rs/foundry-toolchain@v1
               with:
                   version: nightly
-            - name: Run tests
-              run: FOUNDRY_PROFILE=test forge test -vvv
+            - name: Install dependencies
+              run: npm ci
+            - name: Lint
+              run: npm run lint
+            - name: Test
+              run: FOUNDRY_PROFILE=test forge test
