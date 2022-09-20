@@ -29,4 +29,31 @@ jobs:
             - name: Lint
               run: npm run lint
             - name: Test
+              if:
+                  github.event_name != 'pull_request' && github.event_name !=
+                  'pull_request_target'
               run: FOUNDRY_PROFILE=test forge test
+            - name: Test with gas report
+              if:
+                  github.event_name == 'pull_request' || github.event_name ==
+                  'pull_request_target'
+              run:
+                  FOUNDRY_PROFILE=test forge test --gas-report | tee
+                  gasreport.ansi
+            - name: Compare gas reports
+              if:
+                  github.event_name == 'pull_request' || github.event_name ==
+                  'pull_request_target'
+              id: gas_diff
+              uses: Rubilmax/foundry-gas-diff@v3.9
+              with:
+                  sortOrders: desc
+                  ignore: tests/**/*
+            - name: Add gas diff to sticky comment
+              if:
+                  github.event_name == 'pull_request' || github.event_name ==
+                  'pull_request_target'
+              uses: marocchino/sticky-pull-request-comment@v2
+              with:
+                  delete: ${{!steps.gas_diff.outputs.markdown}}
+                  message: ${{steps.gas_diff.outputs.markdown}}
