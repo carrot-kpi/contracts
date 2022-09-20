@@ -39,7 +39,7 @@ jobs:
                   'pull_request_target'
               run:
                   FOUNDRY_PROFILE=test forge test --gas-report | tee
-                  gasreport.ansi
+                  main.gasreport.ansi
             - name: Compare gas reports
               if:
                   github.event_name == 'pull_request' || github.event_name ==
