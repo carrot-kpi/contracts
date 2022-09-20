@@ -89,7 +89,6 @@ contract ERC20KPITokenExpiredTest is BaseTestSetup {
         );
 
         vm.warp(_expiration);
-        assertTrue(_kpiTokenInstance.expired());
 
         address _oracle = _kpiTokenInstance.oracles()[0];
         vm.prank(_oracle);
@@ -188,7 +187,6 @@ contract ERC20KPITokenExpiredTest is BaseTestSetup {
         );
 
         vm.warp(_expiration);
-        assertTrue(_kpiTokenInstance.expired());
 
         address _oracle = _kpiTokenInstance.oracles()[1];
         vm.prank(_oracle);

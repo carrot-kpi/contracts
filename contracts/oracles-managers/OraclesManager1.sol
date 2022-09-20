@@ -76,6 +76,7 @@ contract OraclesManager1 is BaseTemplatesManager, IOraclesManager1 {
         IOracle(_instance).initialize{value: msg.value}(
             msg.sender,
             _id,
+            _template.version,
             _initializationData
         );
         return _instance;

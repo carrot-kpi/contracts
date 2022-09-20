@@ -37,8 +37,8 @@ Tests are written in Solidity and you can find them in the `tests` folder. Both
 property-based fuzzing and standard unit tests are easily supported through the
 use of Foundry.
 
-In order to launch tests you can both use Forge commands directly or yarn
-scripts. For example, these are the available yarn scripts:
+In order to launch tests you can both use Forge commands directly or npm
+scripts. For example, these are the available npm scripts:
 
 - `test`: self explanatory, simply runs the tests.
 - `test:gasreport`: runs the tests giving out a gas consumption report at the

@@ -601,7 +601,6 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
 
         ERC20KPIToken _token = ERC20KPIToken(_predictedKpiTokenAddress);
         assertEq(_token.expiration(), _expiration);
-        assertTrue(!_token.expired());
     }
 
     function testInitializationSuccessWithValue() external {
@@ -676,7 +675,6 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
 
         ERC20KPIToken _token = ERC20KPIToken(_predictedKpiTokenAddress);
         assertEq(_token.expiration(), _expiration);
-        assertTrue(!_token.expired());
 
         assertEq((_token.oracles()[0]).balance, 10 ether);
     }

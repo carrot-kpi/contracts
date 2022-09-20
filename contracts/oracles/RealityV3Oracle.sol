@@ -5,7 +5,7 @@ import {IOracle} from "../interfaces/oracles/IOracle.sol";
 import {IOraclesManager1} from "../interfaces/oracles-managers/IOraclesManager1.sol";
 import {IKPIToken} from "../interfaces/kpi-tokens/IKPIToken.sol";
 import {IRealityV3} from "../interfaces/external/IRealityV3.sol";
-import {Template} from "../interfaces/IBaseTemplatesManager.sol";
+import {IBaseTemplatesManager, Template} from "../interfaces/IBaseTemplatesManager.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Manual Reality oracle
@@ -22,7 +22,8 @@ contract RealityV3Oracle is IOracle, Initializable {
     address public kpiToken;
     address internal oraclesManager;
     address internal reality;
-    Template internal oracleTemplate;
+    uint128 internal templateVersion;
+    uint256 internal templateId;
     bytes32 internal questionId;
     string internal question;
 
@@ -58,6 +59,7 @@ contract RealityV3Oracle is IOracle, Initializable {
     function initialize(
         address _kpiToken,
         uint256 _templateId,
+        uint128 _templateVersion,
         bytes calldata _data
     ) external payable override initializer {
         if (_kpiToken == address(0)) revert ZeroAddressKpiToken();
@@ -84,9 +86,10 @@ contract RealityV3Oracle is IOracle, Initializable {
             revert InvalidOpeningTimestamp();
 
         oraclesManager = msg.sender;
+        templateVersion = _templateVersion;
+        templateId = _templateId;
         kpiToken = _kpiToken;
         reality = _reality;
-        oracleTemplate = IOraclesManager1(msg.sender).template(_templateId);
         question = _question;
         questionId = IRealityV3(_reality).askQuestionWithMinBond{
             value: msg.value
@@ -136,6 +139,10 @@ contract RealityV3Oracle is IOracle, Initializable {
     /// @dev View function returning info about the template used to instantiate this oracle.
     /// @return The template struct.
     function template() external view override returns (Template memory) {
-        return oracleTemplate;
+        return
+            IBaseTemplatesManager(oraclesManager).template(
+                templateId,
+                templateVersion
+            );
     }
 }

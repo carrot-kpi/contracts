@@ -21,20 +21,8 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         oracleInstance.initialize(
             address(0),
             _template.id,
+            _template.version,
             abi.encode(uint256(1))
-        );
-    }
-
-    function testInvalidTemplate() external {
-        RealityV3Oracle oracleInstance = RealityV3Oracle(
-            Clones.clone(address(realityV3OracleTemplate))
-        );
-        vm.prank(address(oraclesManager));
-        vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
-        oracleInstance.initialize(
-            address(1),
-            10,
-            abi.encode(address(1), address(1), 0, "a", 60, block.timestamp + 60)
         );
     }
 
@@ -48,6 +36,7 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         oracleInstance.initialize(
             address(1),
             _template.id,
+            _template.version,
             abi.encode(address(0), address(1), 0, "a", 60, block.timestamp + 60)
         );
     }
@@ -62,6 +51,7 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         oracleInstance.initialize(
             address(1),
             _template.id,
+            _template.version,
             abi.encode(address(1), address(0), 0, "a", 60, block.timestamp + 60)
         );
     }
@@ -76,6 +66,7 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         oracleInstance.initialize(
             address(1),
             _template.id,
+            _template.version,
             abi.encode(address(1), address(1), 0, "", 60, block.timestamp + 60)
         );
     }
@@ -90,6 +81,7 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         oracleInstance.initialize(
             address(1),
             _template.id,
+            _template.version,
             abi.encode(address(1), address(1), 0, "a", 0, block.timestamp + 60)
         );
     }
@@ -104,6 +96,7 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         oracleInstance.initialize(
             address(1),
             _template.id,
+            _template.version,
             abi.encode(address(1), address(1), 0, "a", 60, block.timestamp)
         );
     }
@@ -132,6 +125,7 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         oracleInstance.initialize(
             address(1),
             _template.id,
+            _template.version,
             abi.encode(_realityAddress, address(1), 0, "a", 60, _openingTs)
         );
 

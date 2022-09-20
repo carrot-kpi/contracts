@@ -8,7 +8,7 @@
     "scripts": {
         "lint:prettier": "prettier -l contracts/**/*.sol tests/**/*.sol scripts/**/*.sol",
         "lint:commit-message": "commitlint -e",
-        "lint": "yarn lint:prettier",
+        "lint": "npm run lint:prettier",
         "test": "FOUNDRY_PROFILE=test forge test",
         "test:coverage": "FOUNDRY_PROFILE=test forge coverage",
         "test:gasreport": "FOUNDRY_PROFILE=test forge test --gas-report",

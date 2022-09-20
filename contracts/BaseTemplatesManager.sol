@@ -80,8 +80,7 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
             specification: _specification
         });
         latestVersionTemplates.push(_templateStruct);
-        uint256 _latestVersionTemplatesLength = latestVersionTemplates.length;
-        templateIdToLatestVersionIndex[_id] = _latestVersionTemplatesLength;
+        templateIdToLatestVersionIndex[_id] = latestVersionTemplates.length;
 
         // save an immutable copy of the template at this initial version for
         // historical reasons
@@ -205,7 +204,10 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
         override
         returns (Template memory)
     {
-        return templateByIdAndVersion[_id][_version];
+        if (_id == 0) revert NonExistentTemplate();
+        Template memory _template = templateByIdAndVersion[_id][_version];
+        if (_template.addrezz == address(0)) revert NonExistentTemplate();
+        return _template;
     }
 
     /// @dev Used to determine whether a template with a certain id exists

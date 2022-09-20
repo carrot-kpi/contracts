@@ -259,7 +259,7 @@ contract ERC20KPIToken is
             for (uint8 _j = _i + 1; _j < _collaterals.length; _j++)
                 if (_collateral.token == _collaterals[_j].token)
                     revert DuplicatedCollateral();
-            uint256 _fee = calculateProtocolFee(_collateralAmountBeforeFee);
+            uint256 _fee = (_collateralAmountBeforeFee * 3_000) / 1_000_000;
             uint256 _amountMinusFees;
             unchecked {
                 _amountMinusFees = _collateralAmountBeforeFee - _fee;
@@ -561,17 +561,6 @@ contract ERC20KPIToken is
         emit RecoverERC20(_token, _reimbursement, _receiver);
     }
 
-    /// @dev Given a collateral amount, calculates the protocol fee as a percentage of it.
-    /// @param _amount The collateral amount end result.
-    /// @return The protocol fee amount.
-    function calculateProtocolFee(uint256 _amount)
-        internal
-        pure
-        returns (uint256)
-    {
-        return (_amount * 3_000) / 1_000_000;
-    }
-
     /// @dev Only callable by KPI token holders, lets them redeem any collateral
     /// left in the contract after finalization, proportional to their balance
     /// compared to the total supply and left collateral amount. If the KPI token
@@ -659,31 +648,6 @@ contract ERC20KPIToken is
         emit RedeemCollateral(msg.sender, _receiver, _token, _redeemableAmount);
     }
 
-    /// @dev Given ABI-encoded data about the collaterals a user intends to use
-    /// to create a KPI token, gives back a fee breakdown detailing how much
-    /// fees will be taken from the collaterals. The ABI-encoded params must be
-    /// a `TokenAmount` array (with a maximum of 5 elements).
-    /// @return An ABI-encoded fee breakdown represented by a `TokenAmount` array.
-    function protocolFee(bytes calldata _data)
-        external
-        pure
-        returns (bytes memory)
-    {
-        uint256[] memory _collateralAmounts = abi.decode(_data, (uint256[]));
-
-        if (_collateralAmounts.length == 0) revert NoCollaterals();
-        if (_collateralAmounts.length > 5) revert TooManyCollaterals();
-
-        uint256[] memory _fees = new uint256[](_collateralAmounts.length);
-        for (uint8 _i = 0; _i < _collateralAmounts.length; _i++) {
-            uint256 _collateralAmount = _collateralAmounts[_i];
-            if (_collateralAmount == 0) revert InvalidCollateral();
-            _fees[_i] = calculateProtocolFee(_collateralAmount);
-        }
-
-        return abi.encode(_fees);
-    }
-
     /// @dev View function to check if the KPI token is finalized.
     /// @return A bool describing whether the token is finalized or not.
     function _isFinalized() internal view returns (bool) {
@@ -701,13 +665,6 @@ contract ERC20KPIToken is
     /// @return A bool describing whether the token is finalized or not.
     function _isExpired() internal view returns (bool) {
         return !_isFinalized() && expiration <= block.timestamp;
-    }
-
-    /// @dev View function to check if the KPI token is expired. A KPI token is
-    /// considered expired when not finalized before the expiration date comes.
-    /// @return A bool describing whether the token is finalized or not.
-    function expired() external view override returns (bool) {
-        return _isExpired();
     }
 
     /// @dev View function to check if the KPI token is initialized.
