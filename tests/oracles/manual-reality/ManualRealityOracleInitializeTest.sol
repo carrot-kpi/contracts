@@ -4,6 +4,7 @@ import {BaseTestSetup} from "../../commons/BaseTestSetup.sol";
 import {RealityV3Oracle} from "../../../contracts/oracles/RealityV3Oracle.sol";
 import {IOraclesManager1} from "../../../contracts/interfaces/oracles-managers/IOraclesManager1.sol";
 import {Template} from "../../../contracts/interfaces/IBaseTemplatesManager.sol";
+import {InitializeOracleParams} from "../../../contracts/commons/Types.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
@@ -19,10 +20,13 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         vm.expectRevert(abi.encodeWithSignature("ZeroAddressKpiToken()"));
         vm.prank(address(oraclesManager));
         oracleInstance.initialize(
-            address(0),
-            _template.id,
-            _template.version,
-            abi.encode(uint256(1))
+            InitializeOracleParams({
+                creator: address(this),
+                kpiToken: address(0),
+                templateId: _template.id,
+                templateVersion: _template.version,
+                data: abi.encode(uint256(1))
+            })
         );
     }
 
@@ -34,10 +38,20 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         vm.expectRevert(abi.encodeWithSignature("ZeroAddressReality()"));
         vm.prank(address(oraclesManager));
         oracleInstance.initialize(
-            address(1),
-            _template.id,
-            _template.version,
-            abi.encode(address(0), address(1), 0, "a", 60, block.timestamp + 60)
+            InitializeOracleParams({
+                creator: address(this),
+                kpiToken: address(1),
+                templateId: _template.id,
+                templateVersion: _template.version,
+                data: abi.encode(
+                    address(0),
+                    address(1),
+                    0,
+                    "a",
+                    60,
+                    block.timestamp + 60
+                )
+            })
         );
     }
 
@@ -49,10 +63,20 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         vm.expectRevert(abi.encodeWithSignature("ZeroAddressArbitrator()"));
         vm.prank(address(oraclesManager));
         oracleInstance.initialize(
-            address(1),
-            _template.id,
-            _template.version,
-            abi.encode(address(1), address(0), 0, "a", 60, block.timestamp + 60)
+            InitializeOracleParams({
+                creator: address(this),
+                kpiToken: address(1),
+                templateId: _template.id,
+                templateVersion: _template.version,
+                data: abi.encode(
+                    address(1),
+                    address(0),
+                    0,
+                    "a",
+                    60,
+                    block.timestamp + 60
+                )
+            })
         );
     }
 
@@ -64,10 +88,20 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         vm.expectRevert(abi.encodeWithSignature("InvalidQuestion()"));
         vm.prank(address(oraclesManager));
         oracleInstance.initialize(
-            address(1),
-            _template.id,
-            _template.version,
-            abi.encode(address(1), address(1), 0, "", 60, block.timestamp + 60)
+            InitializeOracleParams({
+                creator: address(this),
+                kpiToken: address(1),
+                templateId: _template.id,
+                templateVersion: _template.version,
+                data: abi.encode(
+                    address(1),
+                    address(1),
+                    0,
+                    "",
+                    60,
+                    block.timestamp + 60
+                )
+            })
         );
     }
 
@@ -79,10 +113,20 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         vm.expectRevert(abi.encodeWithSignature("InvalidQuestionTimeout()"));
         vm.prank(address(oraclesManager));
         oracleInstance.initialize(
-            address(1),
-            _template.id,
-            _template.version,
-            abi.encode(address(1), address(1), 0, "a", 0, block.timestamp + 60)
+            InitializeOracleParams({
+                creator: address(this),
+                kpiToken: address(1),
+                templateId: _template.id,
+                templateVersion: _template.version,
+                data: abi.encode(
+                    address(1),
+                    address(1),
+                    0,
+                    "a",
+                    0,
+                    block.timestamp + 60
+                )
+            })
         );
     }
 
@@ -94,10 +138,20 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         vm.expectRevert(abi.encodeWithSignature("InvalidOpeningTimestamp()"));
         vm.prank(address(oraclesManager));
         oracleInstance.initialize(
-            address(1),
-            _template.id,
-            _template.version,
-            abi.encode(address(1), address(1), 0, "a", 60, block.timestamp)
+            InitializeOracleParams({
+                creator: address(this),
+                kpiToken: address(1),
+                templateId: _template.id,
+                templateVersion: _template.version,
+                data: abi.encode(
+                    address(1),
+                    address(1),
+                    0,
+                    "a",
+                    60,
+                    block.timestamp
+                )
+            })
         );
     }
 
@@ -123,10 +177,20 @@ contract ManualRealityOracleInitializeTest is BaseTestSetup {
         uint256 _openingTs = block.timestamp + 60;
         vm.prank(address(oraclesManager));
         oracleInstance.initialize(
-            address(1),
-            _template.id,
-            _template.version,
-            abi.encode(_realityAddress, address(1), 0, "a", 60, _openingTs)
+            InitializeOracleParams({
+                creator: address(this),
+                kpiToken: address(1),
+                templateId: _template.id,
+                templateVersion: _template.version,
+                data: abi.encode(
+                    _realityAddress,
+                    address(1),
+                    0,
+                    "a",
+                    60,
+                    _openingTs
+                )
+            })
         );
 
         assertEq(oracleInstance.template().id, _template.id);

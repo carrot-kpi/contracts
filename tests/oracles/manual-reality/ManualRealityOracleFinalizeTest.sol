@@ -5,6 +5,7 @@ import {RealityV3Oracle} from "../../../contracts/oracles/RealityV3Oracle.sol";
 import {ERC20KPIToken} from "../../../contracts/kpi-tokens/ERC20KPIToken.sol";
 import {IOraclesManager1} from "../../../contracts/interfaces/oracles-managers/IOraclesManager1.sol";
 import {Template} from "../../../contracts/interfaces/IBaseTemplatesManager.sol";
+import {InitializeOracleParams} from "../../../contracts/commons/Types.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
@@ -28,17 +29,20 @@ contract ManualRealityOracleFinalizeTest is BaseTestSetup {
         );
         vm.prank(address(oraclesManager));
         oracleInstance.initialize(
-            address(1),
-            _template.id,
-            _template.version,
-            abi.encode(
-                _realityAddress,
-                address(1),
-                0,
-                "a",
-                60,
-                block.timestamp + 60
-            )
+            InitializeOracleParams({
+                creator: address(this),
+                kpiToken: address(1),
+                templateId: _template.id,
+                templateVersion: _template.version,
+                data: abi.encode(
+                    _realityAddress,
+                    address(1),
+                    0,
+                    "a",
+                    60,
+                    block.timestamp + 60
+                )
+            })
         );
 
         vm.mockCall(

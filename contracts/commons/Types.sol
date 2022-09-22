@@ -22,3 +22,11 @@ struct InitializeKPITokenParams {
     bytes kpiTokenData;
     bytes oraclesData;
 }
+
+struct InitializeOracleParams {
+    address creator;
+    address kpiToken;
+    uint256 templateId;
+    uint128 templateVersion;
+    bytes data;
+}

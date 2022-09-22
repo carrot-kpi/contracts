@@ -4,6 +4,7 @@ import {ClonesUpgradeable} from "oz-upgradeable/proxy/ClonesUpgradeable.sol";
 import {IOracle} from "../interfaces/oracles/IOracle.sol";
 import {BaseTemplatesManager, Template} from "../BaseTemplatesManager.sol";
 import {IKPITokensFactory} from "../interfaces/IKPITokensFactory.sol";
+import {InitializeOracleParams} from "../commons/Types.sol";
 import {IOraclesManager1} from "../interfaces/oracles-managers/IOraclesManager1.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
@@ -74,10 +75,13 @@ contract OraclesManager1 is BaseTemplatesManager, IOraclesManager1 {
             salt(_creator, _initializationData)
         );
         IOracle(_instance).initialize{value: msg.value}(
-            msg.sender,
-            _id,
-            _template.version,
-            _initializationData
+            InitializeOracleParams({
+                creator: _creator,
+                kpiToken: msg.sender,
+                templateId: _id,
+                templateVersion: _template.version,
+                data: _initializationData
+            })
         );
         return _instance;
     }
