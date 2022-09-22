@@ -53,14 +53,14 @@ contract RealityV3Oracle is IOracle, Initializable {
     /// - `_data`: an ABI-encoded structure forwarded by the created KPI token from the KPI token
     ///   creator, containing the initialization parameters for the oracle template.
     ///   In particular the structure is formed in the following way:
-    ///     - `address _reality`: The address of the Reality.eth contract of choice in a 
+    ///     - `address _reality`: The address of the Reality.eth contract of choice in a
     ///        specific network.
     ///     - `address _arbitrator`: The arbitrator for the Reality.eth question.
     ///     - `uint256 _realityTemplateId`: The template id for the Reality.eth question.
     ///     - `string memory _question`: The question that must be submitted to Reality.eth.
-    ///     - `uint32 _questionTimeout`: The question timeout as described in the Reality.eth 
+    ///     - `uint32 _questionTimeout`: The question timeout as described in the Reality.eth
     ///        docs (linked above).
-    ///     - `uint32 _openingTimestamp`: The question opening timestamp as described in the 
+    ///     - `uint32 _openingTimestamp`: The question opening timestamp as described in the
     ///        Reality.eth docs (linked above).
     ///     - `uint256 minimumBond`: The minimum bond that can be used to answer the question.
     function initialize(InitializeOracleParams memory _params)
