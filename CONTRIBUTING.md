@@ -64,14 +64,16 @@ out.
 
 ### Deploying
 
-In order to deploy the whole platform to a given network you can run the
-following command from the root of the project:
+In order to deploy the whole platform to a given network you can go ahead and
+create a .env.<NETWORK_NAME> file exporting 3 env variables:
 
 ```
-FOUNDRY_PROFILE=production forge script --broadcast --slow --private-key PRIVATE_KEY --fork-url RPC_ENDPOINT --sig 'run(address)' ./scripts/Deploy.sol FEE_RECEIVER
+export PRIVATE_KEY=""
+export RPC_ENDPOINT=""
+export FEE_RECEIVER=""
 ```
 
-the values to pass are:
+brief explainer of the env variables:
 
 - `PRIVATE_KEY`: the private key related to the account that will perform the
   deployment.
@@ -79,6 +81,16 @@ the values to pass are:
   This will also determine the network where the deployment will happen.
 - `FEE_RECEIVER`: the address of the fee receiver. This address will collect all
   the protocol fees.
+
+Once you have one instance of this file for each network you're interested in
+(e.g. .`env.goerli`, `.env.gnosis`, `env.mainnet` etc etc), you can go ahead and
+locally load the env variables by executing `source .env.<NETWORK_NAME>`. After
+doing that, you can finally execute the following command to initiate the
+deployment:
+
+```
+FOUNDRY_PROFILE=production forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address)' ./scripts/Deploy.sol $FEE_RECEIVER
+```
 
 Two alternative forms of the command can be used in order for the deployment to
 be completed with either Trezor or Ledger hardware wallets (all the arguments
