@@ -101,6 +101,40 @@ FOUNDRY_PROFILE=production forge script --broadcast --slow --ledger --fork-url R
 FOUNDRY_PROFILE=production forge script --broadcast --slow --trezor --fork-url RPC_ENDPOINT --sig 'run(address)' ./scripts/Deploy.sol FEE_RECEIVER
 ```
 
+### Adding a template
+
+In order to add a template on a given network create a .env.<NETWORK_NAME> file
+exporting the following env variables:
+
+```
+export PRIVATE_KEY=""
+export RPC_ENDPOINT=""
+export TEMPLATES_MANAGER=""
+export TEMPLATE=""
+export SPECIFICATION=""
+```
+
+brief explainer of the env variables:
+
+- `PRIVATE_KEY`: the private key related to the account that will perform the
+  addition (must be the owner of the templates manager).
+- `RPC_ENDPOINT`: the RPC endpoint that will be used to broadcast transactions.
+  This will also determine the network where the deployment will happen.
+- `TEMPLATES_MANAGER`: the address of the templates manager on the target
+  network.
+- `TEMPLATE`: the address of the template to be added.
+- `SPECIFICATION`: cid of the template specification.
+
+Once you have one instance of this file for each network you're interested in
+(e.g. .`env.goerli`, `.env.gnosis`, `env.mainnet` etc etc), you can go ahead and
+locally load the env variables by executing `source .env.<NETWORK_NAME>`. After
+doing that, you can finally execute the following command to initiate the
+deployment:
+
+```
+FOUNDRY_PROFILE=production forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,address,string)' ./scripts/AddTemplate.sol $TEMPLATES_MANAGER $TEMPLATE $SPECIFICATION
+```
+
 ### Creating a test token
 
 In order to create a test token with the ERC20 template + Reality oracle
