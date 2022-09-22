@@ -7,10 +7,10 @@
         "manualRealityEthOracleTemplate": "0x343c8F75244706eADe9CC0F04c6C588C00E6a747"
     },
     "goerli": {
-        "factory": "0xfB3C168E7b761B8165a25227DB7fB8BfceF90756",
-        "kpiTokensManager": "0x1E067451364b07034646cC03b8bF8e2851C7B84b",
-        "erc20KpiTokensTemplate": "0x3f4963B48fb59189213A84c3Dd7d2c1686481F5d",
-        "oraclesManager": "0x2F8e3C513aB9e75D9E2B8F4C683E2577c908a411",
-        "manualRealityEthOracleTemplate": "0x54ca9Bc25Fd623c94f5E1db4f7CEe846513AA844"
+        "factory": "0xe8a7a4fFE27d77e9aA274F2927D68273c206691C",
+        "kpiTokensManager": "0x08B1947221D596A2A896fDE453117F68b98FDA94",
+        "erc20KpiTokensTemplate": "0x9Abe6551FBFb116dA5E6e6Ed14D8e21454b7bc6F",
+        "oraclesManager": "0xD38B1802bbE71c9e2b44e52dDAD508d0799669AD",
+        "manualRealityEthOracleTemplate": "0xf2BE7372791cbAb2fCDbe73FcA3D94b7f11136F3"
     }
 }
