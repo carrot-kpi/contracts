@@ -524,7 +524,7 @@ contract ERC20KPITokenInitializeTest is BaseTestSetup {
         assertEq(onChainFinalizableOracles.length, 1);
         assertEq(kpiTokenInstance.totalSupply(), 100 ether);
         assertEq(onChainInitialSupply, 100 ether);
-        assertEq(kpiTokenInstance.creator(), address(this));
+        assertEq(kpiTokenInstance.owner(), address(this));
         assertEq(kpiTokenInstance.description(), "a");
         assertTrue(!onChainAndRelationship);
         assertEq(onChainName, "Token");

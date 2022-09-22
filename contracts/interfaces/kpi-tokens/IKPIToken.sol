@@ -17,7 +17,9 @@ interface IKPIToken {
 
     function redeem(bytes memory _data) external;
 
-    function creator() external view returns (address);
+    function owner() external view returns (address);
+
+    function transferOwnership(address _newOwner) external;
 
     function template() external view returns (Template memory);
 

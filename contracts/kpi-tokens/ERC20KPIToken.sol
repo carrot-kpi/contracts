@@ -18,11 +18,11 @@ import {TokenAmount, InitializeKPITokenParams} from "../commons/Types.sol";
 /// reaching the predetermined KPIs or not. In order to check if these KPIs are reached
 /// on-chain, oracles oracles are employed, and based on the results conveyed back to
 /// the KPI token template, the collaterals are either unlocked or sent back to the
-/// original KPI token creator. Interesting logic is additionally tied to the conditions
+/// KPI token owner. Interesting logic is additionally tied to the conditions
 /// and collaterals, such as the possibility to have a minimum payout (a per-collateral
 /// sum that will always be paid out to KPI token holders regardless of the fact that
 /// KPIs are reached or not), weighted KPIs and multiple detached resolution or all-in-one
-/// reaching of KPIs (explained more in details later).
+/// reaching of KPIs (explained more in detail later).
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract ERC20KPIToken is
     ERC20Upgradeable,
@@ -37,7 +37,7 @@ contract ERC20KPIToken is
 
     bool internal allOrNone;
     uint16 internal toBeFinalized;
-    address public creator;
+    address public owner;
     uint8 internal oraclesAmount;
     uint8 internal collateralsAmount;
     address internal kpiTokensManager;
@@ -77,6 +77,7 @@ contract ERC20KPIToken is
     error NothingToRedeem();
     error ZeroAddressToken();
     error ZeroAddressReceiver();
+    error ZeroAddressOwner();
     error NothingToRecover();
     error NotEnoughValue();
 
@@ -85,6 +86,10 @@ contract ERC20KPIToken is
         address indexed token,
         uint256 amount,
         address indexed receiver
+    );
+    event OwnershipTransferred(
+        address indexed oldOwner,
+        address indexed newOwner
     );
     event Finalize(address indexed oracle, uint256 result);
     event RecoverERC20(
@@ -223,7 +228,7 @@ contract ERC20KPIToken is
         _mint(_creator, _erc20Supply);
 
         initialSupply = _erc20Supply;
-        creator = _creator;
+        owner = _creator;
         description = _description;
         expiration = _expiration;
         kpiTokensManager = _kpiTokensManager;
@@ -357,27 +362,39 @@ contract ERC20KPIToken is
         return _finalizableOracle;
     }
 
+    /// @dev Transfers ownership of the KPI token. The owner is the one that has a claim
+    /// over the unused, leftover collateral on finalization.
+    /// @param _newOwner The new owner.
+    // TODO: add tests
+    function transferOwnership(address _newOwner) external override {
+        if (_newOwner == address(0)) revert ZeroAddressOwner();
+        address _owner = owner;
+        if (msg.sender != _owner) revert Forbidden();
+        owner = _newOwner;
+        emit OwnershipTransferred(_owner, _newOwner);
+    }
+
     /// @dev Finalizes a condition linked with the KPI token. Exclusively
     /// callable by oracles linked with the KPI token in order to report the
     /// final outcome for a KPI once everything has played out "in the real world".
     /// Based on the reported results and the template configuration, collateral is
     /// either reserved to be redeemed by KPI token holders when full finalization is
     /// reached (i.e. when all the oracles have reported their final result), or sent
-    /// back to the original KPI token creator (for example when KPIs have not been
+    /// back to the KPI token owner (for example when KPIs have not been
     /// met, minus any present minimum payout). The possible scenarios are the following:
     ///
     /// If a result is either invalid or below the lower bound set for the KPI:
     /// - If an "all or none" approach has been chosen at the KPI token initialization
-    /// time, all the collateral is sent back to the KPI token creator and the KPI token
+    /// time, all the collateral is sent back to the KPI token owner and the KPI token
     /// expires worthless on the spot.
     /// - If no "all or none" condition has been set, the KPI contracts calculates how
     /// much of the collaterals the specific condition "governed" (through the weighting
     /// mechanism), subtracts any minimum payout for these and sends back the right amount
-    /// of collateral to the KPI token creator.
+    /// of collateral to the KPI token owner.
     ///
     /// If a result is in the specified range (and NOT above the higher bound) set for
     /// the KPI, the same calculations happen and some of the collateral gets sent back
-    /// to the KPI token creator depending on how far we were from reaching the full KPI
+    /// to the KPI token owner depending on how far we were from reaching the full KPI
     /// progress.
     ///
     /// If a result is at or above the higher bound set for the KPI token, pretty much
@@ -426,12 +443,12 @@ contract ERC20KPIToken is
     /// answer. In particular:
     /// - If an "all or none" approach has been chosen at the KPI token initialization
     /// level, all the collateral minus any minimum payout is marked to be recovered
-    /// by the KPI token creator. From the KPI token holder's point of view, the token
+    /// by the KPI token owner. From the KPI token holder's point of view, the token
     /// expires worthless on the spot.
     /// - If no "all or none" condition has been set, the KPI contract calculates how
     /// much of the collaterals the specific condition "governed" (through the weighting
     /// mechanism), subtracts any minimum payout for these and sends back the right amount
-    /// of collateral to the KPI token creator.
+    /// of collateral to the KPI token owner.
     /// @param _oracle The oracle being finalized.
     /// @param _allOrNone Whether all the oracles are in an "all or none" configuration or not.
     function handleLowOrInvalidResult(
@@ -463,7 +480,7 @@ contract ERC20KPIToken is
     /// @dev Handles collateral state changes in case an oracle reported an intermediate answer.
     /// In particular if a result is in the specified range (and NOT above the higher bound) set
     /// for the KPI, the same calculations happen and some of the collateral gets sent back
-    /// to the KPI token creator depending on how far we were from reaching the full KPI
+    /// to the KPI token owner depending on how far we were from reaching the full KPI
     /// progress.
     ///
     /// If a result is at or above the higher bound set for the KPI token, pretty much
@@ -521,20 +538,20 @@ contract ERC20KPIToken is
         }
     }
 
-    /// @dev Callable by the KPI token creator, this function lets them recover any ERC20
+    /// @dev Callable by the KPI token owner, this function lets them recover any ERC20
     /// token sent to the KPI token contract. An arbitrary receiver address can be specified
     /// so that the function can be used to also help users that did something wrong by
     /// mistake by sending ERC20 tokens here. Two scenarios are possible here:
-    /// - The KPI token creator wants to recover unused collateral that has been unlocked
+    /// - The KPI token owner wants to recover unused collateral that has been unlocked
     ///   by the KPI token after one or more oracle finalizations.
-    /// - The KPI token creator wants to recover an arbitrary ERC20 token sent by mistake
+    /// - The KPI token owner wants to recover an arbitrary ERC20 token sent by mistake
     ///   to the KPI token contract (even the ERC20 KPI token itself can be recovered from
     ///   the contract).
     /// @param _token The ERC20 token address to be rescued.
     /// @param _receiver The address to which the rescued ERC20 tokens (if any) will be sent.
     function recoverERC20(address _token, address _receiver) external override {
         if (_receiver == address(0)) revert ZeroAddressReceiver();
-        if (msg.sender != creator) revert Forbidden();
+        if (msg.sender != owner) revert Forbidden();
         bool _expired = _isExpired();
         CollateralWithoutToken storage _collateral = collateral[_token];
         if (_collateral.amount > 0) {
@@ -670,7 +687,7 @@ contract ERC20KPIToken is
     /// @dev View function to check if the KPI token is initialized.
     /// @return A bool describing whether the token is initialized or not.
     function _isInitialized() internal view returns (bool) {
-        return creator != address(0);
+        return owner != address(0);
     }
 
     /// @dev View function to query all the oracles associated with the KPI token at once.
