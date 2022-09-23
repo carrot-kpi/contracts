@@ -9,13 +9,18 @@ import {console2} from "forge-std/console2.sol";
 /// @dev Adds a template on a target network.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract AddTemplate is Script {
-    error ZeroAddressFeeReceiver();
+    error ZeroAddress();
+    error InvalidSpecification();
 
     function run(
         address _templatesManager,
         address _template,
         string calldata _specification
     ) external {
+        if (_templatesManager == address(0)) revert ZeroAddress();
+        if (_template == address(0)) revert ZeroAddress();
+        if (bytes(_specification).length == 0) revert InvalidSpecification();
+
         vm.startBroadcast();
         IBaseTemplatesManager(_templatesManager).addTemplate(
             _template,
