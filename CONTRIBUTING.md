@@ -89,7 +89,7 @@ doing that, you can finally execute the following command to initiate the
 deployment:
 
 ```
-FOUNDRY_PROFILE=production forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address)' ./scripts/Deploy.sol $FEE_RECEIVER
+forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address)' ./scripts/Deploy.sol $FEE_RECEIVER
 ```
 
 Two alternative forms of the command can be used in order for the deployment to
@@ -97,8 +97,8 @@ be completed with either Trezor or Ledger hardware wallets (all the arguments
 remain the same as above):
 
 ```
-FOUNDRY_PROFILE=production forge script --broadcast --slow --ledger --fork-url RPC_ENDPOINT --sig 'run(address)' ./scripts/Deploy.sol FEE_RECEIVER
-FOUNDRY_PROFILE=production forge script --broadcast --slow --trezor --fork-url RPC_ENDPOINT --sig 'run(address)' ./scripts/Deploy.sol FEE_RECEIVER
+forge script --broadcast --slow --ledger --fork-url $RPC_ENDPOINT --sig 'run(address)' ./scripts/Deploy.sol $FEE_RECEIVER
+forge script --broadcast --slow --trezor --fork-url $RPC_ENDPOINT --sig 'run(address)' ./scripts/Deploy.sol $FEE_RECEIVER
 ```
 
 ### Adding a template
@@ -132,7 +132,39 @@ doing that, you can finally execute the following command to initiate the
 deployment:
 
 ```
-FOUNDRY_PROFILE=production forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,address,string)' ./scripts/AddTemplate.sol $TEMPLATES_MANAGER $TEMPLATE $SPECIFICATION
+forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,address,string)' ./scripts/AddTemplate.sol $TEMPLATES_MANAGER $TEMPLATE $SPECIFICATION
+```
+
+### Removing a template
+
+In order to remove a template on a given network create a .env.<NETWORK_NAME>
+file exporting the following env variables:
+
+```
+export PRIVATE_KEY=""
+export RPC_ENDPOINT=""
+export TEMPLATES_MANAGER=""
+export REMOVED_TEMPLATE_ID=""
+```
+
+brief explainer of the env variables:
+
+- `PRIVATE_KEY`: the private key related to the account that will perform the
+  addition (must be the owner of the templates manager).
+- `RPC_ENDPOINT`: the RPC endpoint that will be used to broadcast transactions.
+  This will also determine the network where the deployment will happen.
+- `TEMPLATES_MANAGER`: the address of the templates manager on the target
+  network.
+- `REMOVED_TEMPLATE_ID`: the id of the template to be removed.
+
+Once you have one instance of this file for each network you're interested in
+(e.g. .`env.goerli`, `.env.gnosis`, `env.mainnet` etc etc), you can go ahead and
+locally load the env variables by executing `source .env.<NETWORK_NAME>`. After
+doing that, you can finally execute the following command to initiate the
+deployment:
+
+```
+forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,uint256)' ./scripts/RemoveTemplate.sol $TEMPLATES_MANAGER $REMOVED_TEMPLATE_ID
 ```
 
 ### Updating a template specification
@@ -166,7 +198,7 @@ doing that, you can finally execute the following command to initiate the
 deployment:
 
 ```
-FOUNDRY_PROFILE=production forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,uint256,string)' ./scripts/UpdateTemplateSpecification.sol $TEMPLATES_MANAGER $TEMPLATE_ID $NEW_SPECIFICATION
+forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,uint256,string)' ./scripts/UpdateTemplateSpecification.sol $TEMPLATES_MANAGER $TEMPLATE_ID $NEW_SPECIFICATION
 ```
 
 ### Creating a test token
@@ -175,7 +207,7 @@ In order to create a test token with the ERC20 template + Reality oracle
 template you can run the following command from the root of the project:
 
 ```
-FOUNDRY_PROFILE=production forge script --broadcast --slow --private-key PRIVATE_KEY --fork-url RPC_ENDPOINT --sig 'run(address,address,address,uint256,uint256,uint256,uint256,address,address,string,uint32,uint32,string,uint256)' ./scripts/CreateManualRealityEthERC20KpiToken.sol FACTORY_ADDRESS KPI_TOKENS_MANAGER_ADDRESS COLLATERAL_TOKEN COLLATERAL_AMOUNT MINIMUM_PAYOUT LOWER_BOUND HIGHER_BOUND REALITY_ADDRESS ARBITRATOR_ADDRESS REALITY_QUESTION_TEXT REALITY_QUESTION_TIMEOUT REALITY_QUESTION_EXPIRY DESCRIPTION EXPIRATION
+forge script --broadcast --slow --private-key PRIVATE_KEY --fork-url RPC_ENDPOINT --sig 'run(address,address,address,uint256,uint256,uint256,uint256,address,address,string,uint32,uint32,string,uint256)' ./scripts/CreateManualRealityEthERC20KpiToken.sol FACTORY_ADDRESS KPI_TOKENS_MANAGER_ADDRESS COLLATERAL_TOKEN COLLATERAL_AMOUNT MINIMUM_PAYOUT LOWER_BOUND HIGHER_BOUND REALITY_ADDRESS ARBITRATOR_ADDRESS REALITY_QUESTION_TEXT REALITY_QUESTION_TIMEOUT REALITY_QUESTION_EXPIRY DESCRIPTION EXPIRATION
 ```
 
 the values to pass are:
