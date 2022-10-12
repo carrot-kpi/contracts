@@ -15,6 +15,12 @@ interface IKPITokensFactory {
 
     function allowOraclesCreation(address _address) external returns (bool);
 
+    function kpiTokensManager() external returns (address);
+
+    function oraclesManager() external returns (address);
+
+    function feeReceiver() external returns (address);
+
     function setKpiTokensManager(address _kpiTokensManager) external;
 
     function setOraclesManager(address _oraclesManager) external;
