@@ -61,7 +61,7 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
         uint256 _expiration,
         bytes calldata _initializationData,
         bytes calldata _oraclesInitializationData
-    ) external payable override {
+    ) external payable override returns (address) {
         (address _instance, uint128 _templateVersion) = IKPITokensManager1(
             kpiTokensManager
         ).instantiate(
@@ -91,6 +91,8 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
         kpiTokens.push(_instance);
 
         emit CreateToken(_instance);
+
+        return _instance;
     }
 
     /// @dev KPI tokens manager address setter. Can only be called by the contract owner.

@@ -20,8 +20,8 @@ contract KpiTokensManagerGetTemplateTest is BaseTestSetup {
         uint256 _templateId = 1;
         Template memory _template = kpiTokensManager.template(_templateId);
         assertEq(_template.id, _templateId);
-        assertEq(_template.addrezz, address(erc20KpiTokenTemplate));
+        assertEq(_template.addrezz, address(mockKpiTokenTemplate));
         assertEq(_template.version, 1);
-        assertEq(_template.specification, ERC20_KPI_TOKEN_SPECIFICATION);
+        assertEq(_template.specification, MOCK_KPI_TOKEN_SPECIFICATION);
     }
 }

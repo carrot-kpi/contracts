@@ -26,12 +26,15 @@ contract OraclesManager1 is BaseTemplatesManager, IOraclesManager1 {
     /// @param _creator The KPI token creator.
     /// @param _initializationData The template-specific ABI-encoded initialization data.
     /// @return The salt value.
-    function salt(address _creator, bytes calldata _initializationData)
-        internal
-        pure
-        returns (bytes32)
-    {
-        return keccak256(abi.encodePacked(_creator, _initializationData));
+    function salt(
+        address _creator,
+        uint256 _templateId,
+        bytes calldata _initializationData
+    ) internal pure returns (bytes32) {
+        return
+            keccak256(
+                abi.encodePacked(_creator, _templateId, _initializationData)
+            );
     }
 
     /// @dev Predicts an template instance address based on the input data.
@@ -48,7 +51,7 @@ contract OraclesManager1 is BaseTemplatesManager, IOraclesManager1 {
         return
             ClonesUpgradeable.predictDeterministicAddress(
                 latestVersionStorageTemplate(_id).addrezz,
-                salt(_creator, _initializationData),
+                salt(_creator, _id, _initializationData),
                 address(this)
             );
     }
@@ -72,7 +75,7 @@ contract OraclesManager1 is BaseTemplatesManager, IOraclesManager1 {
         Template storage _template = latestVersionStorageTemplate(_id);
         address _instance = ClonesUpgradeable.cloneDeterministic(
             _template.addrezz,
-            salt(_creator, _initializationData)
+            salt(_creator, _id, _initializationData)
         );
         IOracle(_instance).initialize{value: msg.value}(
             InitializeOracleParams({

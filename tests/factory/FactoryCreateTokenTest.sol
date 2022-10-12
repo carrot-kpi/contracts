@@ -1,8 +1,8 @@
 pragma solidity 0.8.17;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
-import {IERC20KPIToken} from "../../contracts/interfaces/kpi-tokens/IERC20KPIToken.sol";
 import {TokenAmount} from "../../contracts/commons/Types.sol";
+import {OracleData} from "../mocks/MockKPIToken.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Factory create token test
@@ -32,94 +32,37 @@ contract FactoryCreateTokenTest is BaseTestSetup {
     }
 
     function testInvalidOracleTemplateInitializationData() external {
-        IERC20KPIToken.Collateral[]
-            memory _collaterals = new IERC20KPIToken.Collateral[](1);
-        _collaterals[0] = IERC20KPIToken.Collateral({
-            token: address(1),
-            amount: 2,
-            minimumPayout: 1
-        });
-        bytes memory _erc20KpiTokenInitializationData = abi.encode(
-            _collaterals,
-            bytes32("Test"),
-            bytes32("TST"),
-            100 ether
-        );
         vm.expectRevert(bytes(""));
         factory.createToken(
             1,
-            "a",
+            "asd",
             block.timestamp + 60,
-            _erc20KpiTokenInitializationData,
+            abi.encode(""),
             abi.encode(2)
         );
     }
 
     function testSuccess() external {
-        IERC20KPIToken.Collateral[]
-            memory _collaterals = new IERC20KPIToken.Collateral[](1);
-        _collaterals[0] = IERC20KPIToken.Collateral({
-            token: address(firstErc20),
-            amount: 2,
-            minimumPayout: 1
-        });
-        bytes memory _erc20KpiTokenInitializationData = abi.encode(
-            _collaterals,
-            "Test",
-            "TST",
-            100 ether
-        );
+        OracleData[] memory _oracles = new OracleData[](1);
+        _oracles[0] = OracleData({templateId: 1, data: abi.encode("")});
 
-        address _reality = address(42);
-        vm.mockCall(
-            _reality,
-            abi.encodeWithSignature(
-                "askQuestionWithMinBond(uint256,string,address,uint32,uint32,uint256,uint256)"
-            ),
-            abi.encode(bytes32("question id"))
-        );
-        bytes memory realityV3OracleInitializationData = abi.encode(
-            _reality,
-            address(this),
-            1,
-            "question",
-            60,
-            block.timestamp + 60
-        );
-        IERC20KPIToken.OracleData[]
-            memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
-        _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 1,
-            lowerBound: 0,
-            higherBound: 1,
-            weight: 1,
-            value: 0,
-            data: realityV3OracleInitializationData
-        });
-        bytes memory _oraclesInitializationData = abi.encode(
-            _oracleDatas,
-            false
-        );
-
-        firstErc20.mint(address(this), 2);
         address _predictedKpiTokenAddress = kpiTokensManager
             .predictInstanceAddress(
                 address(this),
                 1,
                 "a",
                 block.timestamp + 60,
-                _erc20KpiTokenInitializationData,
-                _oraclesInitializationData
+                abi.encode(""),
+                abi.encode(_oracles)
             );
-        firstErc20.approve(_predictedKpiTokenAddress, 2);
 
         assertEq(factory.kpiTokensAmount(), 0);
         factory.createToken(
             1,
             "a",
             block.timestamp + 60,
-            _erc20KpiTokenInitializationData,
-            _oraclesInitializationData
+            abi.encode(""),
+            abi.encode(_oracles)
         );
 
         assertEq(factory.kpiTokensAmount(), 1);

@@ -22,7 +22,7 @@ contract KpiTokensManagerPredictInstanceAddressTest is BaseTestSetup {
         );
         string memory _description = "a";
         address _predictedAddress = Clones.predictDeterministicAddress(
-            address(erc20KpiTokenTemplate),
+            address(mockKpiTokenTemplate),
             keccak256(
                 abi.encodePacked(
                     address(this),

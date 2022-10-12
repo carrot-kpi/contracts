@@ -56,65 +56,6 @@ Carrot v1 comes out of the box with powerful KPI token and oracle templates,
 with the goal of encouraging the community to come up with additional use cases
 that can also lead to custom-made products based off of Carrot v1's platform.
 
-## Default ERC20 KPI token template
-
-A multiple ERC20 collateral, multiple weighted condition, minimum-payout-enabled
-ERC20 KPI token has been developed and will be the first KPI token template
-available. This token template lets anyone create ERC20 tokens that can easily
-be distributed via farming or airdrops, and that can be backed by multiple ERC20
-collaterals (up to 5). Multiple weighted conditions (oracles) can be attached to
-a single KPI token created using this template. An additional powerful feature
-of the template regarding conditions is the ability to specify how the
-conditions should behave related to one another (and as such, this logic really
-only applies when 2 or more conditions are attached to a KPI token). In
-particular we can have two scenarios as of now, with the current implementation:
-
-- In the first scenario, all the conditions have to resolve positively (i.e.
-  they need to either partially or fully reach their goal). In case even just
-  one of the conditions resolves negatively, the collaterals locked in the KPI
-  token are entirely sent back to the creator, while the ERC20 tokens
-  distributed to the community expire worthless on the spot. As you can
-  understand, this is a strict way of operating a KPI token campaign, where you
-  require ALL goals to be at least partially reached in order to unlock even
-  part of the collaterals (exclusive of any specified minimum payout which is
-  paid out regardless).
-- In the second scenario, conditions are judged in a vaccum. If one of a set of
-  conditions fails, **JUST** the collaterals associated to that one condition
-  (determined using the weighting logic) are sent back to the KPI token creator.
-  The other conditions resolve normally and follow the same unlocking logic
-  depending on the result communicated by the oracle.
-
-As previously mentioned, minimum payout can also be specified per used
-collateral, given out regardless of whether any of the goals is actually reached
-or not. Using a weighting, it's also possible to assign a certain portion of the
-collaterals to a condition that might be more important than others in a set. If
-conditions weight is set the same for each specified conditions, collaterals
-distribution related to the conditions is homogeneous. Let's check out an
-example to better understand:
-
-Let's say we have a KPI token created with 2 disjointed conditions A, B. In this
-case, if condition A has a weight of 2 and B of 1, if A is reached, 2/3rds of
-the collaterals will be redeemable by token holders. If condition B also
-verifies, the remaining third of the collaterals will be redeemable by the KPI
-token holders too, but if it fails, only that third gets sent back to the KPI
-token creator. Redeeming the collateral will burn any held ERC20 KPI token.
-
-## Reality.eth oracle template
-
-As for oracle templates, a Reality.eth oracle will initially be available.
-Reality.eth is a crowdsourced oracle, battle-tested by DXdao through Omen and
-its prediction markets.
-
-The idea, for oracles at least, is to minimize trust and human intervention in
-the future by allowing automation to be an integral part of the system. DXdao is
-developing its own cryptoincentivized smart contract execution network, and when
-available, Carrot v1 will be a first party integration. Having a decentralized
-network of bots/humans executing functions in exchange for a reward will
-drastically improve the decentralization and user experience for both KPI token
-creators and holders, all the while opening up new opportunities for creative
-oracle implementations (for example automatic token price/TVL oracles or any
-oracle fetching onchain data).
-
 ## KPITokensFactory
 
 The KPI tokens factory is ideally the contract with which KPI token creators
@@ -188,4 +129,6 @@ interface. The functions that must be overridden are:
   creation.
 
 In general, a good place to have a look at to get started with KPI token
-development is the `ERC20KPIToken` (talk is cheap, show me the code).
+development is the
+[`ERC20KPIToken`](https://github.com/carrot-kpi/erc20-kpi-token-template) (talk
+is cheap, show me the code).

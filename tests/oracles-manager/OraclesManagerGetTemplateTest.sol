@@ -20,8 +20,8 @@ contract OraclesManagerGetTemplateTest is BaseTestSetup {
         uint256 _templateId = 1;
         Template memory _template = oraclesManager.template(_templateId);
         assertEq(_template.id, _templateId);
-        assertEq(_template.addrezz, address(realityV3OracleTemplate));
+        assertEq(_template.addrezz, address(mockOracleTemplate));
         assertEq(_template.version, 1);
-        assertEq(_template.specification, MANUAL_REALITY_ETH_SPECIFICATION);
+        assertEq(_template.specification, MOCK_ORACLE_SPECIFICATION);
     }
 }

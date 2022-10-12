@@ -14,18 +14,13 @@ contract OraclesManagerInstantiateTest is BaseTestSetup {
         oraclesManager.instantiate(address(this), 0, bytes(""));
     }
 
-    function testSuccessManualRealityOracle() external {
-        bytes memory _initializationData = abi.encode(
-            address(2), // fake reality.eth address
-            address(this), // arbitrator
-            1, // template id
-            "a", // question
-            200, // question timeout
-            block.timestamp + 200 // expiry
-        );
+    function testSuccessMockOracle() external {
+        bytes memory _initializationData = abi.encode("asdf");
         address _predictedInstanceAddress = Clones.predictDeterministicAddress(
-            address(realityV3OracleTemplate),
-            keccak256(abi.encodePacked(address(this), _initializationData)),
+            address(mockOracleTemplate),
+            keccak256(
+                abi.encodePacked(address(this), uint256(1), _initializationData)
+            ),
             address(oraclesManager)
         );
         vm.mockCall(

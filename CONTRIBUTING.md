@@ -201,34 +201,6 @@ deployment:
 forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,uint256,string)' ./scripts/UpdateTemplateSpecification.sol $TEMPLATES_MANAGER $TEMPLATE_ID $NEW_SPECIFICATION
 ```
 
-### Creating a test token
-
-In order to create a test token with the ERC20 template + Reality oracle
-template you can run the following command from the root of the project:
-
-```
-forge script --broadcast --slow --private-key PRIVATE_KEY --fork-url RPC_ENDPOINT --sig 'run(address,address,address,uint256,uint256,uint256,uint256,address,address,string,uint32,uint32,string,uint256)' ./scripts/CreateManualRealityEthERC20KpiToken.sol FACTORY_ADDRESS KPI_TOKENS_MANAGER_ADDRESS COLLATERAL_TOKEN COLLATERAL_AMOUNT MINIMUM_PAYOUT LOWER_BOUND HIGHER_BOUND REALITY_ADDRESS ARBITRATOR_ADDRESS REALITY_QUESTION_TEXT REALITY_QUESTION_TIMEOUT REALITY_QUESTION_EXPIRY DESCRIPTION EXPIRATION
-```
-
-the values to pass are:
-
-- `PRIVATE_KEY`: the private key related to the account that will perform the
-  deployment.
-- `RPC_ENDPOINT`: the RPC endpoint that will be used to broadcast transactions.
-  This will also determine the network where the deployment will happen.
-- `FACTORY_ADDRESS`: the address of the factory contract to be used.
-- `KPI_TOKENS_MANAGER_ADDRESS`: the address of the KPI tokens manager contract
-  to be used.
-- `COLLATERAL_TOKEN`: the address of the ERC20 token to be used as collateral.
-- `COLLATERAL_AMOUNT`: the amount of the ERC20 token collateral.
-- `REALITY_ADDRESS`: the address of the Reality.eth contract to be used.
-- `ARBITRATOR_ADDRESS`: the address of the arbitrator to be used.
-- `REALITY_QUESTION_TEXT`: the text of the question to be asked on Reality.
-- `REALITY_QUESTION_TIMEOUT`: the timeout of the Reality question (in seconds).
-- `REALITY_QUESTION_EXPIRY`: the expiry of the Reality question (epoch
-  timestamp).
-- `DESCRIPTION`: IPFS hash pointing to the KPI token's description.
-
 ### Addresses
 
 "Official" deployments and addresses are generally tracked in the

@@ -16,21 +16,21 @@ contract FactoryEnumerateTest is BaseTestSetup {
     }
 
     function testOneTemplateSuccess() external {
-        createKpiToken("a", "a");
+        createKpiToken("a");
         assertEq(factory.enumerate(0, 1).length, 1);
     }
 
     function testMultipleTemplatesSuccess() external {
-        createKpiToken("a", "a");
-        createKpiToken("b", "b");
-        createKpiToken("c", "c");
-        createKpiToken("d", "d");
-        createKpiToken("e", "e");
-        createKpiToken("f", "f");
-        createKpiToken("g", "g");
-        createKpiToken("h", "h");
-        createKpiToken("i", "i");
-        createKpiToken("j", "j");
+        createKpiToken("z");
+        createKpiToken("b");
+        createKpiToken("c");
+        createKpiToken("d");
+        createKpiToken("e");
+        createKpiToken("f");
+        createKpiToken("g");
+        createKpiToken("h");
+        createKpiToken("i");
+        createKpiToken("j");
         assertEq(factory.enumerate(0, 10).length, 10);
     }
 

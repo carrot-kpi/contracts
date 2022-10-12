@@ -11,11 +11,6 @@ import {console2} from "forge-std/console2.sol";
 /// @dev Deploys the platform on a target network.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract Deploy is Script {
-    string internal constant ERC20_KPI_TOKEN_SPECIFICATION =
-        "QmXU4G418hZLL8yxXdjkTFSoH2FdSe6ELgUuSm5fHHJMMN";
-    string internal constant MANUAL_REALITY_ETH_ORACLE_SPECIFICATION =
-        "QmRvoExBSESXedwqfC1cs4DGaRymnRR1wA9YGoZbqsE8Mf";
-
     error ZeroAddressFeeReceiver();
 
     function run(address _feeReceiver) external {

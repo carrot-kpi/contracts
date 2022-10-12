@@ -11,7 +11,7 @@ interface IKPITokensFactory {
         uint256 _expiration,
         bytes memory _initializationData,
         bytes memory _oraclesInitializationData
-    ) external payable;
+    ) external payable returns (address);
 
     function allowOraclesCreation(address _address) external returns (bool);
 
