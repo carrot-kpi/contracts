@@ -1,10 +1,25 @@
 {
-    "name": "@carrot/contracts",
+    "name": "@carrot-kpi/contracts",
     "version": "0.1.0",
     "description": "A smart contract solution to create scalar and boolean KPI tokens, by DXdao.",
     "author": "Federico Luzzi <federico.luzzi@protonmail.com>",
     "license": "GPL-3.0-or-later",
-    "private": true,
+    "publishConfig": {
+        "access": "public"
+    },
+    "files": [
+        "./artifacts/IKPIToken.sol",
+        "./artifacts/IKPITokensManager1.sol",
+        "./artifacts/IOracle.sol",
+        "./artifacts/IOraclesManager1.sol",
+        "./artifacts/IBaseTemplatesManager.sol",
+        "./artifacts/IKPITokensFactory.sol",
+        "./artifacts/KPITokensManager1.sol",
+        "./artifacts/OraclesManager1.sol",
+        "./artifacts/BaseTemplatesManager.sol",
+        "./artifacts/KPITokensFactory.sol",
+        "./.addresses.json"
+    ],
     "scripts": {
         "lint:prettier": "prettier -l contracts/**/*.sol tests/**/*.sol scripts/**/*.sol",
         "lint:commit-message": "commitlint -e",
@@ -15,7 +30,8 @@
         "snapshot": "FOUNDRY_PROFILE=test forge snapshot",
         "compile": "forge build",
         "compile:production": "FOUNDRY_PROFILE=production forge build",
-        "prepare": "husky install"
+        "prepare": "husky install",
+        "prepublishOnly": "npm run compile"
     },
     "devDependencies": {
         "@commitlint/cli": "^17.0.3",
