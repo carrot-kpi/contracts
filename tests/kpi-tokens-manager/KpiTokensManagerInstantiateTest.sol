@@ -10,8 +10,8 @@ import {OracleData} from "../mocks/MockKPIToken.sol";
 /// @dev Tests template instantiation in KPI tokens manager.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract KpiTokensManagerInstantiateTest is BaseTestSetup {
-    function testFailNotFromFactory() external {
-        vm.expectRevert();
+    function testNotFromFactoryFail() external {
+        vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
         kpiTokensManager.instantiate(
             address(this),
             1,

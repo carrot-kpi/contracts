@@ -9,8 +9,8 @@ import {Clones} from "oz/proxy/Clones.sol";
 /// @dev Tests template instantiation in oracles manager.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract OraclesManagerInstantiateTest is BaseTestSetup {
-    function testFailNotFromCreatedKpiToken() external {
-        vm.expectRevert(); /* abi.encodeWithSignature("Forbidden()") */
+    function testNotFromCreatedKpiTokenFail() external {
+        vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
         oraclesManager.instantiate(address(this), 0, bytes(""));
     }
 
