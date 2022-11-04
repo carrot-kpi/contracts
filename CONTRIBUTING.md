@@ -195,10 +195,47 @@ Once you have one instance of this file for each network you're interested in
 (e.g. .`env.goerli`, `.env.gnosis`, `env.mainnet` etc etc), you can go ahead and
 locally load the env variables by executing `source .env.<NETWORK_NAME>`. After
 doing that, you can finally execute the following command to initiate the
-deployment:
+update:
 
 ```
 forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,uint256,string)' ./scripts/UpdateTemplateSpecification.sol $TEMPLATES_MANAGER $TEMPLATE_ID $NEW_SPECIFICATION
+```
+
+### Upgrading a template specification
+
+In order to upgrade a template on a given network create a .env.<NETWORK_NAME>
+file exporting the following env variables:
+
+```
+export PRIVATE_KEY=""
+export RPC_ENDPOINT=""
+export TEMPLATES_MANAGER=""
+export UPGRADED_TEMPLATE_ID=""
+export UPGRADED_TEMPLATE_ADDRESS=""
+export UPGRADED_TEMPLATE_SPECIFICATION=""
+```
+
+brief explainer of the env variables:
+
+- `PRIVATE_KEY`: the private key related to the account that will perform the
+  addition (must be the owner of the templates manager).
+- `RPC_ENDPOINT`: the RPC endpoint that will be used to broadcast transactions.
+  This will also determine the network where the deployment will happen.
+- `TEMPLATES_MANAGER`: the address of the templates manager on the target
+  network.
+- `UPGRADED_TEMPLATE_ID`: the id of the template to be upgraded.
+- `UPGRADED_TEMPLATE_ADDRESS`: address of the new template contract.
+- `UPGRADED_TEMPLATE_SPECIFICATION`: cid of the new template specification or
+  the upgrade.
+
+Once you have one instance of this file for each network you're interested in
+(e.g. .`env.goerli`, `.env.gnosis`, `env.mainnet` etc etc), you can go ahead and
+locally load the env variables by executing `source .env.<NETWORK_NAME>`. After
+doing that, you can finally execute the following command to initiate the
+upgrade:
+
+```
+forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,uint256,address,string)' ./scripts/UpgradeTemplateSpecification.sol $TEMPLATES_MANAGER $UPGRADED_TEMPLATE_ID $UPGRADED_TEMPLATE_ADDRESS $UPGRADED_TEMPLATE_SPECIFICATION
 ```
 
 ### Addresses
