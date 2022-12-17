@@ -1,4 +1,6 @@
-> **Warning** This repo moved and all further development will now be done
+> **Warning**
+>
+> This repo moved and all further development will now be done
 > [here](https://github.com/carrot-kpi/v1-monorepo/tree/develop/packages/contracts).
 
 # Carrot v1 contracts
