@@ -1,8 +1,8 @@
 [profile.default]
-src = 'contracts'
-out = 'artifacts'
+src = 'src'
+out = 'out'
 test = 'tests'
-libs = ['node_modules', 'lib']
+libs = ['lib']
 remappings = [
     'ds-test/=lib/ds-test/src/',
     'oz/=lib/openzeppelin-contracts/contracts/',
