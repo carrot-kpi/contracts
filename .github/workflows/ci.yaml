@@ -20,14 +20,33 @@ jobs:
               uses: actions/setup-node@v3
               with:
                   node-version: ${{matrix.node-version}}
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v2
+              with:
+                  version: latest
+                  run_install: false
+            - name: Get pnpm store directory
+              id: pnpm-cache
+              shell: bash
+              run: |
+                  echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+            - uses: actions/cache@v3
+              name: Setup pnpm cache
+              with:
+                  path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+                  key:
+                      ${{ runner.os }}-pnpm-store-${{
+                      hashFiles('**/pnpm-lock.yaml') }}
+                  restore-keys: |
+                      ${{ runner.os }}-pnpm-store-
             - name: Setup Foundry
               uses: foundry-rs/foundry-toolchain@v1
               with:
                   version: nightly
             - name: Install dependencies
-              run: npm ci
+              run: pnpm install --frozen-lockfile
             - name: Lint
-              run: npm run lint
+              run: pnpm lint
             - name: Test
               if:
                   github.event_name != 'pull_request' && github.event_name !=
