@@ -21,9 +21,9 @@
         "./.addresses.json"
     ],
     "scripts": {
-        "lint:prettier": "prettier -l contracts/**/*.sol tests/**/*.sol scripts/**/*.sol",
+        "lint": "solhint './src/**/*.sol' './scripts/*.sol' './tests/**/*.sol' && prettier --check .",
+        "format": "solhint --fix ./src/**/*.sol ./scripts/*.sol ./tests/**/*.sol",
         "lint:commit-message": "commitlint -e",
-        "lint": "npm run lint:prettier",
         "test": "FOUNDRY_PROFILE=test forge test",
         "test:coverage": "FOUNDRY_PROFILE=test forge coverage",
         "test:gasreport": "FOUNDRY_PROFILE=test forge test --gas-report",
@@ -36,10 +36,8 @@
     "devDependencies": {
         "@commitlint/cli": "^17.0.3",
         "@commitlint/config-conventional": "^17.0.3",
-        "babel-eslint": "^10.1.0",
         "husky": "^8.0.1",
         "prettier": "^2.7.1",
-        "prettier-plugin-solidity": "^1.0.0-beta.19",
-        "solhint-plugin-prettier": "^0.0.5"
+        "solhint": "^3.3.7"
     }
 }

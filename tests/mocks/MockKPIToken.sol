@@ -37,17 +37,20 @@ contract MockKPIToken is IKPIToken {
         }
     }
 
+    // solhint-disable-next-line no-empty-blocks
     function finalize(uint256 _result) external override {}
 
+    // solhint-disable-next-line no-empty-blocks
     function redeem(bytes memory _data) external override {}
 
-    function owner() external view override returns (address) {
+    function owner() external pure override returns (address) {
         return address(0);
     }
 
+    // solhint-disable-next-line no-empty-blocks
     function transferOwnership(address _newOwner) external override {}
 
-    function template() external view override returns (Template memory) {
+    function template() external pure override returns (Template memory) {
         return
             Template({
                 id: 1,
@@ -57,11 +60,11 @@ contract MockKPIToken is IKPIToken {
             });
     }
 
-    function description() external view override returns (string memory) {
+    function description() external pure override returns (string memory) {
         return "foo";
     }
 
-    function finalized() external view override returns (bool) {
+    function finalized() external pure override returns (bool) {
         return true;
     }
 
@@ -69,7 +72,7 @@ contract MockKPIToken is IKPIToken {
         return block.timestamp;
     }
 
-    function data() external view override returns (bytes memory) {
+    function data() external pure override returns (bytes memory) {
         return abi.encode();
     }
 
