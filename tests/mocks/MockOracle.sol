@@ -37,7 +37,7 @@ contract MockOracle is IOracle, Initializable {
         IKPIToken(kpiToken).finalize(0);
     }
 
-    function data() external view override returns (bytes memory) {
+    function data() external pure override returns (bytes memory) {
         return abi.encode("");
     }
 
