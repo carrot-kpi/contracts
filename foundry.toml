@@ -13,6 +13,7 @@ remappings = [
 optimizer = false
 optimizer_runs = 0
 via_ir = false
+gas_reports_ignore = ["MockOracle", "MockKPIToken"]
 
 [profile.optimizer_details]
 constantOptimizer = false

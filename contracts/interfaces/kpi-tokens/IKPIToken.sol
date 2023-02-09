@@ -27,7 +27,9 @@ interface IKPIToken {
 
     function finalized() external view returns (bool);
 
-    function expiration() external view returns (uint256);
+    function expiration() external view returns (uint64);
+
+    function creationTimestamp() external view returns (uint64);
 
     function data() external view returns (bytes memory);
 
