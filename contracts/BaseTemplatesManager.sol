@@ -47,12 +47,13 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
     event UpgradeTemplate(
         uint256 indexed id,
         address indexed newTemplate,
-        uint256 _newVersion,
+        uint256 newVersion,
         string newSpecification
     );
     event UpdateTemplateSpecification(
         uint256 indexed id,
-        string newSpecification
+        string newSpecification,
+        uint256 version
     );
 
     constructor(address _factory) {
@@ -118,8 +119,16 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
         string calldata _newSpecification
     ) external override onlyOwner {
         if (bytes(_newSpecification).length == 0) revert InvalidSpecification();
-        latestVersionStorageTemplate(_id).specification = _newSpecification;
-        emit UpdateTemplateSpecification(_id, _newSpecification);
+        Template
+            storage _latestVersionStorageTemplate = latestVersionStorageTemplate(
+                _id
+            );
+        _latestVersionStorageTemplate.specification = _newSpecification;
+        emit UpdateTemplateSpecification(
+            _id,
+            _newSpecification,
+            _latestVersionStorageTemplate.version
+        );
     }
 
     /// @dev Upgrades a template. This function can only be called by the contract owner (governance).
