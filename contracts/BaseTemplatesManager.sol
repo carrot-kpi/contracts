@@ -124,6 +124,8 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
                 _id
             );
         _latestVersionStorageTemplate.specification = _newSpecification;
+        templateByIdAndVersion[_id][_latestVersionStorageTemplate.version]
+            .specification = _newSpecification;
         emit UpdateTemplateSpecification(
             _id,
             _newSpecification,
