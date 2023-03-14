@@ -201,7 +201,7 @@ update:
 forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,uint256,string)' ./scripts/UpdateTemplateSpecification.sol $TEMPLATES_MANAGER $TEMPLATE_ID $NEW_SPECIFICATION
 ```
 
-### Upgrading a template specification
+### Upgrading a template
 
 In order to upgrade a template on a given network create a .env.<NETWORK_NAME>
 file exporting the following env variables:
