@@ -1,4 +1,4 @@
-pragma solidity 0.8.17;
+pragma solidity 0.8.19;
 
 import {IKPIToken} from "../../contracts/interfaces/kpi-tokens/IKPIToken.sol";
 import {Template} from "../../contracts/interfaces/IBaseTemplatesManager.sol";

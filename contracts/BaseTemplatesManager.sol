@@ -1,4 +1,4 @@
-pragma solidity 0.8.17;
+pragma solidity 0.8.19;
 
 import {Ownable} from "oz/access/Ownable.sol";
 import {Clones} from "oz/proxy/Clones.sol";
@@ -239,6 +239,13 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
     /// @return The templates amount.
     function templatesAmount() external view override returns (uint256) {
         return latestVersionTemplates.length;
+    }
+
+    /// @dev Gets the next template id, i.e. the id of the next template that will
+    /// be added to the manager.
+    /// @return The next template id.
+    function nextTemplateId() external view override returns (uint256) {
+        return templateId + 1;
     }
 
     /// @dev Gets a templates slice off of the latest version templates array based

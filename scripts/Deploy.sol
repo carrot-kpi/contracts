@@ -1,4 +1,4 @@
-pragma solidity 0.8.17;
+pragma solidity 0.8.19;
 
 import {OraclesManager1} from "../contracts/oracles-managers/OraclesManager1.sol";
 import {KPITokensManager1} from "../contracts/kpi-tokens-managers/KPITokensManager1.sol";

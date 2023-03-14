@@ -39,6 +39,8 @@ interface IBaseTemplatesManager {
 
     function templatesAmount() external view returns (uint256);
 
+    function nextTemplateId() external view returns (uint256);
+
     function enumerate(uint256 _fromIndex, uint256 _toIndex)
         external
         view
