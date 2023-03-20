@@ -1,9 +1,12 @@
 {
-    "rinkeby": {
-        "factory": "0xa4885bdfd6c118a022778902f8692f90af74c63e",
-        "kpiTokensManager": "0x1bbc7ce61cc66992acb2b1543b204523e7276fcc",
-        "oraclesManager": "0x1afbbc53d4735e3cfc5b8ca38d013593039e8327",
-        "erc20KpiTokensTemplate": "0x64a7ff8b1d52d0d69d196f01253ce0576370b4a5",
-        "manualRealityEthOracleTemplate": "0x2efa8782c1aa97ed453312f71ca66313ab831ece"
+    "100": {
+        "factory": "0x8F140C6473ab59adCe2a294EdE8d6aB485CfCb8c",
+        "kpiTokensManager": "0x613e4da8b515D11908b1024189564674CA376615",
+        "oraclesManager": "0x61FBb8D6Eb96482a89B6b3aE7af4c391f8A86cB3"
+    },
+    "11155111": {
+        "factory": "0x711524b033FBB213CA71e3d4e09b4792A2299FEF",
+        "kpiTokensManager": "0x6e787295f8FC487776DE28A4f8a7a21fBd341069",
+        "oraclesManager": "0xB65Bd5941e8bF11d7F0eF098BFd08CDD30841797"
     }
 }

@@ -1,52 +1,35 @@
 pragma solidity >=0.8.0;
 
-import {IKPITokensManager} from "../IKPITokensManager.sol";
+import {InitializeKPITokenParams} from "../../commons/Types.sol";
+import {IKPITokensManager1} from "../kpi-tokens-managers/IKPITokensManager1.sol";
+import {Template} from "../IBaseTemplatesManager.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI token interface
 /// @dev KPI token interface.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 interface IKPIToken {
-    struct InitializeArguments {
-        address creator;
-        address kpiTokensManager;
-        uint256 kpiTokenTemplateId;
-        string description;
-        bytes data;
-    }
-
-    function initialize(
-        address _creator,
-        address _kpiTokensManager,
-        uint256 _kpiTokenTemplateId,
-        string memory _description,
-        bytes memory _data
-    ) external;
-
-    function initializeOracles(address _oraclesManager, bytes memory _data)
-        external;
-
-    function collectProtocolFees(address _feeReceiver) external;
+    function initialize(InitializeKPITokenParams memory _params)
+        external
+        payable;
 
     function finalize(uint256 _result) external;
 
-    function redeem() external;
+    function redeem(bytes memory _data) external;
 
-    function creator() external view returns (address);
+    function owner() external view returns (address);
 
-    function template()
-        external
-        view
-        returns (IKPITokensManager.Template memory);
+    function transferOwnership(address _newOwner) external;
+
+    function template() external view returns (Template memory);
 
     function description() external view returns (string memory);
 
     function finalized() external view returns (bool);
 
-    function protocolFee(bytes memory _data)
-        external
-        view
-        returns (bytes memory);
+    function expiration() external view returns (uint256);
+
+    function creationTimestamp() external view returns (uint256);
 
     function data() external view returns (bytes memory);
 

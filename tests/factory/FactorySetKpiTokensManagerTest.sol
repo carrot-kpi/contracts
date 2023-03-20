@@ -1,4 +1,4 @@
-pragma solidity 0.8.14;
+pragma solidity 0.8.19;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 
@@ -8,13 +8,13 @@ import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract FactorySetKpiTokensManagerTest is BaseTestSetup {
     function testNonOwner() external {
-        CHEAT_CODES.prank(address(1));
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("Forbidden()"));
+        vm.prank(address(1));
+        vm.expectRevert("Ownable: caller is not the owner");
         factory.setKpiTokensManager(address(2));
     }
 
     function testZeroAddressManager() external {
-        CHEAT_CODES.expectRevert(
+        vm.expectRevert(
             abi.encodeWithSignature("ZeroAddressKpiTokensManager()")
         );
         factory.setKpiTokensManager(address(0));

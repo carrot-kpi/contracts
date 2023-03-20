@@ -1,4 +1,4 @@
-pragma solidity 0.8.14;
+pragma solidity 0.8.19;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 
@@ -8,15 +8,13 @@ import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract FactorySetFeeReceiverTest is BaseTestSetup {
     function testNonOwner() external {
-        CHEAT_CODES.prank(address(1));
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("Forbidden()"));
+        vm.prank(address(1));
+        vm.expectRevert("Ownable: caller is not the owner");
         factory.setFeeReceiver(address(2));
     }
 
     function testZeroAddressFeeReceiver() external {
-        CHEAT_CODES.expectRevert(
-            abi.encodeWithSignature("ZeroAddressFeeReceiver()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("ZeroAddressFeeReceiver()"));
         factory.setFeeReceiver(address(0));
     }
 

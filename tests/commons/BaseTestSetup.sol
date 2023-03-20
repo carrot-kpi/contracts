@@ -1,138 +1,69 @@
-pragma solidity 0.8.14;
+pragma solidity 0.8.19;
 
-import {DSTest} from "ds-test/test.sol";
-import {ERC20KPIToken} from "../../contracts/kpi-tokens/ERC20KPIToken.sol";
-import {KPITokensManager} from "../../contracts/KPITokensManager.sol";
-import {ManualRealityOracle} from "../../contracts/oracles/ManualRealityOracle.sol";
-import {OraclesManager} from "../../contracts/OraclesManager.sol";
+import {Test} from "forge-std/Test.sol";
+import {KPITokensManager1} from "../../contracts/kpi-tokens-managers/KPITokensManager1.sol";
+import {OraclesManager1} from "../../contracts/oracles-managers/OraclesManager1.sol";
 import {KPITokensFactory} from "../../contracts/KPITokensFactory.sol";
-import {CheatCodes} from "./CheatCodes.sol";
-import {ERC20PresetMinterPauser} from "oz/token/ERC20/presets/ERC20PresetMinterPauser.sol";
-import {IERC20KPIToken} from "../../contracts/interfaces/kpi-tokens/IERC20KPIToken.sol";
+import {MockKPIToken, OracleData} from "../mocks/MockKPIToken.sol";
+import {MockOracle} from "../mocks/MockOracle.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Base test setup
 /// @dev Test hook to set up a base test environment for each test.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
-abstract contract BaseTestSetup is DSTest {
-    CheatCodes internal immutable CHEAT_CODES =
-        CheatCodes(address(HEVM_ADDRESS));
+abstract contract BaseTestSetup is Test {
+    string internal constant MOCK_KPI_TOKEN_SPECIFICATION =
+        "fake-kpi-token-spec";
+    string internal constant MOCK_ORACLE_SPECIFICATION = "fake-oracle-spec";
 
-    string internal constant MANUAL_REALITY_ETH_SPECIFICATION =
-        "QmRvoExBSESXedwqfC1cs4DGaRymnRR1wA9YGoZbqsE8Mf";
-    string internal constant ERC20_KPI_TOKEN_SPECIFICATION =
-        "QmXU4G418hZLL8yxXdjkTFSoH2FdSe6ELgUuSm5fHHJMMN";
-
-    ERC20PresetMinterPauser internal firstErc20;
-    ERC20PresetMinterPauser internal secondErc20;
     address internal feeReceiver;
     KPITokensFactory internal factory;
-    ERC20KPIToken internal erc20KpiTokenTemplate;
-    KPITokensManager internal kpiTokensManager;
-    ManualRealityOracle internal manualRealityOracleTemplate;
-    OraclesManager internal oraclesManager;
+    MockKPIToken internal mockKpiTokenTemplate;
+    KPITokensManager1 internal kpiTokensManager;
+    MockOracle internal mockOracleTemplate;
+    OraclesManager1 internal oraclesManager;
 
     function setUp() external {
-        firstErc20 = new ERC20PresetMinterPauser("Token 1", "TKN1");
-        secondErc20 = new ERC20PresetMinterPauser("Token 2", "TKN2");
-
         feeReceiver = address(400);
         factory = new KPITokensFactory(address(1), address(1), feeReceiver);
 
-        erc20KpiTokenTemplate = new ERC20KPIToken();
-        kpiTokensManager = new KPITokensManager(address(factory));
+        mockKpiTokenTemplate = new MockKPIToken();
+        kpiTokensManager = new KPITokensManager1(address(factory));
         kpiTokensManager.addTemplate(
-            address(erc20KpiTokenTemplate),
-            ERC20_KPI_TOKEN_SPECIFICATION
+            address(mockKpiTokenTemplate),
+            "fake-kpi-token-spec"
         );
 
-        manualRealityOracleTemplate = new ManualRealityOracle();
-        oraclesManager = new OraclesManager(
-            address(factory) /* ,
-            address(0) */ // jolt jobs registry
-        );
+        mockOracleTemplate = new MockOracle();
+        oraclesManager = new OraclesManager1(address(factory));
         oraclesManager.addTemplate(
-            address(manualRealityOracleTemplate),
-            false,
-            MANUAL_REALITY_ETH_SPECIFICATION
+            address(mockOracleTemplate),
+            "fake-oracle-spec"
         );
 
         factory.setKpiTokensManager(address(kpiTokensManager));
         factory.setOraclesManager(address(oraclesManager));
     }
 
-    function createKpiToken(string memory _description, string memory _question)
+    function createKpiToken(string memory _description)
         internal
-        returns (ERC20KPIToken)
+        returns (MockKPIToken)
     {
-        IERC20KPIToken.Collateral[]
-            memory _collaterals = new IERC20KPIToken.Collateral[](1);
-        _collaterals[0] = IERC20KPIToken.Collateral({
-            token: address(firstErc20),
-            amount: 2,
-            minimumPayout: 1
+        OracleData[] memory _oracles = new OracleData[](1);
+        _oracles[0] = OracleData({
+            templateId: 1,
+            data: abi.encode(_description)
         });
-        bytes memory _erc20KpiTokenInitializationData = abi.encode(
-            _collaterals,
-            "Test",
-            "TST",
-            100 ether
-        );
 
-        address _reality = address(42);
-        CHEAT_CODES.mockCall(
-            _reality,
-            abi.encodeWithSignature(
-                "askQuestion(uint256,string,address,uint32,uint32,uint256)"
-            ),
-            abi.encode(bytes32("question id"))
-        );
-        bytes memory _manualRealityOracleInitializationData = abi.encode(
-            _reality,
-            address(this),
-            1,
-            _question,
-            60,
-            block.timestamp + 60
-        );
-        IERC20KPIToken.OracleData[]
-            memory _oracleDatas = new IERC20KPIToken.OracleData[](1);
-        _oracleDatas[0] = IERC20KPIToken.OracleData({
-            templateId: 0,
-            lowerBound: 0,
-            higherBound: 1,
-            weight: 1,
-            data: _manualRealityOracleInitializationData
-        });
-        bytes memory _oraclesInitializationData = abi.encode(
-            _oracleDatas,
-            false
-        );
-
-        firstErc20.mint(address(this), 2);
-        address _predictedKpiTokenAddress = kpiTokensManager
-            .predictInstanceAddress(
-                0,
-                _description,
-                _erc20KpiTokenInitializationData,
-                _oraclesInitializationData
-            );
-        firstErc20.approve(_predictedKpiTokenAddress, 2);
-
-        factory.createToken(
-            0,
-            _description,
-            _erc20KpiTokenInitializationData,
-            _oraclesInitializationData
-        );
-
-        uint256 kpiTokensAmount = factory.kpiTokensAmount();
         return
-            ERC20KPIToken(
-                factory.enumerate(
-                    kpiTokensAmount > 0 ? kpiTokensAmount - 1 : kpiTokensAmount,
-                    kpiTokensAmount > 0 ? kpiTokensAmount : 1
-                )[0]
+            MockKPIToken(
+                factory.createToken(
+                    1,
+                    _description,
+                    block.timestamp + 60,
+                    abi.encode(""),
+                    abi.encode(_oracles)
+                )
             );
     }
 }

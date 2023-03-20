@@ -1,16 +1,79 @@
-on: [push]
-name: test
+name: CI
+on:
+    push:
+        branches:
+            - develop
+            - main
+    pull_request:
+        types: [opened, synchronize, reopened]
 jobs:
-    check:
-        name: Foundry project
+    ci:
         runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-version: [16.x]
         steps:
-            - uses: actions/checkout@v3
+            - name: Checkout
+              uses: actions/checkout@v3
               with:
                   submodules: recursive
-            - name: Install Foundry
+            - name: Setup Node.js ${{matrix.node-version}}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{matrix.node-version}}
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v2
+              with:
+                  version: latest
+                  run_install: false
+            - name: Get pnpm store directory
+              id: pnpm-cache
+              shell: bash
+              run: |
+                  echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+            - uses: actions/cache@v3
+              name: Setup pnpm cache
+              with:
+                  path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+                  key:
+                      ${{ runner.os }}-pnpm-store-${{
+                      hashFiles('**/pnpm-lock.yaml') }}
+                  restore-keys: |
+                      ${{ runner.os }}-pnpm-store-
+            - name: Setup Foundry
               uses: foundry-rs/foundry-toolchain@v1
               with:
                   version: nightly
-            - name: Run tests
-              run: FOUNDRY_PROFILE=test forge test -vvv
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+            - name: Lint
+              run: pnpm lint
+            - name: Test
+              if:
+                  github.event_name != 'pull_request' && github.event_name !=
+                  'pull_request_target'
+              run: FOUNDRY_PROFILE=test forge test
+            - name: Test with gas report
+              if:
+                  github.event_name == 'pull_request' || github.event_name ==
+                  'pull_request_target'
+              run:
+                  FOUNDRY_PROFILE=test forge test --gas-report | tee
+                  gasreport.ansi
+            - name: Compare gas reports
+              if:
+                  github.event_name == 'pull_request' || github.event_name ==
+                  'pull_request_target'
+              id: gas_diff
+              uses: Rubilmax/foundry-gas-diff@v3.9
+              with:
+                  sortOrders: desc
+                  ignore: tests/**/*
+            - name: Add gas diff to sticky comment
+              if:
+                  github.event_name == 'pull_request' || github.event_name ==
+                  'pull_request_target'
+              uses: marocchino/sticky-pull-request-comment@v2
+              with:
+                  delete: ${{!steps.gas_diff.outputs.markdown}}
+                  message: ${{steps.gas_diff.outputs.markdown}}

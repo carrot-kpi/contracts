@@ -1,1 +1,1 @@
-yarn lint:commit-message
+npm run lint:commit-message

@@ -1,7 +1,7 @@
-pragma solidity 0.8.14;
+pragma solidity 0.8.19;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
-import {OraclesManager} from "../../contracts/OraclesManager.sol";
+import {OraclesManager1} from "../../contracts/oracles-managers/OraclesManager1.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Oracles manager instantiation test
@@ -9,17 +9,7 @@ import {OraclesManager} from "../../contracts/OraclesManager.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract OraclesManagerInstantiationTest is BaseTestSetup {
     function testZeroAddressFactory() external {
-        CHEAT_CODES.expectRevert(
-            abi.encodeWithSignature("ZeroAddressFactory()")
-        );
-        new OraclesManager(
-            address(0) /* , address(0) */
-        );
-    }
-
-    function testZeroAddressJobsRegistry() external {
-        new OraclesManager(
-            address(factory) /* , address(0) */
-        );
+        vm.expectRevert(abi.encodeWithSignature("ZeroAddressFactory()"));
+        oraclesManager = new OraclesManager1(address(0));
     }
 }

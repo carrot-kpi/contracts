@@ -1,11 +1,9 @@
-pragma solidity 0.8.14;
+pragma solidity 0.8.19;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 import {KPITokensFactory} from "../../contracts/KPITokensFactory.sol";
-import {ERC20KPIToken} from "../../contracts/kpi-tokens/ERC20KPIToken.sol";
-import {KPITokensManager} from "../../contracts/KPITokensManager.sol";
-import {ManualRealityOracle} from "../../contracts/oracles/ManualRealityOracle.sol";
-import {OraclesManager} from "../../contracts/OraclesManager.sol";
+import {KPITokensManager1} from "../../contracts/kpi-tokens-managers/KPITokensManager1.sol";
+import {OraclesManager1} from "../../contracts/oracles-managers/OraclesManager1.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Factory KPI tokens amount test
@@ -19,32 +17,21 @@ contract FactoryKpiTokensAmountTest is BaseTestSetup {
 
     function testOneTemplate() external {
         factory = new KPITokensFactory(address(1), address(1), address(this));
-        kpiTokensManager = new KPITokensManager(address(factory));
-        kpiTokensManager.addTemplate(
-            address(erc20KpiTokenTemplate),
-            ERC20_KPI_TOKEN_SPECIFICATION
-        );
+        kpiTokensManager = new KPITokensManager1(address(factory));
+        kpiTokensManager.addTemplate(address(mockKpiTokenTemplate), "fake");
 
-        manualRealityOracleTemplate = new ManualRealityOracle();
-        oraclesManager = new OraclesManager(
-            address(factory) /* ,
-            address(0) */ // jolt jobs registry
-        );
-        oraclesManager.addTemplate(
-            address(manualRealityOracleTemplate),
-            false,
-            MANUAL_REALITY_ETH_SPECIFICATION
-        );
+        oraclesManager = new OraclesManager1(address(factory));
+        oraclesManager.addTemplate(address(mockOracleTemplate), "fake");
 
         factory.setKpiTokensManager(address(kpiTokensManager));
         factory.setOraclesManager(address(oraclesManager));
-        createKpiToken("asd", "dsa");
+        createKpiToken("asd");
         assertEq(factory.kpiTokensAmount(), 1);
     }
 
     function testMultipleTemplates() external {
-        createKpiToken("a", "b");
-        createKpiToken("c", "d");
+        createKpiToken("a");
+        createKpiToken("c");
         assertEq(factory.kpiTokensAmount(), 2);
     }
 }

@@ -1,48 +1,64 @@
-pragma solidity 0.8.14;
+pragma solidity 0.8.19;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
-import {OraclesManager} from "../../contracts/OraclesManager.sol";
+import {OraclesManager1} from "../../contracts/oracles-managers/OraclesManager1.sol";
 import {Clones} from "oz/proxy/Clones.sol";
+import {OracleData} from "../mocks/MockKPIToken.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI tokens manager instantiation test
 /// @dev Tests template instantiation in KPI tokens manager.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract KpiTokensManagerInstantiateTest is BaseTestSetup {
-    function testFailNotFromCreatedKpiToken() external {
-        // FIXME: why does this fail if I uncomment stuff?
-        CHEAT_CODES.expectRevert(); /* abi.encodeWithSignature("Forbidden()") */
-        oraclesManager.instantiate(address(this), 0, bytes(""));
+    function testNotFromFactoryFail() external {
+        vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
+        kpiTokensManager.instantiate(
+            address(this),
+            1,
+            "a",
+            block.timestamp + 60,
+            abi.encode(""),
+            abi.encode("")
+        );
     }
 
-    function testSuccessManualRealityOracle() external {
-        bytes memory _initializationData = abi.encode(
-            address(2), // fake reality.eth address
-            address(this), // arbitrator
-            0, // template id
-            "a", // question
-            200, // question timeout
-            block.timestamp + 200 // expiry
-        );
-        address _predictedInstanceAddress = Clones.predictDeterministicAddress(
-            address(manualRealityOracleTemplate),
-            keccak256(abi.encodePacked(address(this), _initializationData)),
-            address(oraclesManager)
-        );
-        CHEAT_CODES.mockCall(
+    function testSuccessMock() external {
+        OracleData[] memory _oracles = new OracleData[](1);
+        _oracles[0] = OracleData({templateId: 1, data: abi.encode("")});
+
+        string memory _description = "a";
+
+        vm.prank(address(factory));
+        address _predictedInstanceAddress = kpiTokensManager
+            .predictInstanceAddress(
+                address(this),
+                1,
+                _description,
+                block.timestamp + 60,
+                abi.encode(""),
+                abi.encode(_oracles)
+            );
+
+        vm.mockCall(
             address(factory),
             abi.encodeWithSignature(
                 "allowOraclesCreation(address)",
-                address(this)
+                _predictedInstanceAddress
             ),
             abi.encode(true)
         );
-        address _instance = oraclesManager.instantiate(
+
+        vm.prank(address(factory));
+        (address _instance, ) = kpiTokensManager.instantiate(
             address(this),
-            0,
-            _initializationData
+            1,
+            _description,
+            block.timestamp + 60,
+            abi.encode(""),
+            abi.encode(_oracles)
         );
+
         assertEq(_instance, _predictedInstanceAddress);
-        CHEAT_CODES.clearMockedCalls();
+        vm.clearMockedCalls();
     }
 }

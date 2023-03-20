@@ -1,8 +1,9 @@
-pragma solidity 0.8.14;
+pragma solidity 0.8.19;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
-import {OraclesManager} from "../../contracts/OraclesManager.sol";
-import {IOraclesManager} from "../../contracts/interfaces/IOraclesManager.sol";
+import {OraclesManager1} from "../../contracts/oracles-managers/OraclesManager1.sol";
+import {IOraclesManager1} from "../../contracts/interfaces/oracles-managers/IOraclesManager1.sol";
+import {Template} from "../../contracts/interfaces/IBaseTemplatesManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
@@ -11,39 +12,30 @@ import {Clones} from "oz/proxy/Clones.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract OraclesManagerAddTemplateTest is BaseTestSetup {
     function testNonOwner() external {
-        CHEAT_CODES.prank(address(1));
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("Forbidden()"));
-        oraclesManager.addTemplate(address(2), false, "");
+        vm.prank(address(1));
+        vm.expectRevert("Ownable: caller is not the owner");
+        oraclesManager.addTemplate(address(2), "");
     }
 
     function testZeroAddressTemplate() external {
-        CHEAT_CODES.expectRevert(
-            abi.encodeWithSignature("ZeroAddressTemplate()")
-        );
-        oraclesManager.addTemplate(address(0), false, "");
+        vm.expectRevert(abi.encodeWithSignature("ZeroAddressTemplate()"));
+        oraclesManager.addTemplate(address(0), "");
     }
 
     function testEmptySpecification() external {
-        CHEAT_CODES.expectRevert(
-            abi.encodeWithSignature("InvalidSpecification()")
-        );
-        oraclesManager.addTemplate(address(1), false, "");
+        vm.expectRevert(abi.encodeWithSignature("InvalidSpecification()"));
+        oraclesManager.addTemplate(address(1), "");
     }
 
     function testSuccess() external {
         string memory _specification = "test";
         address _templateAddress = address(1);
-        oraclesManager.addTemplate(_templateAddress, false, _specification);
-        uint256 _addedTemplateId = oraclesManager.templatesAmount() - 1;
-        IOraclesManager.Template memory _template = oraclesManager.template(
-            _addedTemplateId
-        );
+        oraclesManager.addTemplate(_templateAddress, _specification);
+        uint256 _addedTemplateId = oraclesManager.templatesAmount();
+        Template memory _template = oraclesManager.template(_addedTemplateId);
         assertEq(_template.addrezz, _templateAddress);
-        assertEq(_template.version.major, 1);
-        assertEq(_template.version.minor, 0);
-        assertEq(_template.version.patch, 0);
+        assertEq(_template.version, 1);
         assertEq(_template.specification, _specification);
-        assertTrue(!_template.automatable);
-        assertTrue(_template.exists);
+        assertEq(_template.id, _addedTemplateId);
     }
 }

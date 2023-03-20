@@ -1,7 +1,7 @@
-pragma solidity 0.8.14;
+pragma solidity 0.8.19;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
-import {OraclesManager} from "../../contracts/OraclesManager.sol";
+import {OraclesManager1} from "../../contracts/oracles-managers/OraclesManager1.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
@@ -16,15 +16,17 @@ contract OraclesManagerPredictInstanceAddressTest is BaseTestSetup {
             uint256(3)
         );
         address _predicatedAddress = Clones.predictDeterministicAddress(
-            address(manualRealityOracleTemplate),
-            keccak256(abi.encodePacked(address(this), _initializationData)),
+            address(mockOracleTemplate),
+            keccak256(
+                abi.encodePacked(address(this), uint256(1), _initializationData)
+            ),
             address(oraclesManager)
         );
         assertEq(
             _predicatedAddress,
             oraclesManager.predictInstanceAddress(
                 address(this),
-                0,
+                1,
                 _initializationData
             )
         );

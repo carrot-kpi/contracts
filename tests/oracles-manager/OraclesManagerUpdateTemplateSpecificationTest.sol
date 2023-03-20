@@ -1,8 +1,9 @@
-pragma solidity 0.8.14;
+pragma solidity 0.8.19;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
-import {OraclesManager} from "../../contracts/OraclesManager.sol";
-import {IOraclesManager} from "../../contracts/interfaces/IOraclesManager.sol";
+import {OraclesManager1} from "../../contracts/oracles-managers/OraclesManager1.sol";
+import {IOraclesManager1} from "../../contracts/interfaces/oracles-managers/IOraclesManager1.sol";
+import {Template} from "../../contracts/interfaces/IBaseTemplatesManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
@@ -11,33 +12,27 @@ import {Clones} from "oz/proxy/Clones.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract OraclesManagerUpdateTemplateSpecificationTest is BaseTestSetup {
     function testNonOwner() external {
-        CHEAT_CODES.prank(address(1));
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("Forbidden()"));
+        vm.prank(address(1));
+        vm.expectRevert("Ownable: caller is not the owner");
         oraclesManager.updateTemplateSpecification(0, "");
     }
 
     function testNonExistentTemplate() external {
-        CHEAT_CODES.expectRevert(
-            abi.encodeWithSignature("NonExistentTemplate()")
-        );
-        oraclesManager.updateTemplateSpecification(1, "a");
+        vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
+        oraclesManager.updateTemplateSpecification(0, "a");
     }
 
     function testEmptySpecification() external {
-        CHEAT_CODES.expectRevert(
-            abi.encodeWithSignature("InvalidSpecification()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("InvalidSpecification()"));
         oraclesManager.updateTemplateSpecification(0, "");
     }
 
     function testSuccess() external {
         string memory _oldSpecification = "a";
-        oraclesManager.addTemplate(address(2), false, _oldSpecification);
-        uint256 _templateId = oraclesManager.templatesAmount() - 1;
-        IOraclesManager.Template memory _template = oraclesManager.template(
-            _templateId
-        );
-        assertTrue(_template.exists);
+        oraclesManager.addTemplate(address(2), _oldSpecification);
+        uint256 _templateId = oraclesManager.templatesAmount();
+        Template memory _template = oraclesManager.template(_templateId);
+        assertEq(_template.id, _templateId);
         assertEq(_template.specification, _oldSpecification);
         string memory _newSpecification = "b";
         oraclesManager.updateTemplateSpecification(
@@ -45,7 +40,7 @@ contract OraclesManagerUpdateTemplateSpecificationTest is BaseTestSetup {
             _newSpecification
         );
         _template = oraclesManager.template(_templateId);
-        assertTrue(_template.exists);
+        assertEq(_template.id, _templateId);
         assertEq(_template.specification, _newSpecification);
     }
 }

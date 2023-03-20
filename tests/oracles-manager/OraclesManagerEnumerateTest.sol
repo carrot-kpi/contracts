@@ -1,8 +1,8 @@
-pragma solidity 0.8.14;
+pragma solidity 0.8.19;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
-import {OraclesManager} from "../../contracts/OraclesManager.sol";
-import {IOraclesManager} from "../../contracts/interfaces/IOraclesManager.sol";
+import {OraclesManager1} from "../../contracts/oracles-managers/OraclesManager1.sol";
+import {IOraclesManager1} from "../../contracts/interfaces/oracles-managers/IOraclesManager1.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
@@ -11,10 +11,8 @@ import {Clones} from "oz/proxy/Clones.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract OraclesManagerEnumerateTest is BaseTestSetup {
     function testNoTemplates() external {
-        oraclesManager = new OraclesManager(
-            address(factory) /* , address(0) */
-        );
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
+        oraclesManager = new OraclesManager1(address(factory));
+        vm.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
         oraclesManager.enumerate(0, 1);
     }
 
@@ -23,25 +21,25 @@ contract OraclesManagerEnumerateTest is BaseTestSetup {
     }
 
     function testMultipleTemplatesSuccess() external {
-        oraclesManager.addTemplate(address(10), false, "a");
-        oraclesManager.addTemplate(address(11), false, "b");
-        oraclesManager.addTemplate(address(12), false, "c");
-        oraclesManager.addTemplate(address(12), false, "d");
-        oraclesManager.addTemplate(address(12), false, "e");
-        oraclesManager.addTemplate(address(12), false, "f");
-        oraclesManager.addTemplate(address(12), false, "g");
-        oraclesManager.addTemplate(address(12), false, "h");
-        oraclesManager.addTemplate(address(12), false, "i");
+        oraclesManager.addTemplate(address(10), "a");
+        oraclesManager.addTemplate(address(11), "b");
+        oraclesManager.addTemplate(address(12), "c");
+        oraclesManager.addTemplate(address(12), "d");
+        oraclesManager.addTemplate(address(12), "e");
+        oraclesManager.addTemplate(address(12), "f");
+        oraclesManager.addTemplate(address(12), "g");
+        oraclesManager.addTemplate(address(12), "h");
+        oraclesManager.addTemplate(address(12), "i");
         assertEq(oraclesManager.enumerate(0, 10).length, 10);
     }
 
     function testInconsistentIndices() external {
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
+        vm.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
         oraclesManager.enumerate(10, 5);
     }
 
     function testOneTemplateFail() external {
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
+        vm.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
         oraclesManager.enumerate(0, 10);
     }
 }

@@ -1,7 +1,7 @@
-pragma solidity 0.8.14;
+pragma solidity 0.8.19;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
-import {KPITokensManager} from "../../contracts/KPITokensManager.sol";
+import {KPITokensManager1} from "../../contracts/kpi-tokens-managers/KPITokensManager1.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
@@ -22,10 +22,13 @@ contract KpiTokensManagerPredictInstanceAddressTest is BaseTestSetup {
         );
         string memory _description = "a";
         address _predictedAddress = Clones.predictDeterministicAddress(
-            address(erc20KpiTokenTemplate),
+            address(mockKpiTokenTemplate),
             keccak256(
                 abi.encodePacked(
+                    address(this),
+                    uint256(1),
                     _description,
+                    block.timestamp + 60,
                     _initializationData,
                     _oraclesInitializationData
                 )
@@ -35,8 +38,10 @@ contract KpiTokensManagerPredictInstanceAddressTest is BaseTestSetup {
         assertEq(
             _predictedAddress,
             kpiTokensManager.predictInstanceAddress(
-                0,
+                address(this),
+                1,
                 _description,
+                block.timestamp + 60,
                 _initializationData,
                 _oraclesInitializationData
             )

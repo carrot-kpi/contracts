@@ -1,7 +1,7 @@
-pragma solidity 0.8.14;
+pragma solidity 0.8.19;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
-import {KPITokensManager} from "../../contracts/KPITokensManager.sol";
+import {KPITokensManager1} from "../../contracts/kpi-tokens-managers/KPITokensManager1.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI tokens manager instantiation test
@@ -9,9 +9,7 @@ import {KPITokensManager} from "../../contracts/KPITokensManager.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract KpiTokensManagerInstantiationTest is BaseTestSetup {
     function testZeroAddressFactory() external {
-        CHEAT_CODES.expectRevert(
-            abi.encodeWithSignature("ZeroAddressFactory()")
-        );
-        new KPITokensManager(address(0));
+        vm.expectRevert(abi.encodeWithSignature("ZeroAddressFactory()"));
+        new KPITokensManager1(address(0));
     }
 }

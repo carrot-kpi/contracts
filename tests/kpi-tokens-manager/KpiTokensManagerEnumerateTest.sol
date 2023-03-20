@@ -1,18 +1,19 @@
-pragma solidity 0.8.14;
+pragma solidity 0.8.19;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
-import {KPITokensManager} from "../../contracts/KPITokensManager.sol";
-import {IKPITokensManager} from "../../contracts/interfaces/IKPITokensManager.sol";
+import {KPITokensManager1} from "../../contracts/kpi-tokens-managers/KPITokensManager1.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
-/// @title KPI tokens manager enumerate templates test
-/// @dev Tests templates enumeration in KPI tokens manager.
+/// @title KPI tokens manager templates enumeration test
+/// @dev Tests template enumeration in KPI tokens manager.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract KpiTokensManagerEnumerateTest is BaseTestSetup {
     function testNoTemplates() external {
-        kpiTokensManager = new KPITokensManager(address(factory));
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
+        kpiTokensManager = new KPITokensManager1(
+            address(factory) /* , address(0) */
+        );
+        vm.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
         kpiTokensManager.enumerate(0, 1);
     }
 
@@ -34,12 +35,12 @@ contract KpiTokensManagerEnumerateTest is BaseTestSetup {
     }
 
     function testInconsistentIndices() external {
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
+        vm.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
         kpiTokensManager.enumerate(10, 5);
     }
 
     function testOneTemplateFail() external {
-        CHEAT_CODES.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
+        vm.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
         kpiTokensManager.enumerate(0, 10);
     }
 }

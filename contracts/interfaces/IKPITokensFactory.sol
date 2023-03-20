@@ -8,13 +8,22 @@ interface IKPITokensFactory {
     function createToken(
         uint256 _id,
         string memory _description,
+        uint256 _expiration,
         bytes memory _initializationData,
         bytes memory _oraclesInitializationData
-    ) external;
+    ) external payable returns (address);
 
     function allowOraclesCreation(address _address) external returns (bool);
 
+    function kpiTokensManager() external returns (address);
+
+    function oraclesManager() external returns (address);
+
+    function feeReceiver() external returns (address);
+
     function setKpiTokensManager(address _kpiTokensManager) external;
+
+    function setOraclesManager(address _oraclesManager) external;
 
     function setFeeReceiver(address _feeReceiver) external;
 
