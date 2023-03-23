@@ -15,7 +15,7 @@ interface IOracle {
 
     function template() external view returns (Template memory);
 
-    function finalized() external returns (bool);
+    function finalized() external view returns (bool);
 
     function data() external view returns (bytes memory);
 }
