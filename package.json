@@ -1,7 +1,7 @@
 {
     "name": "@carrot-kpi/contracts",
     "version": "0.1.0",
-    "description": "A smart contract solution to create scalar and boolean KPI tokens, by DXdao.",
+    "description": "A smart contract solution to create efficient KPI tokens.",
     "author": "Federico Luzzi <federico.luzzi@protonmail.com>",
     "license": "GPL-3.0-or-later",
     "publishConfig": {
