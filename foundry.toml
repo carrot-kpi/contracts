@@ -1,8 +1,4 @@
 [profile.default]
-src = 'src'
-out = 'out'
-test = 'tests'
-libs = ['lib']
 remappings = [
     'ds-test/=lib/ds-test/src/',
     'oz/=lib/openzeppelin-contracts/contracts/',
