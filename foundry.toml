@@ -10,5 +10,10 @@ remappings = [
     'forge-std/=lib/forge-std/src/',
     'tests/=tests/'
 ]
-optimizer_runs = 5000000
+optimizer = false
 gas_reports_ignore = ["MockOracle", "MockKPIToken"]
+
+[profile.production]
+optimizer = true
+via_ir = true
+optimizer_runs = 1000000

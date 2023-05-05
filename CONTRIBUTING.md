@@ -89,7 +89,7 @@ doing that, you can finally execute the following command to initiate the
 deployment:
 
 ```
-forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address)' ./scripts/Deploy.sol $FEE_RECEIVER
+FOUNDRY_PROFILE=production forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address)' ./scripts/Deploy.sol $FEE_RECEIVER
 ```
 
 Two alternative forms of the command can be used in order for the deployment to
@@ -97,8 +97,8 @@ be completed with either Trezor or Ledger hardware wallets (all the arguments
 remain the same as above):
 
 ```
-forge script --broadcast --slow --ledger --fork-url $RPC_ENDPOINT --sig 'run(address)' ./scripts/Deploy.sol $FEE_RECEIVER
-forge script --broadcast --slow --trezor --fork-url $RPC_ENDPOINT --sig 'run(address)' ./scripts/Deploy.sol $FEE_RECEIVER
+FOUNDRY_PROFILE=production forge script --broadcast --slow --ledger --fork-url $RPC_ENDPOINT --sig 'run(address)' ./scripts/Deploy.sol $FEE_RECEIVER
+FOUNDRY_PROFILE=production forge script --broadcast --slow --trezor --fork-url $RPC_ENDPOINT --sig 'run(address)' ./scripts/Deploy.sol $FEE_RECEIVER
 ```
 
 ### Adding a template
