@@ -8,5 +8,10 @@
         "factory": "0x711524b033FBB213CA71e3d4e09b4792A2299FEF",
         "kpiTokensManager": "0x6e787295f8FC487776DE28A4f8a7a21fBd341069",
         "oraclesManager": "0xB65Bd5941e8bF11d7F0eF098BFd08CDD30841797"
+    },
+    "421613": {
+        "factory": "0xB6044f769f519a634A5150645484b18d0C031ae8",
+        "kpiTokensManager": "0xe37AA274d1bb3815b63cd13064dE443423F74316",
+        "oraclesManager": "0xEc0B101CDC03ae65F78cF5477F2b9e0FaB9f2b28"
     }
 }
