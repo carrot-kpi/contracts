@@ -118,6 +118,7 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
         uint256 _id,
         string calldata _newSpecification
     ) external override onlyOwner {
+        // TODO: implement version update. If the version is the latest one, we need to also update the latestVersionTemplates array in addition to the templateByIdAndVersion one
         if (bytes(_newSpecification).length == 0) revert InvalidSpecification();
         Template
             storage _latestVersionStorageTemplate = latestVersionStorageTemplate(
