@@ -45,6 +45,31 @@ contract OraclesManagerUpdateTemplateSpecificationTest is BaseTestSetup {
         assertEq(_template.specification, _newSpecification);
     }
 
+    function testNonOwnerSpecificVersion() external {
+        vm.prank(address(1));
+        vm.expectRevert("Ownable: caller is not the owner");
+        oraclesManager.updateTemplateSpecification(0, 0, "");
+    }
+
+    function testNonExistentTemplateSpecificVersion() external {
+        vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
+        oraclesManager.updateTemplateSpecification(0, 0, "a");
+    }
+
+    function testNonExistentVersionSpecificVersion() external {
+        vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
+        oraclesManager.updateTemplateSpecification(
+            1,
+            200, // non existent version
+            "a"
+        );
+    }
+
+    function testEmptySpecificationSpecificVersion() external {
+        vm.expectRevert(abi.encodeWithSignature("InvalidSpecification()"));
+        oraclesManager.updateTemplateSpecification(0, 1, "");
+    }
+
     function testSuccessPastVersion() external {
         assertEq(oraclesManager.templatesAmount(), 1);
 

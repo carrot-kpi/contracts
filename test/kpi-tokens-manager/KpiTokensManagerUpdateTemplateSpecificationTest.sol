@@ -45,6 +45,34 @@ contract KpiTokensManagerUpdateTemplateSpecificationTest is BaseTestSetup {
         assertEq(_template.specification, _newSpecification);
     }
 
+    function testNonOwnerSpecificVersion() external {
+        vm.prank(address(1));
+        vm.expectRevert("Ownable: caller is not the owner");
+        kpiTokensManager.updateTemplateSpecification(0, 0, "");
+    }
+
+    function testNonExistentTemplateSpecificVersion() external {
+        vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
+        kpiTokensManager.updateTemplateSpecification(0, 0, "a");
+    }
+
+    function testNonExistentVersionSpecificVersion() external {
+        emit log_uint(kpiTokensManager.templatesAmount());
+        emit log_address(kpiTokensManager.template(1).addrezz);
+
+        vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
+        kpiTokensManager.updateTemplateSpecification(
+            1,
+            200, // non existent version
+            "a"
+        );
+    }
+
+    function testEmptySpecificationSpecificVersion() external {
+        vm.expectRevert(abi.encodeWithSignature("InvalidSpecification()"));
+        kpiTokensManager.updateTemplateSpecification(0, 1, "");
+    }
+
     function testSuccessPastVersion() external {
         assertEq(kpiTokensManager.templatesAmount(), 1);
 

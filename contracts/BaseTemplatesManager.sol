@@ -155,9 +155,14 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
             storage _latestVersionStorageTemplate = latestVersionStorageTemplate(
                 _id
             );
+        Template storage _templateByIdAndVersion = templateByIdAndVersion[_id][
+            _version
+        ];
+        if (_templateByIdAndVersion.addrezz == address(0))
+            revert NonExistentTemplate();
         if (_version == _latestVersionStorageTemplate.version)
             _latestVersionStorageTemplate.specification = _newSpecification;
-        templateByIdAndVersion[_id][_version].specification = _newSpecification;
+        _templateByIdAndVersion.specification = _newSpecification;
     }
 
     /// @dev Upgrades a template. This function can only be called by the contract owner (governance).
