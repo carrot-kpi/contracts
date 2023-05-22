@@ -169,8 +169,9 @@ forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPO
 
 ### Updating a current template specification
 
-In order to update a current template specification (i.e. the specification of a given template at its latest version, or the currently active one) on a given network create a
-.env.<NETWORK_NAME> file exporting the following env variables:
+In order to update a current template specification (i.e. the specification of a
+given template at its latest version, or the currently active one) on a given
+network create a .env.<NETWORK_NAME> file exporting the following env variables:
 
 ```
 export PRIVATE_KEY=""
@@ -203,8 +204,8 @@ forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPO
 
 ### Updating a past template version's specification
 
-In order to update a specification for a past version of a template on a given network create a
-.env.<NETWORK_NAME> file exporting the following env variables:
+In order to update a specification for a past version of a template on a given
+network create a .env.<NETWORK_NAME> file exporting the following env variables:
 
 ```
 export PRIVATE_KEY=""
