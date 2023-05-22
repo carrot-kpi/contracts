@@ -141,8 +141,8 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
     }
 
     /// @dev Internal implementation of the specification update function. It checks if the
-    /// updated version is the latest one, and in case it is it updates the `templateIdToLatestVersionIndex`
-    /// in addition to the `templateByIdAndVersion` one.
+    /// updated version is the latest one, and in case it is it updates the `latestVersionTemplates`
+    /// array in addition to the `templateByIdAndVersion` one.
     /// @param _id The template's id.
     /// @param _version The version of the template we want to update.
     /// @param _newSpecification the updated specification for the template with id `_id`.
