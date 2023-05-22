@@ -109,8 +109,8 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
         emit RemoveTemplate(_id);
     }
 
-    /// @dev Updates a template specification. The specification is a cid
-    /// pointing to a structured JSON file containing data about the template.
+    /// @dev Updates a template's latest version's specification. The specification
+    /// is a cid pointing to a structured JSON file containing data about the template.
     /// This function can only be called by the contract owner (governance).
     /// @param _id The template's id.
     /// @param _newSpecification the updated specification for the template with id `_id`.
@@ -118,20 +118,51 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
         uint256 _id,
         string calldata _newSpecification
     ) external override onlyOwner {
-        // TODO: implement version update. If the version is the latest one, we need to also update the latestVersionTemplates array in addition to the templateByIdAndVersion one
         if (bytes(_newSpecification).length == 0) revert InvalidSpecification();
+        uint128 _version = latestVersionStorageTemplate(_id).version;
+        _updateTemplateSpecification(_id, _version, _newSpecification);
+        emit UpdateTemplateSpecification(_id, _newSpecification, _version);
+    }
+
+    /// @dev Updates a template specification. The specification is a cid
+    /// pointing to a structured JSON file containing data about the template.
+    /// This function can only be called by the contract owner (governance).
+    /// @param _id The template's id.
+    /// @param _version The version of the template we want to update.
+    /// @param _newSpecification the updated specification for the template with id `_id`.
+    function updateTemplateSpecification(
+        uint256 _id,
+        uint128 _version,
+        string calldata _newSpecification
+    ) external override onlyOwner {
+        if (bytes(_newSpecification).length == 0) revert InvalidSpecification();
+        _updateTemplateSpecification(_id, _version, _newSpecification);
+        emit UpdateTemplateSpecification(_id, _newSpecification, _version);
+    }
+
+    /// @dev Internal implementation of the specification update function. It checks if the
+    /// updated version is the latest one, and in case it is it updates the `latestVersionTemplates`
+    /// array in addition to the `templateByIdAndVersion` one.
+    /// @param _id The template's id.
+    /// @param _version The version of the template we want to update.
+    /// @param _newSpecification the updated specification for the template with id `_id`.
+    function _updateTemplateSpecification(
+        uint256 _id,
+        uint128 _version,
+        string calldata _newSpecification
+    ) internal {
         Template
             storage _latestVersionStorageTemplate = latestVersionStorageTemplate(
                 _id
             );
-        _latestVersionStorageTemplate.specification = _newSpecification;
-        templateByIdAndVersion[_id][_latestVersionStorageTemplate.version]
-            .specification = _newSpecification;
-        emit UpdateTemplateSpecification(
-            _id,
-            _newSpecification,
-            _latestVersionStorageTemplate.version
-        );
+        Template storage _templateByIdAndVersion = templateByIdAndVersion[_id][
+            _version
+        ];
+        if (_templateByIdAndVersion.addrezz == address(0))
+            revert NonExistentTemplate();
+        if (_version == _latestVersionStorageTemplate.version)
+            _latestVersionStorageTemplate.specification = _newSpecification;
+        _templateByIdAndVersion.specification = _newSpecification;
     }
 
     /// @dev Upgrades a template. This function can only be called by the contract owner (governance).

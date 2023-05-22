@@ -28,6 +28,12 @@ interface IBaseTemplatesManager {
         string calldata _newSpecification
     ) external;
 
+    function updateTemplateSpecification(
+        uint256 _id,
+        uint128 _version,
+        string calldata _newSpecification
+    ) external;
+
     function template(uint256 _id) external view returns (Template memory);
 
     function template(uint256 _id, uint128 _version)
