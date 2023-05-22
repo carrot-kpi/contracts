@@ -167,9 +167,9 @@ deployment:
 forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,uint256)' ./scripts/RemoveTemplate.sol $TEMPLATES_MANAGER $REMOVED_TEMPLATE_ID
 ```
 
-### Updating a template specification
+### Updating a current template specification
 
-In order to update a template specification on a given network create a
+In order to update a current template specification (i.e. the specification of a given template at its latest version, or the currently active one) on a given network create a
 .env.<NETWORK_NAME> file exporting the following env variables:
 
 ```
@@ -199,6 +199,42 @@ update:
 
 ```
 forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,uint256,string)' ./scripts/UpdateTemplateSpecification.sol $TEMPLATES_MANAGER $TEMPLATE_ID $NEW_SPECIFICATION
+```
+
+### Updating a past template version's specification
+
+In order to update a specification for a past version of a template on a given network create a
+.env.<NETWORK_NAME> file exporting the following env variables:
+
+```
+export PRIVATE_KEY=""
+export RPC_ENDPOINT=""
+export TEMPLATES_MANAGER=""
+export TEMPLATE_ID=""
+export TEMPLATE_VERSION=""
+export NEW_SPECIFICATION=""
+```
+
+brief explainer of the env variables:
+
+- `PRIVATE_KEY`: the private key related to the account that will perform the
+  addition (must be the owner of the templates manager).
+- `RPC_ENDPOINT`: the RPC endpoint that will be used to broadcast transactions.
+  This will also determine the network where the deployment will happen.
+- `TEMPLATES_MANAGER`: the address of the templates manager on the target
+  network.
+- `TEMPLATE_ID`: the id of the template to be updated.
+- `TEMPLATE_VERSION`: the version of the template to be updated.
+- `NEW_SPECIFICATION`: cid of the new template specification.
+
+Once you have one instance of this file for each network you're interested in
+(e.g. .`env.goerli`, `.env.gnosis`, `env.mainnet` etc etc), you can go ahead and
+locally load the env variables by executing `source .env.<NETWORK_NAME>`. After
+doing that, you can finally execute the following command to initiate the
+update:
+
+```
+forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,uint256,string)' ./scripts/UpdateTemplateSpecificationAtVersion.sol $TEMPLATES_MANAGER $TEMPLATE_ID $TEMPLATE_VERSION $NEW_SPECIFICATION
 ```
 
 ### Upgrading a template
