@@ -89,7 +89,7 @@ doing that, you can finally execute the following command to initiate the
 deployment:
 
 ```
-FOUNDRY_PROFILE=production forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address)' ./script/Deploy.sol $FEE_RECEIVER
+FOUNDRY_PROFILE=production forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address)' Deploy $FEE_RECEIVER
 ```
 
 Two alternative forms of the command can be used in order for the deployment to
@@ -97,8 +97,8 @@ be completed with either Trezor or Ledger hardware wallets (all the arguments
 remain the same as above):
 
 ```
-FOUNDRY_PROFILE=production forge script --broadcast --slow --ledger --fork-url $RPC_ENDPOINT --sig 'run(address)' ./script/Deploy.sol $FEE_RECEIVER
-FOUNDRY_PROFILE=production forge script --broadcast --slow --trezor --fork-url $RPC_ENDPOINT --sig 'run(address)' ./script/Deploy.sol $FEE_RECEIVER
+FOUNDRY_PROFILE=production forge script --broadcast --slow --ledger --fork-url $RPC_ENDPOINT --sig 'run(address)' Deploy $FEE_RECEIVER
+FOUNDRY_PROFILE=production forge script --broadcast --slow --trezor --fork-url $RPC_ENDPOINT --sig 'run(address)' Deploy $FEE_RECEIVER
 ```
 
 ### Adding a template
@@ -132,7 +132,7 @@ doing that, you can finally execute the following command to initiate the
 deployment:
 
 ```
-forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,address,string)' ./scripts/AddTemplate.sol $TEMPLATES_MANAGER $TEMPLATE $SPECIFICATION
+forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,address,string)' AddTemplate $TEMPLATES_MANAGER $TEMPLATE $SPECIFICATION
 ```
 
 ### Removing a template
@@ -164,7 +164,7 @@ doing that, you can finally execute the following command to initiate the
 deployment:
 
 ```
-forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,uint256)' ./scripts/RemoveTemplate.sol $TEMPLATES_MANAGER $REMOVED_TEMPLATE_ID
+forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,uint256)' RemoveTemplate $TEMPLATES_MANAGER $REMOVED_TEMPLATE_ID
 ```
 
 ### Updating a current template specification
@@ -199,7 +199,7 @@ doing that, you can finally execute the following command to initiate the
 update:
 
 ```
-forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,uint256,string)' ./scripts/UpdateTemplateSpecification.sol $TEMPLATES_MANAGER $TEMPLATE_ID $NEW_SPECIFICATION
+forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,uint256,string)' UpdateTemplateSpecification $TEMPLATES_MANAGER $TEMPLATE_ID $NEW_SPECIFICATION
 ```
 
 ### Updating a past template version's specification
@@ -235,7 +235,7 @@ doing that, you can finally execute the following command to initiate the
 update:
 
 ```
-forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,uint256,string)' ./scripts/UpdateTemplateSpecificationAtVersion.sol $TEMPLATES_MANAGER $TEMPLATE_ID $TEMPLATE_VERSION $NEW_SPECIFICATION
+forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,uint256,string)' UpdateTemplateSpecificationAtVersion $TEMPLATES_MANAGER $TEMPLATE_ID $TEMPLATE_VERSION $NEW_SPECIFICATION
 ```
 
 ### Upgrading a template
@@ -272,7 +272,7 @@ doing that, you can finally execute the following command to initiate the
 upgrade:
 
 ```
-forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,uint256,address,string)' ./scripts/UpgradeTemplateSpecification.sol $TEMPLATES_MANAGER $UPGRADED_TEMPLATE_ID $UPGRADED_TEMPLATE_ADDRESS $UPGRADED_TEMPLATE_SPECIFICATION
+forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,uint256,address,string)' UpgradeTemplateSpecification $TEMPLATES_MANAGER $UPGRADED_TEMPLATE_ID $UPGRADED_TEMPLATE_ADDRESS $UPGRADED_TEMPLATE_SPECIFICATION
 ```
 
 ### Addresses
