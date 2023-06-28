@@ -235,7 +235,7 @@ doing that, you can finally execute the following command to initiate the
 update:
 
 ```
-forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,uint256,string)' UpdateTemplateSpecificationAtVersion $TEMPLATES_MANAGER $TEMPLATE_ID $TEMPLATE_VERSION $NEW_SPECIFICATION
+forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,uint256,uint128,string)' UpdateTemplateSpecificationAtVersion $TEMPLATES_MANAGER $TEMPLATE_ID $TEMPLATE_VERSION $NEW_SPECIFICATION
 ```
 
 ### Upgrading a template
@@ -272,7 +272,7 @@ doing that, you can finally execute the following command to initiate the
 upgrade:
 
 ```
-forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,uint256,address,string)' UpgradeTemplateSpecification $TEMPLATES_MANAGER $UPGRADED_TEMPLATE_ID $UPGRADED_TEMPLATE_ADDRESS $UPGRADED_TEMPLATE_SPECIFICATION
+forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,uint256,address,string)' UpgradeTemplate $TEMPLATES_MANAGER $UPGRADED_TEMPLATE_ID $UPGRADED_TEMPLATE_ADDRESS $UPGRADED_TEMPLATE_SPECIFICATION
 ```
 
 ### Addresses

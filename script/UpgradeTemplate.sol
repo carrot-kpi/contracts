@@ -4,10 +4,10 @@ import {IBaseTemplatesManager} from "../contracts/interfaces/IBaseTemplatesManag
 import {Script} from "forge-std/Script.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
-/// @title Upgrade template specification.
-/// @dev Upgrades a template specification on a target network.
+/// @title Upgrade template.
+/// @dev Upgrades a template on a target network.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
-contract UpgradeTemplateSpecification is Script {
+contract UpgradeTemplate is Script {
     error ZeroAddress();
     error ZeroId();
     error InvalidSpecification();
