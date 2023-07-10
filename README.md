@@ -35,9 +35,8 @@ is achieved by allowing to create KPI token and oracle templates "on the go"
 the Carrot platform and implementing both a frontend and a backend (the backend
 generally consists of one or more smart contracts).
 
-Anyone can potentially code the functionality they want/need in Carrot and
-use it freely, putting almost no limits on creativity for incentivization
-campaigns.
+Anyone can potentially code the functionality they want/need in Carrot and use
+it freely, putting almost no limits on creativity for incentivization campaigns.
 
 This is mainly achieved using 2 contracts: `KPITokensManager` and
 `OraclesManager`. These contracts act as a registry for both KPI token and
@@ -52,10 +51,9 @@ entities in the platform. In particular, addition, removal, upgrade and update
 can only be performed by the manager contract's owner (governance), while
 template instantiation can only be initiated by the `KPITokensFactory`.
 
-Carrot comes out of the box with powerful KPI token and oracle templates,
-with the goal of encouraging the community to come up with additional use cases
-that can also lead to entirely custom-made products based on Carrot's
-platform.
+Carrot comes out of the box with powerful KPI token and oracle templates, with
+the goal of encouraging the community to come up with additional use cases that
+can also lead to entirely custom-made products based on Carrot's platform.
 
 ## KPITokensFactory
 
