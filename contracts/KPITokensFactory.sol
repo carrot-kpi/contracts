@@ -9,11 +9,8 @@ import {InitializeKPITokenParams} from "./commons/Types.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI tokens factory
 /// @dev The factory contract acts as an entry point for users wanting to
-/// create a KPI token., passing as input the id of the template that is
-/// to be used, alongside the description's IPFS cid (pointing to a
-/// structured JSON describing what the KPI token is about) and the oracles
-/// initialization data (template-specific). Other utility view functions
-/// are included to query the storage of the contract.
+/// create a KPI token. Other utility view functions are included to query
+/// the storage of the contract.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract KPITokensFactory is Ownable, IKPITokensFactory {
     address public kpiTokensManager;
@@ -49,12 +46,12 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
 
     /// @dev Creates a KPI token with the input data.
     /// @param _id The id of the KPI token template to be used.
-    /// @param _description An IPFS cid pointing to a structured JSON describing what the KPI token is about.
+    /// @param _description An IPFS cid pointing to a file describing what the KPI token is about.
     /// @param _expiration A timestamp indicating the KPI token's expiration (avoids locked funds in case
-    /// something happens to an oracle).
+    /// something happens to an oracle and it becomes unresponsive).
     /// @param _initializationData The template-specific ABI-encoded initialization data.
-    /// @param _oraclesInitializationData The initialization data required by the template to initialize
-    /// the linked oracles.
+    /// @param _oraclesInitializationData The initialization data required by the KPI token template
+    /// to initialize its linked oracle(s).
     function createToken(
         uint256 _id,
         string calldata _description,

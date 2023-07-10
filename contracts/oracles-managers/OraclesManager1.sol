@@ -9,7 +9,7 @@ import {IOraclesManager1} from "../interfaces/oracles-managers/IOraclesManager1.
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Oracles manager
-/// @dev The templates manager contract acts as a template
+/// @dev The oracles manager contract acts as a template
 /// registry for oracle implementations. Additionally,
 /// templates can also only be instantiated by the manager itself,
 /// exclusively by request of a KPI token being created. All
@@ -21,9 +21,9 @@ contract OraclesManager1 is BaseTemplatesManager, IOraclesManager1 {
     constructor(address _factory) BaseTemplatesManager(_factory) {}
 
     /// @dev Calculates the salt value used in CREATE2 when
-    /// instantiating new templates. the salt is calculated as
-    /// keccak256(abi.encodePacked(`_creator`, `_initializationData`)).
+    /// instantiating new templates.
     /// @param _creator The KPI token creator.
+    /// @param _templateId The oracle temmplate id being used.
     /// @param _initializationData The template-specific ABI-encoded initialization data.
     /// @return The salt value.
     function salt(
@@ -56,10 +56,7 @@ contract OraclesManager1 is BaseTemplatesManager, IOraclesManager1 {
             );
     }
 
-    /// @dev Instantiates a given oracle template using EIP 1167 minimal proxies.
-    /// The input data will both be used to choose the instantiated template
-    /// and to feed it initialization data. This function checks that the
-    /// factory allows the oracle instantiation.
+    /// @dev Instantiates a given oracle template using ERC 1167 minimal proxies.
     /// @param _creator The KPI token creator.
     /// @param _id The id of the template that is to be instantiated.
     /// @param _initializationData The template-specific ABI-encoded initialization data.

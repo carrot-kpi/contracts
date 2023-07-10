@@ -8,13 +8,10 @@ import {IBaseTemplatesManager, Template} from "./interfaces/IBaseTemplatesManage
 import {IKPITokensFactory} from "./interfaces/IKPITokensFactory.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
-/// @title Templates manager
-/// @dev The templates manager contract acts as a template
-/// registry for oracles/kpi token implementations. Additionally,
-/// templates can also only be instantiated by the manager itself,
-/// (exclusively by request of either the factory, in case of KPI
-/// tokens, or a KPI token being created in case of oracles). All
-/// template-related functions are governance-gated
+/// @title Base templates manager
+/// @dev The base templates manager contract acts as a base registry
+/// contract from which both oracles and KPI token manager contracts
+/// extend. All template-related functions are governance-gated
 /// (addition, removal, upgrade of templates and more) and the
 /// governance contract must be the owner of the templates manager.
 /// The contract will keep track of all the versions of every template
@@ -64,8 +61,7 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
     /// @dev Adds a template to the registry. This function can only be called
     /// by the contract owner (governance).
     /// @param _template The template's address.
-    /// @param _specification An IPFS cid pointing to a structured JSON
-    /// describing the template.
+    /// @param _specification An IPFS cid pointing to the template's specification.
     function addTemplate(address _template, string calldata _specification)
         external
         override
@@ -110,7 +106,7 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
     }
 
     /// @dev Updates a template's latest version's specification. The specification
-    /// is a cid pointing to a structured JSON file containing data about the template.
+    /// is a cid pointing to a file containing data about the template.
     /// This function can only be called by the contract owner (governance).
     /// @param _id The template's id.
     /// @param _newSpecification the updated specification for the template with id `_id`.
@@ -124,9 +120,10 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
         emit UpdateTemplateSpecification(_id, _newSpecification, _version);
     }
 
-    /// @dev Updates a template specification. The specification is a cid
-    /// pointing to a structured JSON file containing data about the template.
-    /// This function can only be called by the contract owner (governance).
+    /// @dev Updates the specification of a template at a specific version.
+    /// The specification is a cid pointing to a file containing data about
+    /// the template. This function can only be called by the contract's
+    /// owner (governance).
     /// @param _id The template's id.
     /// @param _version The version of the template we want to update.
     /// @param _newSpecification the updated specification for the template with id `_id`.
@@ -203,10 +200,10 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
         );
     }
 
-    /// @dev Gets a template from storage, in its latest, most up
+    /// @dev Gets a storage pointer to the template, in its latest, most up
     /// to date version.
     /// @param _id The id of the template that needs to be fetched.
-    /// @return The template from storage with id `_id` in its most
+    /// @return A storage pointer to the template with id `_id` in its most
     /// up to date version.
     function latestVersionStorageTemplate(uint256 _id)
         internal
@@ -266,8 +263,8 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
         return latestVersionTemplates[_index - 1].id == _id;
     }
 
-    /// @dev Gets the amount of all registered templates (works on the latest
-    // versions template array and doesn't take into account deleted templates).
+    /// @dev Gets the amount of all registered templates. It works on the latest
+    /// versions template array and accounts for deleted templates (they won't be counted).
     /// @return The templates amount.
     function templatesAmount() external view override returns (uint256) {
         return latestVersionTemplates.length;

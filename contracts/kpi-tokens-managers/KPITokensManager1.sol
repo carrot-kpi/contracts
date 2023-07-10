@@ -9,11 +9,11 @@ import {IKPITokensManager1} from "../interfaces/kpi-tokens-managers/IKPITokensMa
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI tokens manager
-/// @dev The KPI token manager contract acts as a template
+/// @dev The KPI tokens manager contract acts as a template
 /// registry for KPI token implementations. Additionally, templates
 /// can also only be instantiated by the manager itself,
 /// exclusively by request of the factory contract. All
-/// templates-related functions are governance-gated
+/// template-related functions are governance-gated
 /// (addition, removal, upgrade of templates and more) and the
 /// governance contract must be the owner of the KPI tokens manager.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
@@ -21,9 +21,11 @@ contract KPITokensManager1 is BaseTemplatesManager, IKPITokensManager1 {
     constructor(address _factory) BaseTemplatesManager(_factory) {}
 
     /// @dev Calculates the salt value used in CREATE2 when
-    /// instantiating new templates. the salt is calculated as
-    /// keccak256(abi.encodePacked(`_description`, `_initializationData`, `_oraclesInitializationData`)).
-    /// @param _description An IPFS cid pointing to a structured JSON describing what the KPI token is about.
+    /// instantiating new templates.
+    /// @param _creator The KPI token creator address.
+    /// @param _id The KPI token template id being used.
+    /// @param _description An IPFS cid pointing to a file describing what the KPI token is about.
+    /// @param _expiration A timestamp indicating when the KPI token will expire.
     /// @param _initializationData The template-specific ABI-encoded initialization data.
     /// @param _oraclesInitializationData The initialization data required by the template to initialize
     /// the linked oracles.
@@ -50,13 +52,15 @@ contract KPITokensManager1 is BaseTemplatesManager, IKPITokensManager1 {
     }
 
     /// @dev Predicts a KPI token template instance address based on the input data.
+    /// @param _creator The KPI token creator address.
     /// @param _id The id of the template that is to be instantiated.
-    /// @param _description An IPFS cid pointing to a structured JSON describing what the KPI token is about.
+    /// @param _description An IPFS cid pointing to a file describing what the KPI token is about.
+    /// @param _expiration A timestamp indicating when the KPI token will expire.
     /// @param _initializationData The template-specific ABI-encoded initialization data.
     /// @param _oraclesInitializationData The initialization data required by the template to initialize
     /// the linked oracles.
     /// @return The address at which the template with the given input
-    /// parameters will be instantiated.
+    /// parameters will be deployed.
     function predictInstanceAddress(
         address _creator,
         uint256 _id,
@@ -79,11 +83,11 @@ contract KPITokensManager1 is BaseTemplatesManager, IKPITokensManager1 {
             );
     }
 
-    /// @dev Instantiates a given template using EIP 1167 minimal proxies.
-    /// The input data will both be used to choose the instantiated template
-    /// and to feed it initialization data.
+    /// @dev Instantiates a given template using ERC 1167 minimal proxies.
+    /// @param _creator The KPI token creator address.
     /// @param _templateId The id of the template that is to be instantiated.
-    /// @param _description An IPFS cid pointing to a structured JSON describing what the KPI token is about.
+    /// @param _description An IPFS cid pointing to a file describing what the KPI token is about.
+    /// @param _expiration A timestamp indicating when the KPI token will expire.
     /// @param _initializationData The template-specific ABI-encoded initialization data.
     /// @param _oraclesInitializationData The initialization data required by the template to initialize
     /// the linked oracles.
