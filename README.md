@@ -15,10 +15,10 @@
 
 <p align="center">
     <img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3">
-    <img src="https://github.com/carrot-kpi/v1-monorepo/actions/workflows/ci.yml/badge.svg" alt="CI">
+    <img src="https://github.com/carrot-kpi/contracts/actions/workflows/ci.yml/badge.svg" alt="CI">
 </p>
 
-# Carrot v1 contracts
+# Carrot contracts
 
 The smart contracts powering Carrot's efficient incentivization. Both the
 contracts and the tests are written in Solidity using Foundry.
@@ -35,7 +35,7 @@ is achieved by allowing to create KPI token and oracle templates "on the go"
 the Carrot platform and implementing both a frontend and a backend (the backend
 generally consists of one or more smart contracts).
 
-Anyone can potentially code the functionality they want/need in Carrot v1 and
+Anyone can potentially code the functionality they want/need in Carrot and
 use it freely, putting almost no limits on creativity for incentivization
 campaigns.
 
@@ -52,9 +52,9 @@ entities in the platform. In particular, addition, removal, upgrade and update
 can only be performed by the manager contract's owner (governance), while
 template instantiation can only be initiated by the `KPITokensFactory`.
 
-Carrot v1 comes out of the box with powerful KPI token and oracle templates,
+Carrot comes out of the box with powerful KPI token and oracle templates,
 with the goal of encouraging the community to come up with additional use cases
-that can also lead to entirely custom-made products based on Carrot v1's
+that can also lead to entirely custom-made products based on Carrot's
 platform.
 
 ## KPITokensFactory
