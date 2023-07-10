@@ -1,9 +1,9 @@
 # Contributing
 
-Carrot v1 contracts are developed using Foundry, so in order to contribute you
-need to first install Foundry locally. Check out
-[this link](https://getfoundry.sh/) to easily install Foundry on your machine.
-Make sure you periodically update Foundry to the latest version.
+Carrot contracts are developed using Foundry, so in order to contribute you need
+to first install Foundry locally. Check out [this link](https://getfoundry.sh/)
+to easily install Foundry on your machine. Make sure you periodically update
+Foundry to the latest version.
 
 Foundry manages dependencies using git submodules, so it's advised to use
 `git clone --recurse-submodules` when cloning the repo in order to have a
@@ -23,9 +23,9 @@ fine-tune the development process. Here we use 2 profiles:
   raw speed. As the name suggests, this is used to run all the available tests
   in a quick way, and without useless optimization.
 - `production`: The production profile must be used when deploying contracts in
-  production. This profile avhieves maximum optimization leveraging the new Yul
-  IR optimizer made production-ready in solc version `0.8.13`, and also focuses
-  on the production contracts, skipping compilation of the tests entirely.
+  production. This profile achieves maximum optimization leveraging the Yul IR
+  optimizer made production-ready in solc version `0.8.13`, and also focuses on
+  the production contracts, skipping compilation of the tests entirely.
   Depending on your machine, building with this profile can take some time.
 
 All the profiles above are specified in the `foundry.toml` file at the root of
@@ -48,9 +48,7 @@ scripts. For example, these are the available npm scripts:
 ## Github Actions
 
 The repository uses GH actions to setup CI to automatically run all the
-available
-[tests](https://github.com/carrot-kpi/contracts/blob/feature/v1-no-automation/.github/workflows/ci.yaml)
-on each push.
+available tests on each push.
 
 ## Pre-commit hooks
 
@@ -277,5 +275,5 @@ forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPO
 
 ### Addresses
 
-"Official" deployments and addresses are generally tracked in the
-`.addresses.json` file, even though it might be unreliable for testnets.
+Official deployments and addresses are generally tracked in the
+`.addresses.json` file.
