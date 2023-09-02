@@ -27,9 +27,7 @@ contract UpdateTemplateSpecificationAtVersion is Script {
 
         vm.startBroadcast();
         IBaseTemplatesManager(_templatesManager).updateTemplateSpecification(
-            _templateId,
-            _templateVersion,
-            _specification
+            _templateId, _templateVersion, _specification
         );
         vm.stopBroadcast();
     }

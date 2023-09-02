@@ -14,9 +14,7 @@ contract FactorySetKpiTokensManagerTest is BaseTestSetup {
     }
 
     function testZeroAddressManager() external {
-        vm.expectRevert(
-            abi.encodeWithSignature("ZeroAddressKpiTokensManager()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("ZeroAddressKpiTokensManager()"));
         factory.setKpiTokensManager(address(0));
     }
 

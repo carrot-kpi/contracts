@@ -29,8 +29,5 @@ interface IKPITokensFactory {
 
     function kpiTokensAmount() external view returns (uint256);
 
-    function enumerate(uint256 _fromIndex, uint256 _toIndex)
-        external
-        view
-        returns (address[] memory);
+    function enumerate(uint256 _fromIndex, uint256 _toIndex) external view returns (address[] memory);
 }

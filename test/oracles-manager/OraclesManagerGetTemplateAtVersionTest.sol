@@ -77,11 +77,7 @@ contract OraclesManagerGetTemplateAtVersionTest is BaseTestSetup {
         assertEq(_template.specification, "asd1");
 
         MockOracle _newMockOracleTemplate = new MockOracle();
-        _oraclesManager.upgradeTemplate(
-            1,
-            address(_newMockOracleTemplate),
-            "asd2"
-        );
+        _oraclesManager.upgradeTemplate(1, address(_newMockOracleTemplate), "asd2");
 
         _template = _oraclesManager.template(1); // check current template updated
         assertEq(_template.addrezz, address(_newMockOracleTemplate));

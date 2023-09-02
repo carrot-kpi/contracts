@@ -9,9 +9,7 @@ import {Template} from "../IBaseTemplatesManager.sol";
 /// @dev KPI token interface.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 interface IKPIToken {
-    function initialize(InitializeKPITokenParams memory _params)
-        external
-        payable;
+    function initialize(InitializeKPITokenParams memory _params) external payable;
 
     function finalize(uint256 _result) external;
 

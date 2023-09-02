@@ -38,17 +38,9 @@ contract KPITokensManager1 is BaseTemplatesManager, IKPITokensManager1 {
         bytes memory _initializationData,
         bytes memory _oraclesInitializationData
     ) internal pure returns (bytes32) {
-        return
-            keccak256(
-                abi.encodePacked(
-                    _creator,
-                    _id,
-                    _description,
-                    _expiration,
-                    _initializationData,
-                    _oraclesInitializationData
-                )
-            );
+        return keccak256(
+            abi.encodePacked(_creator, _id, _description, _expiration, _initializationData, _oraclesInitializationData)
+        );
     }
 
     /// @dev Predicts a KPI token template instance address based on the input data.
@@ -69,18 +61,10 @@ contract KPITokensManager1 is BaseTemplatesManager, IKPITokensManager1 {
         bytes memory _initializationData,
         bytes memory _oraclesInitializationData
     ) external view override returns (address) {
-        return
-            Clones.predictDeterministicAddress(
-                latestVersionStorageTemplate(_id).addrezz,
-                salt(
-                    _creator,
-                    _id,
-                    _description,
-                    _expiration,
-                    _initializationData,
-                    _oraclesInitializationData
-                )
-            );
+        return Clones.predictDeterministicAddress(
+            latestVersionStorageTemplate(_id).addrezz,
+            salt(_creator, _id, _description, _expiration, _initializationData, _oraclesInitializationData)
+        );
     }
 
     /// @dev Instantiates a given template using ERC 1167 minimal proxies.
@@ -105,14 +89,7 @@ contract KPITokensManager1 is BaseTemplatesManager, IKPITokensManager1 {
         Template memory _template = latestVersionStorageTemplate(_templateId);
         address _instance = Clones.cloneDeterministic(
             _template.addrezz,
-            salt(
-                _creator,
-                _templateId,
-                _description,
-                _expiration,
-                _initializationData,
-                _oraclesInitializationData
-            )
+            salt(_creator, _templateId, _description, _expiration, _initializationData, _oraclesInitializationData)
         );
         return (_instance, _template.version);
     }

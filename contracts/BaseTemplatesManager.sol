@@ -22,8 +22,7 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
     uint256 internal templateId;
     Template[] internal latestVersionTemplates;
     mapping(uint256 => uint256) internal templateIdToLatestVersionIndex;
-    mapping(uint256 => mapping(uint128 => Template))
-        internal templateByIdAndVersion;
+    mapping(uint256 => mapping(uint128 => Template)) internal templateByIdAndVersion;
 
     error NonExistentTemplate();
     error ZeroAddressFactory();
@@ -35,23 +34,10 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
     error InvalidIndices();
     error AutomationNotSupported();
 
-    event AddTemplate(
-        uint256 indexed id,
-        address indexed template,
-        string specification
-    );
+    event AddTemplate(uint256 indexed id, address indexed template, string specification);
     event RemoveTemplate(uint256 indexed id);
-    event UpgradeTemplate(
-        uint256 indexed id,
-        address indexed newTemplate,
-        uint256 newVersion,
-        string newSpecification
-    );
-    event UpdateTemplateSpecification(
-        uint256 indexed id,
-        string newSpecification,
-        uint256 version
-    );
+    event UpgradeTemplate(uint256 indexed id, address indexed newTemplate, uint256 newVersion, string newSpecification);
+    event UpdateTemplateSpecification(uint256 indexed id, string newSpecification, uint256 version);
 
     constructor(address _factory) {
         if (_factory == address(0)) revert ZeroAddressFactory();
@@ -62,20 +48,12 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
     /// by the contract owner (governance).
     /// @param _template The template's address.
     /// @param _specification An IPFS cid pointing to the template's specification.
-    function addTemplate(address _template, string calldata _specification)
-        external
-        override
-        onlyOwner
-    {
+    function addTemplate(address _template, string calldata _specification) external override onlyOwner {
         if (_template == address(0)) revert ZeroAddressTemplate();
         if (bytes(_specification).length == 0) revert InvalidSpecification();
         uint256 _id = ++templateId;
-        Template memory _templateStruct = Template({
-            id: _id,
-            addrezz: _template,
-            version: 1,
-            specification: _specification
-        });
+        Template memory _templateStruct =
+            Template({id: _id, addrezz: _template, version: 1, specification: _specification});
         latestVersionTemplates.push(_templateStruct);
         templateIdToLatestVersionIndex[_id] = latestVersionTemplates.length;
 
@@ -91,14 +69,10 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
     function removeTemplate(uint256 _id) external override onlyOwner {
         uint256 _index = templateIdToLatestVersionIndex[_id];
         if (_index == 0) revert NonExistentTemplate();
-        Template storage _lastLatestVersionTemplate = latestVersionTemplates[
-            latestVersionTemplates.length - 1
-        ];
+        Template storage _lastLatestVersionTemplate = latestVersionTemplates[latestVersionTemplates.length - 1];
         if (_lastLatestVersionTemplate.id != _id) {
             latestVersionTemplates[_index - 1] = _lastLatestVersionTemplate;
-            templateIdToLatestVersionIndex[
-                _lastLatestVersionTemplate.id
-            ] = _index;
+            templateIdToLatestVersionIndex[_lastLatestVersionTemplate.id] = _index;
         }
         delete templateIdToLatestVersionIndex[_id];
         latestVersionTemplates.pop();
@@ -110,10 +84,7 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
     /// This function can only be called by the contract owner (governance).
     /// @param _id The template's id.
     /// @param _newSpecification the updated specification for the template with id `_id`.
-    function updateTemplateSpecification(
-        uint256 _id,
-        string calldata _newSpecification
-    ) external override onlyOwner {
+    function updateTemplateSpecification(uint256 _id, string calldata _newSpecification) external override onlyOwner {
         if (bytes(_newSpecification).length == 0) revert InvalidSpecification();
         uint128 _version = latestVersionStorageTemplate(_id).version;
         _updateTemplateSpecification(_id, _version, _newSpecification);
@@ -127,11 +98,11 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
     /// @param _id The template's id.
     /// @param _version The version of the template we want to update.
     /// @param _newSpecification the updated specification for the template with id `_id`.
-    function updateTemplateSpecification(
-        uint256 _id,
-        uint128 _version,
-        string calldata _newSpecification
-    ) external override onlyOwner {
+    function updateTemplateSpecification(uint256 _id, uint128 _version, string calldata _newSpecification)
+        external
+        override
+        onlyOwner
+    {
         if (bytes(_newSpecification).length == 0) revert InvalidSpecification();
         _updateTemplateSpecification(_id, _version, _newSpecification);
         emit UpdateTemplateSpecification(_id, _newSpecification, _version);
@@ -143,22 +114,15 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
     /// @param _id The template's id.
     /// @param _version The version of the template we want to update.
     /// @param _newSpecification the updated specification for the template with id `_id`.
-    function _updateTemplateSpecification(
-        uint256 _id,
-        uint128 _version,
-        string calldata _newSpecification
-    ) internal {
-        Template
-            storage _latestVersionStorageTemplate = latestVersionStorageTemplate(
-                _id
-            );
-        Template storage _templateByIdAndVersion = templateByIdAndVersion[_id][
-            _version
-        ];
-        if (_templateByIdAndVersion.addrezz == address(0))
+    function _updateTemplateSpecification(uint256 _id, uint128 _version, string calldata _newSpecification) internal {
+        Template storage _latestVersionStorageTemplate = latestVersionStorageTemplate(_id);
+        Template storage _templateByIdAndVersion = templateByIdAndVersion[_id][_version];
+        if (_templateByIdAndVersion.addrezz == address(0)) {
             revert NonExistentTemplate();
-        if (_version == _latestVersionStorageTemplate.version)
+        }
+        if (_version == _latestVersionStorageTemplate.version) {
             _latestVersionStorageTemplate.specification = _newSpecification;
+        }
         _templateByIdAndVersion.specification = _newSpecification;
     }
 
@@ -166,38 +130,25 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
     /// @param _id The id of the template that needs to be upgraded.
     /// @param _newTemplate The new address of the template.
     /// @param _newSpecification The updated specification for the upgraded template.
-    function upgradeTemplate(
-        uint256 _id,
-        address _newTemplate,
-        string calldata _newSpecification
-    ) external override onlyOwner {
+    function upgradeTemplate(uint256 _id, address _newTemplate, string calldata _newSpecification)
+        external
+        override
+        onlyOwner
+    {
         if (_newTemplate == address(0)) revert ZeroAddressTemplate();
         if (bytes(_newSpecification).length == 0) revert InvalidSpecification();
-        Template
-            storage _latestVersionTemplateFromStorage = latestVersionStorageTemplate(
-                _id
-            );
-        if (
-            keccak256(bytes(_latestVersionTemplateFromStorage.specification)) ==
-            keccak256(bytes(_newSpecification))
-        ) revert InvalidSpecification();
+        Template storage _latestVersionTemplateFromStorage = latestVersionStorageTemplate(_id);
+        if (keccak256(bytes(_latestVersionTemplateFromStorage.specification)) == keccak256(bytes(_newSpecification))) {
+            revert InvalidSpecification();
+        }
         _latestVersionTemplateFromStorage.addrezz = _newTemplate;
         _latestVersionTemplateFromStorage.specification = _newSpecification;
         uint128 _updatedVersion = _latestVersionTemplateFromStorage.version + 1;
         _latestVersionTemplateFromStorage.version = _updatedVersion;
 
-        templateByIdAndVersion[_id][_updatedVersion] = Template({
-            id: _id,
-            addrezz: _newTemplate,
-            specification: _newSpecification,
-            version: _updatedVersion
-        });
-        emit UpgradeTemplate(
-            _id,
-            _newTemplate,
-            _updatedVersion,
-            _newSpecification
-        );
+        templateByIdAndVersion[_id][_updatedVersion] =
+            Template({id: _id, addrezz: _newTemplate, specification: _newSpecification, version: _updatedVersion});
+        emit UpgradeTemplate(_id, _newTemplate, _updatedVersion, _newSpecification);
     }
 
     /// @dev Gets a storage pointer to the template, in its latest, most up
@@ -205,11 +156,7 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
     /// @param _id The id of the template that needs to be fetched.
     /// @return A storage pointer to the template with id `_id` in its most
     /// up to date version.
-    function latestVersionStorageTemplate(uint256 _id)
-        internal
-        view
-        returns (Template storage)
-    {
+    function latestVersionStorageTemplate(uint256 _id) internal view returns (Template storage) {
         if (_id == 0) revert NonExistentTemplate();
         uint256 _index = templateIdToLatestVersionIndex[_id];
         if (_index == 0) revert NonExistentTemplate();
@@ -224,12 +171,7 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
     /// @param _id The id of the template that needs to be fetched.
     /// @return The template with id `_id`, at its latest, most up to
     /// date version.
-    function template(uint256 _id)
-        external
-        view
-        override
-        returns (Template memory)
-    {
+    function template(uint256 _id) external view override returns (Template memory) {
         return latestVersionStorageTemplate(_id);
     }
 
@@ -238,12 +180,7 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
     /// @param _id The id of the template that needs to be fetched.
     /// @param _version The version at which the template should be fetched.
     /// @return The template with id `_id` at version `_version`.
-    function template(uint256 _id, uint128 _version)
-        external
-        view
-        override
-        returns (Template memory)
-    {
+    function template(uint256 _id, uint128 _version) external view override returns (Template memory) {
         if (_id == 0) revert NonExistentTemplate();
         Template memory _template = templateByIdAndVersion[_id][_version];
         if (_template.addrezz == address(0)) revert NonExistentTemplate();
@@ -284,18 +221,15 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
     /// @param _fromIndex The index from which to get templates (inclusive).
     /// @param _toIndex The maximum index to which to get templates (the element at this index won't be included).
     /// @return A templates array representing the slice taken through the given indexes.
-    function enumerate(uint256 _fromIndex, uint256 _toIndex)
-        external
-        view
-        override
-        returns (Template[] memory)
-    {
-        if (_toIndex > latestVersionTemplates.length || _fromIndex > _toIndex)
+    function enumerate(uint256 _fromIndex, uint256 _toIndex) external view override returns (Template[] memory) {
+        if (_toIndex > latestVersionTemplates.length || _fromIndex > _toIndex) {
             revert InvalidIndices();
+        }
         uint256 _range = _toIndex - _fromIndex;
         Template[] memory _templates = new Template[](_range);
-        for (uint256 _i = 0; _i < _range; _i++)
+        for (uint256 _i = 0; _i < _range; _i++) {
             _templates[_i] = latestVersionTemplates[_fromIndex + _i];
+        }
         return _templates;
     }
 }

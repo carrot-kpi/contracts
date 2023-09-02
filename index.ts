@@ -12,7 +12,10 @@ export interface CarrotContractAddresses {
     oraclesManager: Address;
 }
 
-export const DEPLOYMENT_ADDRESSES: Record<SupportedChainId, CarrotContractAddresses> = {
+export const DEPLOYMENT_ADDRESSES: Record<
+    SupportedChainId,
+    CarrotContractAddresses
+> = {
     [SupportedChainId.GNOSIS]: {
         factory: "0xD503Bdcc3Cd38D3cEaBa1efA43EFCc03b7Fb1CbA",
         kpiTokensManager: "0xCd85e0690f85A52D260273E5B51336D1151F2832",

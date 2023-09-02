@@ -36,10 +36,7 @@ contract KpiTokensManagerUpdateTemplateSpecificationTest is BaseTestSetup {
         assertEq(_template.id, _templateId);
         assertEq(_template.specification, _oldSpecification);
         string memory _newSpecification = "b";
-        kpiTokensManager.updateTemplateSpecification(
-            _templateId,
-            _newSpecification
-        );
+        kpiTokensManager.updateTemplateSpecification(_templateId, _newSpecification);
         _template = kpiTokensManager.template(_templateId);
         assertEq(_template.id, _templateId);
         assertEq(_template.specification, _newSpecification);
@@ -86,46 +83,24 @@ contract KpiTokensManagerUpdateTemplateSpecificationTest is BaseTestSetup {
 
         // add an additional template to the set by upgrading
         string memory _upgradedSpecification = "b";
-        kpiTokensManager.upgradeTemplate(
-            _templateId,
-            address(3),
-            _upgradedSpecification
-        );
+        kpiTokensManager.upgradeTemplate(_templateId, address(3), _upgradedSpecification);
         // templates amount is 2 because the test templates manager starts with
         // one template being present
         assertEq(kpiTokensManager.templatesAmount(), 2);
-        Template memory _upgradedTemplate = kpiTokensManager.template(
-            _templateId
-        );
+        Template memory _upgradedTemplate = kpiTokensManager.template(_templateId);
         assertEq(_upgradedTemplate.id, _templateId);
         assertEq(_upgradedTemplate.version, 2);
         assertEq(_upgradedTemplate.specification, _upgradedSpecification);
 
         string memory _newSpecification = "new";
-        kpiTokensManager.updateTemplateSpecification(
-            _templateId,
-            1,
-            _newSpecification
-        );
-        Template memory _updatedTemplate = kpiTokensManager.template(
-            _templateId,
-            1
-        );
-        Template memory _upgradedTemplatePostUpdate = kpiTokensManager.template(
-            _templateId,
-            2
-        );
+        kpiTokensManager.updateTemplateSpecification(_templateId, 1, _newSpecification);
+        Template memory _updatedTemplate = kpiTokensManager.template(_templateId, 1);
+        Template memory _upgradedTemplatePostUpdate = kpiTokensManager.template(_templateId, 2);
 
         // check that the upgraded template was left unchanged
         assertEq(_upgradedTemplate.id, _upgradedTemplatePostUpdate.id);
-        assertEq(
-            _upgradedTemplate.version,
-            _upgradedTemplatePostUpdate.version
-        );
-        assertEq(
-            _upgradedTemplate.specification,
-            _upgradedTemplatePostUpdate.specification
-        );
+        assertEq(_upgradedTemplate.version, _upgradedTemplatePostUpdate.version);
+        assertEq(_upgradedTemplate.specification, _upgradedTemplatePostUpdate.specification);
 
         // check that the updated template was in fact updated
         assertEq(_updatedTemplate.id, 2);
@@ -152,25 +127,17 @@ contract KpiTokensManagerUpdateTemplateSpecificationTest is BaseTestSetup {
         assertEq(_template.specification, _specification);
 
         string memory _newSpecification = "new";
-        kpiTokensManager.updateTemplateSpecification(
-            _template.id,
-            _template.version,
-            _newSpecification
-        );
+        kpiTokensManager.updateTemplateSpecification(_template.id, _template.version, _newSpecification);
 
         // the harness function explicitly reads from the latest version
         // templates array
-        Template memory _latestVersionTemplate = kpiTokensManager
-            .exposedLatestVersionStorageTemplate(_template.id);
+        Template memory _latestVersionTemplate = kpiTokensManager.exposedLatestVersionStorageTemplate(_template.id);
         assertEq(_latestVersionTemplate.specification, _newSpecification);
 
         // the template reading function operates on the template by id and
         // version array, so with the assertion above we check that both
         // templates were updated correctly.
-        Template memory _templateByIdAndVersion = kpiTokensManager.template(
-            _template.id,
-            _template.version
-        );
+        Template memory _templateByIdAndVersion = kpiTokensManager.template(_template.id, _template.version);
         assertEq(_templateByIdAndVersion.specification, _newSpecification);
     }
 }

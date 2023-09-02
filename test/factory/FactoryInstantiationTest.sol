@@ -9,9 +9,7 @@ import {KPITokensFactory} from "../../contracts/KPITokensFactory.sol";
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
 contract FactoryInstantiationTest is BaseTestSetup {
     function testZeroAddressKpiTokensManager() external {
-        vm.expectRevert(
-            abi.encodeWithSignature("ZeroAddressKpiTokensManager()")
-        );
+        vm.expectRevert(abi.encodeWithSignature("ZeroAddressKpiTokensManager()"));
         new KPITokensFactory(address(0), address(1), address(2));
     }
 

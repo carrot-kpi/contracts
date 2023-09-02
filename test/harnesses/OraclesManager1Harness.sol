@@ -6,11 +6,7 @@ import {Template} from "../../contracts/interfaces/IBaseTemplatesManager.sol";
 contract OraclesManager1Harness is OraclesManager1 {
     constructor(address _factory) OraclesManager1(_factory) {}
 
-    function exposedLatestVersionStorageTemplate(uint256 _id)
-        external
-        view
-        returns (Template memory)
-    {
+    function exposedLatestVersionStorageTemplate(uint256 _id) external view returns (Template memory) {
         return latestVersionStorageTemplate(_id);
     }
 }

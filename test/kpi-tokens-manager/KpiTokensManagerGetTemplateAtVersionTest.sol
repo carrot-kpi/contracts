@@ -77,11 +77,7 @@ contract KpiTokensManagerGetTemplateAtVersionTest is BaseTestSetup {
         assertEq(_template.specification, "asd1");
 
         MockKPIToken _newMockKpiTokenTemplate = new MockKPIToken();
-        _kpiTokensManager.upgradeTemplate(
-            1,
-            address(_newMockKpiTokenTemplate),
-            "asd2"
-        );
+        _kpiTokensManager.upgradeTemplate(1, address(_newMockKpiTokenTemplate), "asd2");
 
         _template = _kpiTokensManager.template(1); // check current template updated
         assertEq(_template.addrezz, address(_newMockKpiTokenTemplate));

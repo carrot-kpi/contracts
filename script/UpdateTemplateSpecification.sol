@@ -13,20 +13,13 @@ contract UpdateTemplateSpecification is Script {
     error ZeroId();
     error InvalidSpecification();
 
-    function run(
-        address _templatesManager,
-        uint256 _templateId,
-        string calldata _specification
-    ) external {
+    function run(address _templatesManager, uint256 _templateId, string calldata _specification) external {
         if (_templatesManager == address(0)) revert ZeroAddress();
         if (_templateId == 0) revert ZeroId();
         if (bytes(_specification).length == 0) revert InvalidSpecification();
 
         vm.startBroadcast();
-        IBaseTemplatesManager(_templatesManager).updateTemplateSpecification(
-            _templateId,
-            _specification
-        );
+        IBaseTemplatesManager(_templatesManager).updateTemplateSpecification(_templateId, _specification);
         vm.stopBroadcast();
     }
 }
