@@ -36,11 +36,7 @@ contract KpiTokensManagerUpgradeTemplateTest is BaseTestSetup {
         uint256 _templateId = 1;
         Template memory _template = kpiTokensManager.template(_templateId);
         vm.expectRevert(abi.encodeWithSignature("InvalidSpecification()"));
-        kpiTokensManager.upgradeTemplate(
-            _templateId,
-            address(1),
-            _template.specification
-        );
+        kpiTokensManager.upgradeTemplate(_templateId, address(1), _template.specification);
     }
 
     function testSuccess() external {
@@ -50,11 +46,7 @@ contract KpiTokensManagerUpgradeTemplateTest is BaseTestSetup {
         assertEq(_template.version, 1);
         string memory _newSpecification = "b";
         address _newAddress = address(123);
-        kpiTokensManager.upgradeTemplate(
-            _templateId,
-            _newAddress,
-            _newSpecification
-        );
+        kpiTokensManager.upgradeTemplate(_templateId, _newAddress, _newSpecification);
         _template = kpiTokensManager.template(_templateId);
         assertEq(_template.id, _templateId);
         assertEq(_template.addrezz, _newAddress);

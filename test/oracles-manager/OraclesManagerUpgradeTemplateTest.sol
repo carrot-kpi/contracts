@@ -36,11 +36,7 @@ contract OraclesManagerUpgradeTemplateTest is BaseTestSetup {
         uint256 _templateId = 1;
         Template memory _template = oraclesManager.template(_templateId);
         vm.expectRevert(abi.encodeWithSignature("InvalidSpecification()"));
-        oraclesManager.upgradeTemplate(
-            _templateId,
-            address(1),
-            _template.specification
-        );
+        oraclesManager.upgradeTemplate(_templateId, address(1), _template.specification);
     }
 
     function testSuccess() external {
@@ -50,11 +46,7 @@ contract OraclesManagerUpgradeTemplateTest is BaseTestSetup {
         assertEq(_template.version, 1);
         string memory _newSpecification = "b";
         address _newAddress = address(123);
-        oraclesManager.upgradeTemplate(
-            _templateId,
-            _newAddress,
-            _newSpecification
-        );
+        oraclesManager.upgradeTemplate(_templateId, _newAddress, _newSpecification);
         _template = oraclesManager.template(_templateId);
         assertEq(_template.id, _templateId);
         assertEq(_template.addrezz, _newAddress);

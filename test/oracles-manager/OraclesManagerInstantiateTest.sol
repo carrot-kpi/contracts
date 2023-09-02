@@ -18,24 +18,13 @@ contract OraclesManagerInstantiateTest is BaseTestSetup {
         bytes memory _initializationData = abi.encode("asdf");
         address _predictedInstanceAddress = Clones.predictDeterministicAddress(
             address(mockOracleTemplate),
-            keccak256(
-                abi.encodePacked(address(this), uint256(1), _initializationData)
-            ),
+            keccak256(abi.encodePacked(address(this), uint256(1), _initializationData)),
             address(oraclesManager)
         );
         vm.mockCall(
-            address(factory),
-            abi.encodeWithSignature(
-                "allowOraclesCreation(address)",
-                address(this)
-            ),
-            abi.encode(true)
+            address(factory), abi.encodeWithSignature("allowOraclesCreation(address)", address(this)), abi.encode(true)
         );
-        address _instance = oraclesManager.instantiate(
-            address(this),
-            1,
-            _initializationData
-        );
+        address _instance = oraclesManager.instantiate(address(this), 1, _initializationData);
         assertEq(_instance, _predictedInstanceAddress);
         vm.clearMockedCalls();
     }

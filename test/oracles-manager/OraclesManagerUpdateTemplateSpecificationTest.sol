@@ -36,10 +36,7 @@ contract OraclesManagerUpdateTemplateSpecificationTest is BaseTestSetup {
         assertEq(_template.id, _templateId);
         assertEq(_template.specification, _oldSpecification);
         string memory _newSpecification = "b";
-        oraclesManager.updateTemplateSpecification(
-            _templateId,
-            _newSpecification
-        );
+        oraclesManager.updateTemplateSpecification(_templateId, _newSpecification);
         _template = oraclesManager.template(_templateId);
         assertEq(_template.id, _templateId);
         assertEq(_template.specification, _newSpecification);
@@ -83,46 +80,24 @@ contract OraclesManagerUpdateTemplateSpecificationTest is BaseTestSetup {
 
         // add an additional template
         string memory _upgradedSpecification = "b";
-        oraclesManager.upgradeTemplate(
-            _templateId,
-            address(3),
-            _upgradedSpecification
-        );
+        oraclesManager.upgradeTemplate(_templateId, address(3), _upgradedSpecification);
         // templates amount is 2 because the test templates manager start with
         // one template being present
         assertEq(oraclesManager.templatesAmount(), 2);
-        Template memory _upgradedTemplate = oraclesManager.template(
-            _templateId
-        );
+        Template memory _upgradedTemplate = oraclesManager.template(_templateId);
         assertEq(_upgradedTemplate.id, _templateId);
         assertEq(_upgradedTemplate.version, 2);
         assertEq(_upgradedTemplate.specification, _upgradedSpecification);
 
         string memory _newSpecification = "new";
-        oraclesManager.updateTemplateSpecification(
-            _templateId,
-            1,
-            _newSpecification
-        );
-        Template memory _updatedTemplate = oraclesManager.template(
-            _templateId,
-            1
-        );
-        Template memory _upgradedTemplatePostUpdate = oraclesManager.template(
-            _templateId,
-            2
-        );
+        oraclesManager.updateTemplateSpecification(_templateId, 1, _newSpecification);
+        Template memory _updatedTemplate = oraclesManager.template(_templateId, 1);
+        Template memory _upgradedTemplatePostUpdate = oraclesManager.template(_templateId, 2);
 
         // check that the upgraded template was left unchanged
         assertEq(_upgradedTemplate.id, _upgradedTemplatePostUpdate.id);
-        assertEq(
-            _upgradedTemplate.version,
-            _upgradedTemplatePostUpdate.version
-        );
-        assertEq(
-            _upgradedTemplate.specification,
-            _upgradedTemplatePostUpdate.specification
-        );
+        assertEq(_upgradedTemplate.version, _upgradedTemplatePostUpdate.version);
+        assertEq(_upgradedTemplate.specification, _upgradedTemplatePostUpdate.specification);
 
         // check that the updated template was in fact updated
         assertEq(_updatedTemplate.id, 2);
@@ -149,25 +124,17 @@ contract OraclesManagerUpdateTemplateSpecificationTest is BaseTestSetup {
         assertEq(_template.specification, _specification);
 
         string memory _newSpecification = "new";
-        oraclesManager.updateTemplateSpecification(
-            _template.id,
-            _template.version,
-            _newSpecification
-        );
+        oraclesManager.updateTemplateSpecification(_template.id, _template.version, _newSpecification);
 
         // the harness function explicitly reads from the latest version
         // templates array
-        Template memory _latestVersionTemplate = oraclesManager
-            .exposedLatestVersionStorageTemplate(_template.id);
+        Template memory _latestVersionTemplate = oraclesManager.exposedLatestVersionStorageTemplate(_template.id);
         assertEq(_latestVersionTemplate.specification, _newSpecification);
 
         // the template reading function operates on the template by id and
         // version array, so with the assertion above we check that both
         // templates were updated correctly.
-        Template memory _templateByIdAndVersion = oraclesManager.template(
-            _template.id,
-            _template.version
-        );
+        Template memory _templateByIdAndVersion = oraclesManager.template(_template.id, _template.version);
         assertEq(_templateByIdAndVersion.specification, _newSpecification);
     }
 }

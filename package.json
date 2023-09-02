@@ -4,25 +4,27 @@
     "description": "A smart contract solution to create efficient KPI tokens.",
     "author": "Federico Luzzi <federico.luzzi@protonmail.com>",
     "license": "GPL-3.0-or-later",
+    "main": "./dist/cjs/index.cjs",
+    "module": "./dist/es/index.mjs",
+    "types": "./dist/types/index.d.ts",
+    "typings": "./dist/types/index.d.ts",
+    "sideEffects": false,
+    "exports": {
+        ".": {
+            "types": "./dist/types/index.d.ts",
+            "import": "./dist/es/index.mjs",
+            "default": "./dist/cjs/index.cjs"
+        }
+    },
+    "files": [
+        "./dist"
+    ],
     "publishConfig": {
         "access": "public"
     },
-    "files": [
-        "./artifacts/IKPIToken.sol",
-        "./artifacts/IKPITokensManager1.sol",
-        "./artifacts/IOracle.sol",
-        "./artifacts/IOraclesManager1.sol",
-        "./artifacts/IBaseTemplatesManager.sol",
-        "./artifacts/IKPITokensFactory.sol",
-        "./artifacts/KPITokensManager1.sol",
-        "./artifacts/OraclesManager1.sol",
-        "./artifacts/BaseTemplatesManager.sol",
-        "./artifacts/KPITokensFactory.sol",
-        "./.addresses.json"
-    ],
     "scripts": {
-        "lint": "solhint './src/**/*.sol' './scripts/*.sol' './tests/**/*.sol' && prettier --check .",
-        "format": "solhint --fix ./src/**/*.sol ./scripts/*.sol ./tests/**/*.sol",
+        "lint": "forge fmt --check && prettier --check .",
+        "format": "forge fmt && prettier --write .",
         "build": "forge build",
         "build:production": "FOUNDRY_PROFILE=production forge build",
         "lint:commit-message": "commitlint -e",
@@ -33,6 +35,8 @@
         "compile": "forge build",
         "compile:production": "FOUNDRY_PROFILE=production forge build",
         "prepare": "husky install",
+        "clean:lib": "rimraf ./dist",
+        "build:lib": "yarn clean:lib && rollup -c rollup.config.mjs && tsc",
         "prepublishOnly": "npm run compile"
     },
     "devDependencies": {
@@ -40,6 +44,11 @@
         "@commitlint/config-conventional": "^17.6.3",
         "husky": "^8.0.3",
         "prettier": "^2.8.8",
-        "solhint": "^3.4.1"
+        "rimraf": "^5.0.1",
+        "rollup": "^3.28.1",
+        "rollup-plugin-esbuild": "^5.0.0",
+        "solhint": "^3.4.1",
+        "typescript": "^5.2.2",
+        "viem": "^1.9.5"
     }
 }

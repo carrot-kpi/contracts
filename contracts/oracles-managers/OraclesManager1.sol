@@ -26,15 +26,12 @@ contract OraclesManager1 is BaseTemplatesManager, IOraclesManager1 {
     /// @param _templateId The oracle temmplate id being used.
     /// @param _initializationData The template-specific ABI-encoded initialization data.
     /// @return The salt value.
-    function salt(
-        address _creator,
-        uint256 _templateId,
-        bytes calldata _initializationData
-    ) internal pure returns (bytes32) {
-        return
-            keccak256(
-                abi.encodePacked(_creator, _templateId, _initializationData)
-            );
+    function salt(address _creator, uint256 _templateId, bytes calldata _initializationData)
+        internal
+        pure
+        returns (bytes32)
+    {
+        return keccak256(abi.encodePacked(_creator, _templateId, _initializationData));
     }
 
     /// @dev Predicts an template instance address based on the input data.
@@ -43,17 +40,15 @@ contract OraclesManager1 is BaseTemplatesManager, IOraclesManager1 {
     /// @param _initializationData The template-specific ABI-encoded initialization data.
     /// @return The address at which the template with the given input
     /// parameters will be instantiated.
-    function predictInstanceAddress(
-        address _creator,
-        uint256 _id,
-        bytes calldata _initializationData
-    ) external view override returns (address) {
-        return
-            ClonesUpgradeable.predictDeterministicAddress(
-                latestVersionStorageTemplate(_id).addrezz,
-                salt(_creator, _id, _initializationData),
-                address(this)
-            );
+    function predictInstanceAddress(address _creator, uint256 _id, bytes calldata _initializationData)
+        external
+        view
+        override
+        returns (address)
+    {
+        return ClonesUpgradeable.predictDeterministicAddress(
+            latestVersionStorageTemplate(_id).addrezz, salt(_creator, _id, _initializationData), address(this)
+        );
     }
 
     /// @dev Instantiates a given oracle template using ERC 1167 minimal proxies.
@@ -62,18 +57,18 @@ contract OraclesManager1 is BaseTemplatesManager, IOraclesManager1 {
     /// @param _initializationData The template-specific ABI-encoded initialization data.
     /// @return The address at which the template with the given input
     /// parameters has been instantiated.
-    function instantiate(
-        address _creator,
-        uint256 _id,
-        bytes calldata _initializationData
-    ) external payable override returns (address) {
-        if (!IKPITokensFactory(factory).allowOraclesCreation(msg.sender))
+    function instantiate(address _creator, uint256 _id, bytes calldata _initializationData)
+        external
+        payable
+        override
+        returns (address)
+    {
+        if (!IKPITokensFactory(factory).allowOraclesCreation(msg.sender)) {
             revert Forbidden();
+        }
         Template storage _template = latestVersionStorageTemplate(_id);
-        address _instance = ClonesUpgradeable.cloneDeterministic(
-            _template.addrezz,
-            salt(_creator, _id, _initializationData)
-        );
+        address _instance =
+            ClonesUpgradeable.cloneDeterministic(_template.addrezz, salt(_creator, _id, _initializationData));
         IOracle(_instance).initialize{value: msg.value}(
             InitializeOracleParams({
                 creator: _creator,

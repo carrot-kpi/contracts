@@ -24,11 +24,7 @@ contract UpgradeTemplate is Script {
         if (bytes(_specification).length == 0) revert InvalidSpecification();
 
         vm.startBroadcast();
-        IBaseTemplatesManager(_templatesManager).upgradeTemplate(
-            _templateId,
-            _templateAddress,
-            _specification
-        );
+        IBaseTemplatesManager(_templatesManager).upgradeTemplate(_templateId, _templateAddress, _specification);
         vm.stopBroadcast();
     }
 }

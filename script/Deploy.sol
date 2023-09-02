@@ -27,18 +27,12 @@ contract Deploy is Script {
         KPITokensManager1 _kpiTokensManager = new KPITokensManager1(
             address(_factory)
         );
-        console2.log(
-            "KPI tokens manager deployed at address: ",
-            address(_kpiTokensManager)
-        );
+        console2.log("KPI tokens manager deployed at address: ", address(_kpiTokensManager));
 
         OraclesManager1 _oraclesManager = new OraclesManager1(
             address(_factory)
         );
-        console2.log(
-            "Oracles manager deployed at address: ",
-            address(_oraclesManager)
-        );
+        console2.log("Oracles manager deployed at address: ", address(_oraclesManager));
 
         _factory.setKpiTokensManager(address(_kpiTokensManager));
         _factory.setOraclesManager(address(_oraclesManager));

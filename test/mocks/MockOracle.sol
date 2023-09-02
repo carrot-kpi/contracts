@@ -18,12 +18,7 @@ contract MockOracle is IOracle, Initializable {
     error Forbidden();
     error ZeroAddressKpiToken();
 
-    function initialize(InitializeOracleParams memory _params)
-        external
-        payable
-        override
-        initializer
-    {
+    function initialize(InitializeOracleParams memory _params) external payable override initializer {
         if (_params.kpiToken == address(0)) revert ZeroAddressKpiToken();
         oraclesManager = msg.sender;
         templateVersion = _params.templateVersion;
@@ -42,10 +37,6 @@ contract MockOracle is IOracle, Initializable {
     }
 
     function template() external view override returns (Template memory) {
-        return
-            IBaseTemplatesManager(oraclesManager).template(
-                templateId,
-                templateVersion
-            );
+        return IBaseTemplatesManager(oraclesManager).template(templateId, templateVersion);
     }
 }

@@ -17,13 +17,7 @@ contract FactoryTokensAmountTest is BaseTestSetup {
     function testOneToken() external {
         OracleData[] memory _oracles = new OracleData[](1);
         _oracles[0] = OracleData({templateId: 1, data: abi.encode("")});
-        factory.createToken(
-            1,
-            "asd",
-            block.timestamp + 60,
-            abi.encode(""),
-            abi.encode(_oracles)
-        );
+        factory.createToken(1, "asd", block.timestamp + 60, abi.encode(""), abi.encode(_oracles));
         assertEq(factory.kpiTokensAmount(), 1);
     }
 

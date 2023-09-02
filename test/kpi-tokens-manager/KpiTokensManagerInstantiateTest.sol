@@ -12,14 +12,7 @@ import {OracleData} from "../mocks/MockKPIToken.sol";
 contract KpiTokensManagerInstantiateTest is BaseTestSetup {
     function testNotFromFactoryFail() external {
         vm.expectRevert(abi.encodeWithSignature("Forbidden()"));
-        kpiTokensManager.instantiate(
-            address(this),
-            1,
-            "a",
-            block.timestamp + 60,
-            abi.encode(""),
-            abi.encode("")
-        );
+        kpiTokensManager.instantiate(address(this), 1, "a", block.timestamp + 60, abi.encode(""), abi.encode(""));
     }
 
     function testSuccessMock() external {
@@ -29,33 +22,19 @@ contract KpiTokensManagerInstantiateTest is BaseTestSetup {
         string memory _description = "a";
 
         vm.prank(address(factory));
-        address _predictedInstanceAddress = kpiTokensManager
-            .predictInstanceAddress(
-                address(this),
-                1,
-                _description,
-                block.timestamp + 60,
-                abi.encode(""),
-                abi.encode(_oracles)
-            );
+        address _predictedInstanceAddress = kpiTokensManager.predictInstanceAddress(
+            address(this), 1, _description, block.timestamp + 60, abi.encode(""), abi.encode(_oracles)
+        );
 
         vm.mockCall(
             address(factory),
-            abi.encodeWithSignature(
-                "allowOraclesCreation(address)",
-                _predictedInstanceAddress
-            ),
+            abi.encodeWithSignature("allowOraclesCreation(address)", _predictedInstanceAddress),
             abi.encode(true)
         );
 
         vm.prank(address(factory));
-        (address _instance, ) = kpiTokensManager.instantiate(
-            address(this),
-            1,
-            _description,
-            block.timestamp + 60,
-            abi.encode(""),
-            abi.encode(_oracles)
+        (address _instance,) = kpiTokensManager.instantiate(
+            address(this), 1, _description, block.timestamp + 60, abi.encode(""), abi.encode(_oracles)
         );
 
         assertEq(_instance, _predictedInstanceAddress);
