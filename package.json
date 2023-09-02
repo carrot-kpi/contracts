@@ -36,8 +36,8 @@
         "compile:production": "FOUNDRY_PROFILE=production forge build",
         "prepare": "husky install",
         "clean:lib": "rimraf ./dist",
-        "build:lib": "yarn clean:lib && rollup -c rollup.config.mjs && tsc",
-        "prepublishOnly": "npm run compile"
+        "build:lib": "pnpm clean:lib && rollup -c rollup.config.mjs && tsc",
+        "prepublishOnly": "pnpm build:lib"
     },
     "devDependencies": {
         "@commitlint/cli": "^17.6.3",
