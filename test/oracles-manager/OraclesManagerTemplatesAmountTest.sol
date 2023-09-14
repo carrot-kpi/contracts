@@ -16,13 +16,16 @@ contract OraclesManagerTemplatesAmountTest is BaseTestSetup {
     }
 
     function testOneTemplate() external {
+        oraclesManager = new OraclesManager1(address(factory));
+        oraclesManager.addTemplate(address(10), "a");
         assertEq(oraclesManager.templatesAmount(), 1);
     }
 
     function testMultipleTemplates() external {
+        oraclesManager = new OraclesManager1(address(factory));
         oraclesManager.addTemplate(address(10), "a");
         oraclesManager.addTemplate(address(11), "b");
         oraclesManager.addTemplate(address(12), "c");
-        assertEq(oraclesManager.templatesAmount(), 4);
+        assertEq(oraclesManager.templatesAmount(), 3);
     }
 }

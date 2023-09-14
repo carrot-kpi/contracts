@@ -16,7 +16,7 @@ import {MockOracle} from "../mocks/MockOracle.sol";
 contract OraclesManagerGetTemplateAtVersionTest is BaseTestSetup {
     function testNonExistentTemplate() external {
         vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
-        oraclesManager.template(2);
+        oraclesManager.template(20_000);
     }
 
     function testNonExistentVersion() external {

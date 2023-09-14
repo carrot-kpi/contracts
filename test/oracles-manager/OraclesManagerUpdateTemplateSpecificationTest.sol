@@ -68,6 +68,9 @@ contract OraclesManagerUpdateTemplateSpecificationTest is BaseTestSetup {
     }
 
     function testSuccessPastVersion() external {
+        oraclesManager = new OraclesManager1(address(factory));
+        oraclesManager.addTemplate(address(mockOracleTemplate), "fake");
+
         assertEq(oraclesManager.templatesAmount(), 1);
 
         string memory _oldSpecification = "a";

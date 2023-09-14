@@ -54,9 +54,6 @@ contract KpiTokensManagerUpdateTemplateSpecificationTest is BaseTestSetup {
     }
 
     function testNonExistentVersionSpecificVersion() external {
-        emit log_uint(kpiTokensManager.templatesAmount());
-        emit log_address(kpiTokensManager.template(1).addrezz);
-
         vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
         kpiTokensManager.updateTemplateSpecification(
             1,
