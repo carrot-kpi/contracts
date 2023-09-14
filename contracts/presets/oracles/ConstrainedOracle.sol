@@ -1,5 +1,6 @@
 pragma solidity >=0.8.0;
 
+import {Initializable} from "oz-upgradeable/proxy/utils/Initializable.sol";
 import {BaseOracle} from "./BaseOracle.sol";
 import {InitializeOracleParams} from "../../commons/Types.sol";
 import {IKPIToken} from "../../interfaces/kpi-tokens/IKPIToken.sol";
@@ -27,7 +28,7 @@ enum Constraint {
 /// result itself in a Carrot-compatible target completion
 /// percentage based on it on finalization.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
-abstract contract ConstrainedOracle is BaseOracle {
+abstract contract ConstrainedOracle is Initializable {
     uint256 internal constant MULTIPLIER = 64;
 
     Constraint internal constraint;
@@ -40,37 +41,33 @@ abstract contract ConstrainedOracle is BaseOracle {
     error InvalidGreaterThanConstraintValue();
     error InvalidLowerThanConstraintValue();
 
-    /// @dev Initializes the base oracle preset this contract
-    /// extends from and sets up the constraint on the end result
-    /// of the oracle based on the given parameters. This function
-    ///  can only be called while initializing an oracle instance. If you extend from this contract, make sure you call this, otherwise no state will be initialized.
-    /// @param _kpiToken The attached KPI token address (used to initialize the base oracle preset).
-    /// @param _templateId The oracle's template id (used to initialize the base oracle preset).
-    /// @param _templateVersion The oracle's template version (used to initialize the base oracle preset).
+    /// @dev Sets up the constraint on the end result of the oracle based on
+    /// the given parameters. This function can only be called while initializing
+    /// an oracle instance. If you extend from this contract, make sure you call this,
+    /// otherwise no state will be initialized.
     /// @param _constraint The oracle's constraint type.
-    /// @param _value0 The first value that can be used, in tandem with the constraint type, to specify the required constraint. This is always required.
-    /// @param _value1 The second value that can be used, in tandem with the constraint type, to specify the required constraint. This is only valid for constraint types that need a range to be applied, such as "between", "not between" and "range".
-    function __ConstrainedOracle_init(
-        address _kpiToken,
-        uint256 _templateId,
-        uint128 _templateVersion,
-        Constraint _constraint,
-        uint256 _value0,
-        uint256 _value1
-    ) internal onlyInitializing {
-        __BaseOracle_init(_kpiToken, _templateId, _templateVersion);
-
+    /// @param _value0 The first value that can be used, in tandem with the constraint type, to specify
+    /// the required constraint. This is always required.
+    /// @param _value1 The second value that can be used, in tandem with the constraint type, to specify
+    /// the required constraint. This is only valid for constraint types that need a range to be applied,
+    /// such as "between", "not between" and "range".
+    function __ConstrainedOracle_init(Constraint _constraint, uint256 _value0, uint256 _value1)
+        internal
+        onlyInitializing
+    {
         (value0, value1) = _validateConstraint(_constraint, _value0, _value1);
-
-        kpiToken = _kpiToken;
-        oraclesManager = msg.sender;
-        templateId = _templateId;
-        templateVersion = _templateVersion;
         constraint = _constraint;
     }
 
+    /// @dev Checks that the user-given constraint is sane and valid.
+    /// @param _constraint The constraint type.
+    /// @param _value0 The first value that can be used, in tandem with the constraint type, to specify
+    /// the required constraint. This is always required.
+    /// @param _value1 The second value that can be used, in tandem with the constraint type, to specify
+    /// the required constraint. This is only valid for constraint types that need a range to be applied,
+    /// such as "between", "not between" and "range".
     function _validateConstraint(Constraint _constraint, uint256 _value0, uint256 _value1)
-        internal
+        private
         pure
         returns (uint256, uint256)
     {
@@ -109,6 +106,10 @@ abstract contract ConstrainedOracle is BaseOracle {
         revert InvalidConstraint();
     }
 
+    /// @dev The main function exposed by the oracle preset. This can be used by implementations at
+    /// finalization time to transform the final value of the oracle to a Carrot-compatible goal
+    /// completion percentage taking into account the constraint.
+    /// @param _result The final value of the oracle.
     function _toCompletionPercentage(uint256 _result) internal view returns (uint256) {
         if (_result == INVALID_ANSWER) {
             return INVALID_ANSWER;

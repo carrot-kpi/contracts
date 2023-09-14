@@ -1,9 +1,9 @@
 pragma solidity 0.8.19;
 
+import {Initializable} from "oz-upgradeable/proxy/utils/Initializable.sol";
 import {BaseOracle} from "./BaseOracle.sol";
 import {IOracle} from "../../interfaces/oracles/IOracle.sol";
 import {IKPIToken} from "../../interfaces/kpi-tokens/IKPIToken.sol";
-import {InitializeOracleParams} from "../../commons/Types.sol";
 import {IBaseTemplatesManager, Template} from "../../interfaces/IBaseTemplatesManager.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
@@ -11,7 +11,7 @@ import {IBaseTemplatesManager, Template} from "../../interfaces/IBaseTemplatesMa
 /// @dev A base oracle template implementation that allows an external predefined and constant
 /// answerer to finalize the oracle when it decides the time has come.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
-abstract contract ConstantAnswererTrustedOracle is BaseOracle {
+abstract contract ConstantAnswererTrustedOracle {
     address public immutable answerer;
 
     error Forbidden();
@@ -23,21 +23,6 @@ abstract contract ConstantAnswererTrustedOracle is BaseOracle {
     constructor(address _answerer) {
         if (_answerer == address(0)) revert ZeroAddressAnswerer();
         answerer = _answerer;
-    }
-
-    /// @dev Initializes the base oracle preset this contract extends from. This function
-    /// can only be called while initializing an oracle instance. If you extend from
-    /// this contract, make sure you call this, otherwise no state will be initialized.
-    /// @param _kpiToken The attached KPI token address (used to initialize the base
-    /// oracle preset).
-    /// @param _templateId The oracle's template id (used to initialize the base
-    /// oracle preset).
-    /// @param _templateVersion The oracle's template version (used to initialize the base oracle preset).
-    function __ConstantAnswererTrustedOracle_init(address _kpiToken, uint256 _templateId, uint128 _templateVersion)
-        internal
-        onlyInitializing
-    {
-        __BaseOracle_init(_kpiToken, _templateId, _templateVersion);
     }
 
     /// @dev The main function exposed by the oracle preset. This can be used by implementations at
