@@ -112,7 +112,7 @@ contract ConstrainedOracleToCompletionPercentageTest is BaseTestSetup {
         assertEq(oracleInstance.toCompletionPercentage(40), UNIT);
     }
 
-    function testLowerThanConstraintLessThanTarget() external {
+    function testGreaterThanConstraintLessThanTarget() external {
         MockConstrainedOracle oracleInstance = initializeConstrainedOracle(Constraint.GreaterThan, 10, 0);
         assertEq(oracleInstance.toCompletionPercentage(9), 0);
     }

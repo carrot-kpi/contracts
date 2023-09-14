@@ -20,7 +20,7 @@ abstract contract BaseOracle is IOracle, Initializable {
     error InvalidTemplateId();
     error InvalidTemplateVersion();
 
-    /// @dev Initializes the internal state of the preset, allowing it to provide a
+    /// @dev Initializes the internal state of the preset, allowing it to provide
     /// basic but functional implementations for the most common Carrot oracle functions.
     /// This function can only be called while initializing an oracle instance. If you
     /// extend from this contract, make sure you call this, otherwise no state will be

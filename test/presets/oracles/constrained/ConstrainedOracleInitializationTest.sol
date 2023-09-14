@@ -158,6 +158,37 @@ contract ConstrainedOracleInitializationTest is BaseTestSetup {
         );
     }
 
+    function testNotBetweenConstraintInvalidRange() external {
+        MockConstrainedOracle oracleInstance =
+            MockConstrainedOracle(ClonesUpgradeable.clone(address(mockConstrainedOracleTemplate)));
+
+        // lower bound == higher bound
+        vm.expectRevert(abi.encodeWithSignature("InvalidRangeBounds()"));
+        vm.prank(address(oraclesManager));
+        oracleInstance.initialize(
+            InitializeOracleParams({
+                creator: address(this),
+                kpiToken: address(1),
+                templateId: 1,
+                templateVersion: 1,
+                data: abi.encode(Constraint.NotBetween, 10, 10)
+            })
+        );
+
+        // lower bound > higher bound
+        vm.expectRevert(abi.encodeWithSignature("InvalidRangeBounds()"));
+        vm.prank(address(oraclesManager));
+        oracleInstance.initialize(
+            InitializeOracleParams({
+                creator: address(this),
+                kpiToken: address(1),
+                templateId: 1,
+                templateVersion: 1,
+                data: abi.encode(Constraint.NotBetween, 11, 10)
+            })
+        );
+    }
+
     function testRangeConstraintInvalidRange() external {
         MockConstrainedOracle oracleInstance =
             MockConstrainedOracle(ClonesUpgradeable.clone(address(mockConstrainedOracleTemplate)));

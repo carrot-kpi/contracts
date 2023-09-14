@@ -13,7 +13,7 @@ enum Constraint {
     // percentage is determined based on the final absolute result
     // checking where it landed in the specified range. As an example,
     // if we have a range constraint with bounds 0 and 10 and the end
-    //  result is 5, the goal will be determined to have been 50% completed.
+    // result is 5, the goal will be determined to have been 50% completed.
     Range,
     GreaterThan,
     LowerThan,
