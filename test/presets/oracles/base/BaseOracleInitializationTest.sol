@@ -79,4 +79,27 @@ contract BaseOracleInitializationTest is BaseTestSetup {
         assertEq(oracleInstance.template().version, _template.version);
         assertEq(oracleInstance.template().specification, _template.specification);
     }
+
+    function testFuzzSuccess(address _kpiToken, uint256 _templateId, uint128 _templateVersion, bytes memory _data)
+        external
+    {
+        vm.assume(_kpiToken != address(0));
+        vm.assume(_templateId != 0);
+        vm.assume(_templateVersion != 0);
+
+        MockBaseOracle oracleInstance = MockBaseOracle(ClonesUpgradeable.clone(address(mockBaseOracleTemplate)));
+        vm.prank(address(oraclesManager));
+        oracleInstance.initialize(
+            InitializeOracleParams({
+                creator: address(this),
+                kpiToken: _kpiToken,
+                templateId: _templateId,
+                templateVersion: _templateVersion,
+                data: _data
+            })
+        );
+
+        assertEq(oracleInstance.finalized(), false);
+        assertEq(oracleInstance.kpiToken(), _kpiToken);
+    }
 }
