@@ -36,4 +36,15 @@ contract KpiTokensManagerAddTemplateTest is BaseTestSetup {
         assertEq(_template.version, 1);
         assertEq(_template.specification, _specification);
     }
+
+    function testFuzzSuccess(address _templateAddress, string memory _specification) external {
+        vm.assume(_templateAddress != address(0));
+        vm.assume(bytes(_specification).length != 0);
+        kpiTokensManager.addTemplate(_templateAddress, _specification);
+        uint256 _addedTemplateId = kpiTokensManager.templatesAmount();
+        Template memory _template = kpiTokensManager.template(_addedTemplateId);
+        assertEq(_template.addrezz, _templateAddress);
+        assertEq(_template.version, 1);
+        assertEq(_template.specification, _specification);
+    }
 }
