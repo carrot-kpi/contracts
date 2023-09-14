@@ -284,6 +284,36 @@ contract ConstrainedOracleInitializationTest is BaseTestSetup {
         assertEq(_value1, 1);
     }
 
+    function testSuccessNotBetweenConstraint() external {
+        MockConstrainedOracle oracleInstance =
+            MockConstrainedOracle(ClonesUpgradeable.clone(address(mockConstrainedOracleTemplate)));
+        Template memory _template = oraclesManager.template(1);
+        address kpiToken = address(1);
+        vm.prank(address(oraclesManager));
+        oracleInstance.initialize(
+            InitializeOracleParams({
+                creator: address(this),
+                kpiToken: kpiToken,
+                templateId: _template.id,
+                templateVersion: _template.version,
+                data: abi.encode(Constraint.NotBetween, 0, 1)
+            })
+        );
+
+        assertEq(oracleInstance.finalized(), false);
+        assertEq(oracleInstance.kpiToken(), kpiToken);
+        assertEq(oracleInstance.template().addrezz, _template.addrezz);
+        assertEq(oracleInstance.template().id, _template.id);
+        assertEq(oracleInstance.template().version, _template.version);
+        assertEq(oracleInstance.template().specification, _template.specification);
+
+        (Constraint _constraint, uint256 _value0, uint256 _value1) =
+            abi.decode(oracleInstance.data(), (Constraint, uint256, uint256));
+        assertEq(uint256(_constraint), uint256(Constraint.NotBetween));
+        assertEq(_value0, 0);
+        assertEq(_value1, 1);
+    }
+
     function testSuccessRangeConstraint() external {
         MockConstrainedOracle oracleInstance =
             MockConstrainedOracle(ClonesUpgradeable.clone(address(mockConstrainedOracleTemplate)));
