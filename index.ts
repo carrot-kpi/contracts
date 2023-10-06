@@ -6,26 +6,58 @@ export enum ChainId {
     SCROLL_SEPOLIA = 534351,
 }
 
-export interface CarrotContractAddresses {
-    factory: Address;
-    kpiTokensManager: Address;
-    oraclesManager: Address;
+export interface CarrotContract {
+    address: Address;
+    deploymentBlock: number;
 }
 
-export const DEPLOYMENT_ADDRESSES: Record<ChainId, CarrotContractAddresses> = {
+export interface CarrotContracts {
+    factory: CarrotContract;
+    kpiTokensManager: CarrotContract;
+    oraclesManager: CarrotContract;
+}
+
+export const DEPLOYMENT_ADDRESSES: Record<ChainId, CarrotContracts> = {
     [ChainId.GNOSIS]: {
-        factory: "0xD503Bdcc3Cd38D3cEaBa1efA43EFCc03b7Fb1CbA",
-        kpiTokensManager: "0xCd85e0690f85A52D260273E5B51336D1151F2832",
-        oraclesManager: "0xc9E426B468d334AF6208ef9b3bA5f599d1417c6e",
+        factory: {
+            address: "0xD503Bdcc3Cd38D3cEaBa1efA43EFCc03b7Fb1CbA",
+            deploymentBlock: 28_680_516,
+        },
+        kpiTokensManager: {
+            address: "0xCd85e0690f85A52D260273E5B51336D1151F2832",
+            deploymentBlock: 28_680_518,
+        },
+        oraclesManager: {
+            address: "0xc9E426B468d334AF6208ef9b3bA5f599d1417c6e",
+            deploymentBlock: 28_680_520,
+        },
     },
     [ChainId.SEPOLIA]: {
-        factory: "0x44bBb970E534bCE4B42C5a34b15d5B049704417A",
-        kpiTokensManager: "0xA4537024597F8B9243AbE105D0Cb297Ea2562ef1",
-        oraclesManager: "0x940d1D2F5c5724a37593D323bFde54F81D6f11C0",
+        factory: {
+            address: "0x44bBb970E534bCE4B42C5a34b15d5B049704417A",
+            deploymentBlock: 3_784_913,
+        },
+        kpiTokensManager: {
+            address: "0xA4537024597F8B9243AbE105D0Cb297Ea2562ef1",
+            deploymentBlock: 3_784_915,
+        },
+        oraclesManager: {
+            address: "0x940d1D2F5c5724a37593D323bFde54F81D6f11C0",
+            deploymentBlock: 3_784_917,
+        },
     },
     [ChainId.SCROLL_SEPOLIA]: {
-        factory: "0x64a0745EF9d3772d9739D9350873eD3703bE45eC",
-        kpiTokensManager: "0xD4AC4AaFb81eC774E49AA755A66EfCe4574D6276",
-        oraclesManager: "0xD3Fe5d463dD1fd943CCC2271F2ea980B898B5DA3",
+        factory: {
+            address: "0x64a0745EF9d3772d9739D9350873eD3703bE45eC",
+            deploymentBlock: 416_670,
+        },
+        kpiTokensManager: {
+            address: "0xD4AC4AaFb81eC774E49AA755A66EfCe4574D6276",
+            deploymentBlock: 416_672,
+        },
+        oraclesManager: {
+            address: "0xD3Fe5d463dD1fd943CCC2271F2ea980B898B5DA3",
+            deploymentBlock: 416_675,
+        },
     },
 };
