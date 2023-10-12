@@ -2,11 +2,11 @@ pragma solidity 0.8.19;
 
 import {BaseTestSetup} from "../../../commons/BaseTestSetup.sol";
 import {MockConstantAnswererTrustedOracle} from "../../../mocks/MockConstantAnswererTrustedOracle.sol";
-import {IOraclesManager1} from "../../../../contracts/interfaces/oracles-managers/IOraclesManager1.sol";
+import {IOraclesManager} from "../../../../contracts/interfaces/IOraclesManager.sol";
 import {Template} from "../../../../contracts/interfaces/IBaseTemplatesManager.sol";
 import {Constraint} from "../../../../contracts/presets/oracles/ConstrainedOracle.sol";
 import {InitializeOracleParams} from "../../../../contracts/commons/Types.sol";
-import {ClonesUpgradeable} from "oz-upgradeable/proxy/ClonesUpgradeable.sol";
+import {Clones} from "oz/proxy/Clones.sol";
 import {INVALID_ANSWER} from "../../../../contracts/commons/Constants.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
@@ -21,7 +21,7 @@ contract ConstantAnswererTrustedOracleInitializationTest is BaseTestSetup {
 
     function testZeroAddressKpiToken() external {
         MockConstantAnswererTrustedOracle oracleInstance =
-            MockConstantAnswererTrustedOracle(ClonesUpgradeable.clone(address(mockConstantAnswererTrustedOracle)));
+            MockConstantAnswererTrustedOracle(Clones.clone(address(mockConstantAnswererTrustedOracle)));
         vm.expectRevert(abi.encodeWithSignature("ZeroAddressKPIToken()"));
         vm.prank(address(oraclesManager));
         oracleInstance.initialize(
@@ -37,7 +37,7 @@ contract ConstantAnswererTrustedOracleInitializationTest is BaseTestSetup {
 
     function testZeroTemplateId() external {
         MockConstantAnswererTrustedOracle oracleInstance =
-            MockConstantAnswererTrustedOracle(ClonesUpgradeable.clone(address(mockConstantAnswererTrustedOracle)));
+            MockConstantAnswererTrustedOracle(Clones.clone(address(mockConstantAnswererTrustedOracle)));
         vm.expectRevert(abi.encodeWithSignature("InvalidTemplateId()"));
         vm.prank(address(oraclesManager));
         oracleInstance.initialize(
@@ -53,7 +53,7 @@ contract ConstantAnswererTrustedOracleInitializationTest is BaseTestSetup {
 
     function testZeroVersion() external {
         MockConstantAnswererTrustedOracle oracleInstance =
-            MockConstantAnswererTrustedOracle(ClonesUpgradeable.clone(address(mockConstantAnswererTrustedOracle)));
+            MockConstantAnswererTrustedOracle(Clones.clone(address(mockConstantAnswererTrustedOracle)));
         vm.expectRevert(abi.encodeWithSignature("InvalidTemplateVersion()"));
         vm.prank(address(oraclesManager));
         oracleInstance.initialize(

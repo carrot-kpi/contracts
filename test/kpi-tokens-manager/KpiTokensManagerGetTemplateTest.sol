@@ -1,8 +1,8 @@
 pragma solidity 0.8.19;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
-import {OraclesManager1} from "../../contracts/oracles-managers/OraclesManager1.sol";
-import {IKPITokensManager1} from "../../contracts/interfaces/kpi-tokens-managers/IKPITokensManager1.sol";
+import {OraclesManager} from "../../contracts/OraclesManager.sol";
+import {IKPITokensManager} from "../../contracts/interfaces/IKPITokensManager.sol";
 import {Template} from "../../contracts/interfaces/IBaseTemplatesManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 

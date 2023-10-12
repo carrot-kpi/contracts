@@ -1,6 +1,6 @@
 pragma solidity >=0.8.0;
 
-import {IOraclesManager1} from "../oracles-managers/IOraclesManager1.sol";
+import {IOraclesManager} from "../IOraclesManager.sol";
 import {InitializeOracleParams} from "../../commons/Types.sol";
 import {Template} from "../IBaseTemplatesManager.sol";
 

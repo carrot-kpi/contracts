@@ -1,11 +1,10 @@
 pragma solidity 0.8.19;
 
-import {Ownable} from "oz/access/Ownable.sol";
 import {Clones} from "oz/proxy/Clones.sol";
-import {IKPIToken} from "../interfaces/kpi-tokens/IKPIToken.sol";
-import {BaseTemplatesManager} from "../BaseTemplatesManager.sol";
-import {Template} from "../interfaces/IBaseTemplatesManager.sol";
-import {IKPITokensManager1} from "../interfaces/kpi-tokens-managers/IKPITokensManager1.sol";
+import {IKPIToken} from "./interfaces/kpi-tokens/IKPIToken.sol";
+import {BaseTemplatesManager} from "./BaseTemplatesManager.sol";
+import {Template} from "./interfaces/IBaseTemplatesManager.sol";
+import {IKPITokensManager} from "./interfaces/IKPITokensManager.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI tokens manager
@@ -17,9 +16,7 @@ import {IKPITokensManager1} from "../interfaces/kpi-tokens-managers/IKPITokensMa
 /// (addition, removal, upgrade of templates and more) and the
 /// governance contract must be the owner of the KPI tokens manager.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
-contract KPITokensManager1 is BaseTemplatesManager, IKPITokensManager1 {
-    constructor(address _factory) BaseTemplatesManager(_factory) {}
-
+contract KPITokensManager is BaseTemplatesManager, IKPITokensManager {
     /// @dev Calculates the salt value used in CREATE2 when
     /// instantiating new templates.
     /// @param _creator The KPI token creator address.

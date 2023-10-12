@@ -1,7 +1,7 @@
 pragma solidity 0.8.19;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
-import {OraclesManager1} from "../../contracts/oracles-managers/OraclesManager1.sol";
+import {OraclesManager} from "../../contracts/OraclesManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 import {OracleData} from "../mocks/MockKPIToken.sol";
 

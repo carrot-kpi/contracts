@@ -1,11 +1,11 @@
 pragma solidity 0.8.19;
 
-import {ClonesUpgradeable} from "oz-upgradeable/proxy/ClonesUpgradeable.sol";
-import {IOracle} from "../interfaces/oracles/IOracle.sol";
-import {BaseTemplatesManager, Template} from "../BaseTemplatesManager.sol";
-import {IKPITokensFactory} from "../interfaces/IKPITokensFactory.sol";
-import {InitializeOracleParams} from "../commons/Types.sol";
-import {IOraclesManager1} from "../interfaces/oracles-managers/IOraclesManager1.sol";
+import {Clones} from "oz/proxy/Clones.sol";
+import {IOracle} from "./interfaces/oracles/IOracle.sol";
+import {BaseTemplatesManager, Template} from "./BaseTemplatesManager.sol";
+import {IKPITokensFactory} from "./interfaces/IKPITokensFactory.sol";
+import {InitializeOracleParams} from "./commons/Types.sol";
+import {IOraclesManager} from "./interfaces/IOraclesManager.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Oracles manager
@@ -17,9 +17,7 @@ import {IOraclesManager1} from "../interfaces/oracles-managers/IOraclesManager1.
 /// (addition, removal, upgrade of templates and more) and the
 /// governance contract must be the owner of the oracles manager.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
-contract OraclesManager1 is BaseTemplatesManager, IOraclesManager1 {
-    constructor(address _factory) BaseTemplatesManager(_factory) {}
-
+contract OraclesManager is BaseTemplatesManager, IOraclesManager {
     /// @dev Calculates the salt value used in CREATE2 when
     /// instantiating new templates.
     /// @param _creator The KPI token creator.
@@ -46,7 +44,7 @@ contract OraclesManager1 is BaseTemplatesManager, IOraclesManager1 {
         override
         returns (address)
     {
-        return ClonesUpgradeable.predictDeterministicAddress(
+        return Clones.predictDeterministicAddress(
             latestVersionStorageTemplate(_id).addrezz, salt(_creator, _id, _initializationData), address(this)
         );
     }
@@ -67,8 +65,7 @@ contract OraclesManager1 is BaseTemplatesManager, IOraclesManager1 {
             revert Forbidden();
         }
         Template storage _template = latestVersionStorageTemplate(_id);
-        address _instance =
-            ClonesUpgradeable.cloneDeterministic(_template.addrezz, salt(_creator, _id, _initializationData));
+        address _instance = Clones.cloneDeterministic(_template.addrezz, salt(_creator, _id, _initializationData));
         IOracle(_instance).initialize{value: msg.value}(
             InitializeOracleParams({
                 creator: _creator,

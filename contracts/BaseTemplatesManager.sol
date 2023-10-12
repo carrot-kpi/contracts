@@ -1,7 +1,9 @@
 pragma solidity 0.8.19;
 
-import {Ownable} from "oz/access/Ownable.sol";
+import {OwnableUpgradeable} from "oz-upgradeable/access/OwnableUpgradeable.sol";
 import {Clones} from "oz/proxy/Clones.sol";
+import {UUPSUpgradeable} from "oz/proxy/utils/UUPSUpgradeable.sol";
+import {Initializable} from "oz-upgradeable/proxy/utils/Initializable.sol";
 import {IKPIToken} from "./interfaces/kpi-tokens/IKPIToken.sol";
 import {IOracle} from "./interfaces/oracles/IOracle.sol";
 import {IBaseTemplatesManager, Template} from "./interfaces/IBaseTemplatesManager.sol";
@@ -17,7 +19,7 @@ import {IKPITokensFactory} from "./interfaces/IKPITokensFactory.sol";
 /// The contract will keep track of all the versions of every template
 /// and will keep history of even deleted/unactive templates.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
-abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
+abstract contract BaseTemplatesManager is Initializable, UUPSUpgradeable, OwnableUpgradeable, IBaseTemplatesManager {
     address public factory;
     uint256 internal templateId;
     Template[] internal latestVersionTemplates;
@@ -25,6 +27,7 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
     mapping(uint256 => mapping(uint128 => Template)) internal templateByIdAndVersion;
 
     error NonExistentTemplate();
+    error ZeroAddressOwner();
     error ZeroAddressFactory();
     error Forbidden();
     error ZeroAddressTemplate();
@@ -39,10 +42,18 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
     event UpgradeTemplate(uint256 indexed id, address indexed newTemplate, uint256 newVersion, string newSpecification);
     event UpdateTemplateSpecification(uint256 indexed id, string newSpecification, uint256 version);
 
-    constructor(address _factory) {
+    constructor() {
+        _disableInitializers();
+    }
+
+    function initialize(address _factory) external initializer {
         if (_factory == address(0)) revert ZeroAddressFactory();
+
+        __Ownable_init();
         factory = _factory;
     }
+
+    function _authorizeUpgrade(address _newImplementation) internal override onlyOwner {}
 
     /// @dev Adds a template to the registry. This function can only be called
     /// by the contract owner (governance).

@@ -1,11 +1,13 @@
 pragma solidity 0.8.19;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
-import {OraclesManager1} from "../../contracts/oracles-managers/OraclesManager1.sol";
-import {IOraclesManager1} from "../../contracts/interfaces/oracles-managers/IOraclesManager1.sol";
+import {OraclesManager} from "../../contracts/OraclesManager.sol";
+import {BaseTemplatesManager} from "../../contracts/BaseTemplatesManager.sol";
+import {IOraclesManager} from "../../contracts/interfaces/IOraclesManager.sol";
 import {Template} from "../../contracts/interfaces/IBaseTemplatesManager.sol";
-import {OraclesManager1Harness} from "../harnesses/OraclesManager1Harness.sol";
+import {OraclesManagerHarness} from "../harnesses/OraclesManagerHarness.sol";
 import {Clones} from "oz/proxy/Clones.sol";
+import {ERC1967Proxy} from "oz/proxy/ERC1967/ERC1967Proxy.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Oracles manager update template specification test
@@ -68,7 +70,7 @@ contract OraclesManagerUpdateTemplateSpecificationTest is BaseTestSetup {
     }
 
     function testSuccessPastVersion() external {
-        oraclesManager = new OraclesManager1(address(factory));
+        oraclesManager = initializeOraclesManager(address(factory));
         oraclesManager.addTemplate(address(mockOracleTemplate), "fake");
 
         assertEq(oraclesManager.templatesAmount(), 1);
@@ -109,9 +111,9 @@ contract OraclesManagerUpdateTemplateSpecificationTest is BaseTestSetup {
     }
 
     function testSuccessExplicitLatestVersion() external {
-        OraclesManager1Harness oraclesManager = new OraclesManager1Harness(
-            address(factory)
-        );
+        ERC1967Proxy _proxy =
+        new ERC1967Proxy(address(new OraclesManagerHarness()), abi.encodeWithSelector(BaseTemplatesManager.initialize.selector, factory));
+        OraclesManagerHarness oraclesManager = OraclesManagerHarness(address(_proxy));
 
         assertEq(oraclesManager.templatesAmount(), 0);
 

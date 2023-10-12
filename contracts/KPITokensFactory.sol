@@ -1,8 +1,10 @@
 pragma solidity 0.8.19;
 
-import {Ownable} from "oz/access/Ownable.sol";
+import {OwnableUpgradeable} from "oz-upgradeable/access/OwnableUpgradeable.sol";
+import {UUPSUpgradeable} from "oz/proxy/utils/UUPSUpgradeable.sol";
+import {Initializable} from "oz-upgradeable/proxy/utils/Initializable.sol";
 import {IKPITokensFactory} from "./interfaces/IKPITokensFactory.sol";
-import {IKPITokensManager1} from "./interfaces/kpi-tokens-managers/IKPITokensManager1.sol";
+import {IKPITokensManager} from "./interfaces/IKPITokensManager.sol";
 import {IKPIToken} from "./interfaces/kpi-tokens/IKPIToken.sol";
 import {InitializeKPITokenParams} from "./commons/Types.sol";
 
@@ -12,7 +14,7 @@ import {InitializeKPITokenParams} from "./commons/Types.sol";
 /// create a KPI token. Other utility view functions are included to query
 /// the storage of the contract.
 /// @author Federico Luzzi - <federico.luzzi@protonmail.com>
-contract KPITokensFactory is Ownable, IKPITokensFactory {
+contract KPITokensFactory is Initializable, UUPSUpgradeable, OwnableUpgradeable, IKPITokensFactory {
     address public kpiTokensManager;
     address public oraclesManager;
     address public feeReceiver;
@@ -29,17 +31,27 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
     event SetOraclesManager(address oraclesManager);
     event SetFeeReceiver(address feeReceiver);
 
-    constructor(address _kpiTokensManager, address _oraclesManager, address _feeReceiver) {
+    constructor() {
+        _disableInitializers();
+    }
+
+    function initialize(address _kpiTokensManager, address _oraclesManager, address _feeReceiver)
+        external
+        initializer
+    {
         if (_kpiTokensManager == address(0)) {
             revert ZeroAddressKpiTokensManager();
         }
         if (_oraclesManager == address(0)) revert ZeroAddressOraclesManager();
         if (_feeReceiver == address(0)) revert ZeroAddressFeeReceiver();
 
+        __Ownable_init();
         kpiTokensManager = _kpiTokensManager;
         oraclesManager = _oraclesManager;
         feeReceiver = _feeReceiver;
     }
+
+    function _authorizeUpgrade(address _newImplementation) internal override onlyOwner {}
 
     /// @dev Creates a KPI token with the input data.
     /// @param _id The id of the KPI token template to be used.
@@ -56,7 +68,7 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
         bytes calldata _initializationData,
         bytes calldata _oraclesInitializationData
     ) external payable override returns (address) {
-        (address _instance, uint128 _templateVersion) = IKPITokensManager1(kpiTokensManager).instantiate(
+        (address _instance, uint128 _templateVersion) = IKPITokensManager(kpiTokensManager).instantiate(
             msg.sender, _id, _description, _expiration, _initializationData, _oraclesInitializationData
         );
         allowOraclesCreation[_instance] = true;
