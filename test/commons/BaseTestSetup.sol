@@ -51,6 +51,7 @@ abstract contract BaseTestSetup is Test {
 
         factory.setKpiTokensManager(address(kpiTokensManager));
         factory.setOraclesManager(address(oraclesManager));
+        factory.setPermissionless(true); // permissionless is specifically tested
     }
 
     function createKpiToken(string memory _description) internal returns (MockKPIToken) {
@@ -59,6 +60,18 @@ abstract contract BaseTestSetup is Test {
 
         return MockKPIToken(
             factory.createToken(1, _description, block.timestamp + 60, abi.encode(""), abi.encode(_oracles))
+        );
+    }
+
+    function createKpiTokenWithFactory(KPITokensFactory _factory, string memory _description)
+        internal
+        returns (MockKPIToken)
+    {
+        OracleData[] memory _oracles = new OracleData[](1);
+        _oracles[0] = OracleData({templateId: 1, data: abi.encode(_description)});
+
+        return MockKPIToken(
+            _factory.createToken(1, _description, block.timestamp + 60, abi.encode(""), abi.encode(_oracles))
         );
     }
 
