@@ -18,7 +18,7 @@ import {IKPITokensFactory} from "./interfaces/IKPITokensFactory.sol";
 /// governance contract must be the owner of the templates manager.
 /// The contract will keep track of all the versions of every template
 /// and will keep history of even deleted/unactive templates.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 abstract contract BaseTemplatesManager is Initializable, UUPSUpgradeable, OwnableUpgradeable, IBaseTemplatesManager {
     address public factory;
     uint256 internal templateId;

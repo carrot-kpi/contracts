@@ -12,7 +12,7 @@ import {INVALID_ANSWER} from "../../../../contracts/commons/Constants.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Constrained oracle preset initialize test
 /// @dev Tests initialization in constrained oracle preset.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract ConstrainedOracleInitializationTest is BaseTestSetup {
     function testZeroAddressKpiToken() external {
         MockConstrainedOracle oracleInstance =

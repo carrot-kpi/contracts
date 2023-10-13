@@ -7,7 +7,7 @@ import {ERC1967Proxy} from "oz/proxy/ERC1967/ERC1967Proxy.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Factory instantiation test
 /// @dev Tests factory instantiation.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract FactoryInitializeTest is BaseTestSetup {
     function testZeroAddressKpiTokensManager() external {
         KPITokensFactory _factory = new KPITokensFactory();

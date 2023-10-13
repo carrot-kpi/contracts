@@ -7,7 +7,7 @@ import {Template} from "../IBaseTemplatesManager.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI token interface
 /// @dev KPI token interface.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 interface IKPIToken {
     function initialize(InitializeKPITokenParams memory _params) external payable;
 

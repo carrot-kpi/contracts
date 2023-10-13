@@ -8,7 +8,7 @@ import {OraclesManager} from "../../contracts/OraclesManager.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Factory KPI tokens amount test
 /// @dev Tests KPI tokens enumeration.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract FactoryKpiTokensAmountTest is BaseTestSetup {
     function testNoTemplates() external {
         factory = initializeKPITokensFactory(address(1), address(2), address(3));

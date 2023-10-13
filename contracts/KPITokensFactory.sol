@@ -13,7 +13,7 @@ import {InitializeKPITokenParams} from "./commons/Types.sol";
 /// @dev The factory contract acts as an entry point for users wanting to
 /// create a KPI token. Other utility view functions are included to query
 /// the storage of the contract.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract KPITokensFactory is Initializable, UUPSUpgradeable, OwnableUpgradeable, IKPITokensFactory {
     address public kpiTokensManager;
     address public oraclesManager;

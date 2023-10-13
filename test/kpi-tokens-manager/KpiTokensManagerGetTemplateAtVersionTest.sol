@@ -12,7 +12,7 @@ import {KPITokensManager} from "../../contracts/KPITokensManager.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI tokens manager get template test
 /// @dev Tests template query in KPI tokens manager.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract KpiTokensManagerGetTemplateAtVersionTest is BaseTestSetup {
     function testNonExistentTemplate() external {
         vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));

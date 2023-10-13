@@ -8,7 +8,7 @@ import {Clones} from "oz/proxy/Clones.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI tokens manager add template test
 /// @dev Tests template addition in KPI tokens manager.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract KpiTokensManagerAddTemplateTest is BaseTestSetup {
     function testNonOwner() external {
         vm.prank(address(1));

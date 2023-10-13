@@ -7,7 +7,7 @@ import {Clones} from "oz/proxy/Clones.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Factory enumerate test
 /// @dev Tests KPI tokens enumeration.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract FactoryEnumerateTest is BaseTestSetup {
     function testNoTemplates() external {
         factory = initializeKPITokensFactory(address(1), address(2), address(3));

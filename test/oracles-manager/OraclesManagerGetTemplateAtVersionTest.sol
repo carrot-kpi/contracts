@@ -12,7 +12,7 @@ import {MockOracle} from "../mocks/MockOracle.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Oracles manager get template at version test
 /// @dev Tests template at version query in oracles manager.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract OraclesManagerGetTemplateAtVersionTest is BaseTestSetup {
     function testNonExistentTemplate() external {
         vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));

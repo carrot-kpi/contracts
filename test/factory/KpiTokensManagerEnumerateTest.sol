@@ -8,7 +8,7 @@ import {Clones} from "oz/proxy/Clones.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI tokens manager enumerate templates test
 /// @dev Tests templates enumeration in KPI tokens manager.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract KpiTokensManagerEnumerateTest is BaseTestSetup {
     function testNoTemplates() external {
         kpiTokensManager = initializeKPITokensManager(address(factory));

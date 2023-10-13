@@ -12,7 +12,7 @@ import {ERC1967Proxy} from "oz/proxy/ERC1967/ERC1967Proxy.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Oracles manager update template specification test
 /// @dev Tests template specification update in oracles manager.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract OraclesManagerUpdateTemplateSpecificationTest is BaseTestSetup {
     function testNonOwner() external {
         vm.prank(address(1));

@@ -9,7 +9,7 @@ import {Clones} from "oz/proxy/Clones.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Oracles manager template upgrade test
 /// @dev Tests template upgrade in oracles manager.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract OraclesManagerUpgradeTemplateTest is BaseTestSetup {
     function testNonOwner() external {
         vm.prank(address(1));

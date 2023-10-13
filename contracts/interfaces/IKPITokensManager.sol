@@ -5,7 +5,7 @@ import {IBaseTemplatesManager} from "./IBaseTemplatesManager.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI tokens manager interface
 /// @dev Interface for the KPI tokens manager contract.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 interface IKPITokensManager is IBaseTemplatesManager {
     function predictInstanceAddress(
         address _creator,

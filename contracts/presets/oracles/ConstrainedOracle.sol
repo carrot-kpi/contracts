@@ -27,7 +27,7 @@ enum Constraint {
 /// constraint on the end result and that transforms the end
 /// result itself in a Carrot-compatible target completion
 /// percentage based on it on finalization.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 abstract contract ConstrainedOracle is Initializable {
     uint256 internal constant MULTIPLIER = 64;
 

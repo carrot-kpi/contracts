@@ -8,7 +8,7 @@ import {OracleData} from "../mocks/MockKPIToken.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI tokens manager instantiation test
 /// @dev Tests template instantiation in KPI tokens manager.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract KpiTokensManagerInstantiateTest is BaseTestSetup {
     function testNotFromFactoryFail() external {
         vm.expectRevert(abi.encodeWithSignature("Forbidden()"));

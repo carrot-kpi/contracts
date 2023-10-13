@@ -9,7 +9,7 @@ import {Clones} from "oz/proxy/Clones.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Oracles manager remove template test
 /// @dev Tests template removal in oracles manager.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract OraclesManagerRemoveTemplateTest is BaseTestSetup {
     function testNonOwner() external {
         vm.prank(address(1));

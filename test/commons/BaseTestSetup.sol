@@ -15,7 +15,7 @@ import {ERC1967Proxy} from "oz/proxy/ERC1967/ERC1967Proxy.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Base test setup
 /// @dev Test hook to set up a base test environment for each test.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 abstract contract BaseTestSetup is Test {
     string internal constant MOCK_KPI_TOKEN_SPECIFICATION = "fake-kpi-token-spec";
     string internal constant MOCK_ORACLE_SPECIFICATION = "fake-oracle-spec";

@@ -7,7 +7,7 @@ import {Clones} from "oz/proxy/Clones.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI tokens manager predict instance address test
 /// @dev Tests template instance address prediction in KPI tokens manager.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract KpiTokensManagerPredictInstanceAddressTest is BaseTestSetup {
     function testSuccess() external {
         bytes memory _initializationData = abi.encodePacked(uint256(1), uint256(2), uint256(3));

@@ -10,7 +10,7 @@ import {stdStorage, StdStorage} from "forge-std/Test.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI tokens manager remove template test
 /// @dev Tests template removal in KPI tokens manager.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract KpiTokensManagerRemoveTemplateTest is BaseTestSetup {
     using stdStorage for StdStorage;
 

@@ -12,7 +12,7 @@ import {INVALID_ANSWER} from "../../../../contracts/commons/Constants.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Constant answerer trusted oracle preset initialize test
 /// @dev Tests the check answerer function in the constant answerer trusted oracle.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract ConstantAnswererTrustedOracleCheckAnswererTest is BaseTestSetup {
     function initializeOracle(address _answerer) internal returns (MockConstantAnswererTrustedOracle) {
         MockConstantAnswererTrustedOracle oracleInstance = new MockConstantAnswererTrustedOracle(_answerer);

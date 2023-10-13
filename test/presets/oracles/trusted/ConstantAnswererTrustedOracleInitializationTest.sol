@@ -12,7 +12,7 @@ import {INVALID_ANSWER} from "../../../../contracts/commons/Constants.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Constant answerer trusted oracle preset initialization test
 /// @dev Tests initialization in the constant answerer trusted oracle preset.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract ConstantAnswererTrustedOracleInitializationTest is BaseTestSetup {
     function testZeroAddressAnswerer() external {
         vm.expectRevert(abi.encodeWithSignature("ZeroAddressAnswerer()"));

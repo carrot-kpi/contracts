@@ -13,7 +13,7 @@ struct OracleData {
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI token template implementation
 /// @dev A KPI token template implementation
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract MockKPIToken is IKPIToken {
     address[] internal _oracles;
 

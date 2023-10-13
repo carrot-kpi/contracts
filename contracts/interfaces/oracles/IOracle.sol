@@ -7,7 +7,7 @@ import {Template} from "../IBaseTemplatesManager.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Oracle interface
 /// @dev Oracle interface.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 interface IOracle {
     function initialize(InitializeOracleParams memory _params) external payable;
 

@@ -8,7 +8,7 @@ import {Clones} from "oz/proxy/Clones.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Oracles manager templates enumeration test
 /// @dev Tests template enumeration in oracles manager.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract OraclesManagerEnumerateTest is BaseTestSetup {
     function testNoTemplates() external {
         oraclesManager = initializeOraclesManager(address(factory));

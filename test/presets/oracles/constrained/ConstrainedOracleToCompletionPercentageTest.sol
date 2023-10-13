@@ -12,7 +12,7 @@ import {INVALID_ANSWER, UNIT} from "../../../../contracts/commons/Constants.sol"
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Constrained oracle preset to completion percentage test
 /// @dev Tests the to completion percentage function in the constrained oracle preset.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract ConstrainedOracleToCompletionPercentageTest is BaseTestSetup {
     function initializeConstrainedOracle(Constraint _constraint, uint256 _value0, uint256 _value1)
         internal

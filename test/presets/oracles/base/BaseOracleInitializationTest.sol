@@ -10,7 +10,7 @@ import {ClonesUpgradeable} from "oz-upgradeable/proxy/ClonesUpgradeable.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Base oracle preset initialize test
 /// @dev Tests initialization in base oracle preset.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract BaseOracleInitializationTest is BaseTestSetup {
     function testZeroAddressKpiToken() external {
         MockBaseOracle oracleInstance = MockBaseOracle(ClonesUpgradeable.clone(address(mockBaseOracleTemplate)));

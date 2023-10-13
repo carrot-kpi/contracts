@@ -15,7 +15,7 @@ import {IKPITokensManager} from "./interfaces/IKPITokensManager.sol";
 /// template-related functions are governance-gated
 /// (addition, removal, upgrade of templates and more) and the
 /// governance contract must be the owner of the KPI tokens manager.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract KPITokensManager is BaseTemplatesManager, IKPITokensManager {
     /// @dev Calculates the salt value used in CREATE2 when
     /// instantiating new templates.

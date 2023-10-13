@@ -8,7 +8,7 @@ import {BaseTemplatesManager} from "../../contracts/BaseTemplatesManager.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI tokens manager instantiation test
 /// @dev Tests KPI tokens manager instantiation.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract KpiTokensManagerInitializeTest is BaseTestSetup {
     function testZeroAddressFactory() external {
         KPITokensManager _manager = new KPITokensManager();
