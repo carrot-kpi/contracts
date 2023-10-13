@@ -10,7 +10,7 @@ import {Clones} from "oz/proxy/Clones.sol";
 /// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract KpiTokensManagerTemplatesAmountTest is BaseTestSetup {
     function testNoTemplates() external {
-        kpiTokensManager = initializeKPITokensManager(address(factory) /* , address(0) */ );
+        kpiTokensManager = initializeKPITokensManager(address(factory));
         assertEq(kpiTokensManager.templatesAmount(), 0);
     }
 
