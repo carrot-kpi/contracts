@@ -10,6 +10,12 @@ import {BaseTemplatesManager} from "../../contracts/BaseTemplatesManager.sol";
 /// @dev Tests instantiation in oracles manager.
 /// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract OraclesManagerInitializeTest is BaseTestSetup {
+    function testDisabledInitializerNonProxiedImplementationContract() external {
+        OraclesManager _manager = new OraclesManager();
+        vm.expectRevert("Initializable: contract is already initialized");
+        _manager.initialize(address(1));
+    }
+
     function testZeroAddressFactory() external {
         OraclesManager _manager = new OraclesManager();
         vm.expectRevert(abi.encodeWithSignature("ZeroAddressFactory()"));

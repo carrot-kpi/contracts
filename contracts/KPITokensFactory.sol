@@ -1,12 +1,10 @@
 pragma solidity 0.8.19;
 
-import {OwnableUpgradeable} from "oz-upgradeable/access/OwnableUpgradeable.sol";
-import {UUPSUpgradeable} from "oz/proxy/utils/UUPSUpgradeable.sol";
-import {Initializable} from "oz-upgradeable/proxy/utils/Initializable.sol";
 import {IKPITokensFactory} from "./interfaces/IKPITokensFactory.sol";
 import {IKPITokensManager} from "./interfaces/IKPITokensManager.sol";
 import {IKPIToken} from "./interfaces/kpi-tokens/IKPIToken.sol";
 import {InitializeKPITokenParams} from "./commons/Types.sol";
+import {CarrotUpgradeable} from "./CarrotUpgradeable.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI tokens factory
@@ -14,7 +12,7 @@ import {InitializeKPITokenParams} from "./commons/Types.sol";
 /// create a KPI token. Other utility view functions are included to query
 /// the storage of the contract.
 /// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
-contract KPITokensFactory is Initializable, UUPSUpgradeable, OwnableUpgradeable, IKPITokensFactory {
+contract KPITokensFactory is CarrotUpgradeable, IKPITokensFactory {
     address public kpiTokensManager;
     address public oraclesManager;
     address public feeReceiver;
@@ -31,10 +29,10 @@ contract KPITokensFactory is Initializable, UUPSUpgradeable, OwnableUpgradeable,
     event SetOraclesManager(address oraclesManager);
     event SetFeeReceiver(address feeReceiver);
 
-    constructor() {
-        _disableInitializers();
-    }
-
+    /// @dev Initializes and sets up the KPI tokens factory with the input data.
+    /// @param _kpiTokensManager The address of the KPI tokens manager to be used.
+    /// @param _oraclesManager The address of the oracles manager to be used.
+    /// @param _feeReceiver The address of the fee receiver to be used.
     function initialize(address _kpiTokensManager, address _oraclesManager, address _feeReceiver)
         external
         initializer
@@ -45,13 +43,11 @@ contract KPITokensFactory is Initializable, UUPSUpgradeable, OwnableUpgradeable,
         if (_oraclesManager == address(0)) revert ZeroAddressOraclesManager();
         if (_feeReceiver == address(0)) revert ZeroAddressFeeReceiver();
 
-        __Ownable_init();
+        __CarrotUpgradeable_init();
         kpiTokensManager = _kpiTokensManager;
         oraclesManager = _oraclesManager;
         feeReceiver = _feeReceiver;
     }
-
-    function _authorizeUpgrade(address _newImplementation) internal override onlyOwner {}
 
     /// @dev Creates a KPI token with the input data.
     /// @param _id The id of the KPI token template to be used.

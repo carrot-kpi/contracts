@@ -10,6 +10,12 @@ import {BaseTemplatesManager} from "../../contracts/BaseTemplatesManager.sol";
 /// @dev Tests KPI tokens manager instantiation.
 /// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract KpiTokensManagerInitializeTest is BaseTestSetup {
+    function testDisabledInitializerNonProxiedImplementationContract() external {
+        KPITokensManager _manager = new KPITokensManager();
+        vm.expectRevert("Initializable: contract is already initialized");
+        _manager.initialize(address(1));
+    }
+
     function testZeroAddressFactory() external {
         KPITokensManager _manager = new KPITokensManager();
         vm.expectRevert(abi.encodeWithSignature("ZeroAddressFactory()"));

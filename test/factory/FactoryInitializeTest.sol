@@ -9,6 +9,12 @@ import {ERC1967Proxy} from "oz/proxy/ERC1967/ERC1967Proxy.sol";
 /// @dev Tests factory instantiation.
 /// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract FactoryInitializeTest is BaseTestSetup {
+    function testDisabledInitializerNonProxiedImplementationContract() external {
+        KPITokensFactory _factory = new KPITokensFactory();
+        vm.expectRevert("Initializable: contract is already initialized");
+        _factory.initialize(address(1), address(1), address(1));
+    }
+
     function testZeroAddressKpiTokensManager() external {
         KPITokensFactory _factory = new KPITokensFactory();
         vm.expectRevert(abi.encodeWithSignature("ZeroAddressKpiTokensManager()"));

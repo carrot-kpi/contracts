@@ -1,13 +1,11 @@
 pragma solidity 0.8.19;
 
-import {OwnableUpgradeable} from "oz-upgradeable/access/OwnableUpgradeable.sol";
 import {Clones} from "oz/proxy/Clones.sol";
-import {UUPSUpgradeable} from "oz/proxy/utils/UUPSUpgradeable.sol";
-import {Initializable} from "oz-upgradeable/proxy/utils/Initializable.sol";
 import {IKPIToken} from "./interfaces/kpi-tokens/IKPIToken.sol";
 import {IOracle} from "./interfaces/oracles/IOracle.sol";
 import {IBaseTemplatesManager, Template} from "./interfaces/IBaseTemplatesManager.sol";
 import {IKPITokensFactory} from "./interfaces/IKPITokensFactory.sol";
+import {CarrotUpgradeable} from "./CarrotUpgradeable.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Base templates manager
@@ -19,7 +17,7 @@ import {IKPITokensFactory} from "./interfaces/IKPITokensFactory.sol";
 /// The contract will keep track of all the versions of every template
 /// and will keep history of even deleted/unactive templates.
 /// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
-abstract contract BaseTemplatesManager is Initializable, UUPSUpgradeable, OwnableUpgradeable, IBaseTemplatesManager {
+abstract contract BaseTemplatesManager is CarrotUpgradeable, IBaseTemplatesManager {
     address public factory;
     uint256 internal templateId;
     Template[] internal latestVersionTemplates;
@@ -42,18 +40,14 @@ abstract contract BaseTemplatesManager is Initializable, UUPSUpgradeable, Ownabl
     event UpgradeTemplate(uint256 indexed id, address indexed newTemplate, uint256 newVersion, string newSpecification);
     event UpdateTemplateSpecification(uint256 indexed id, string newSpecification, uint256 version);
 
-    constructor() {
-        _disableInitializers();
-    }
-
+    /// @dev Initializes and sets up the base templates manager with the input data.
+    /// @param _factory The address of the KPI tokens factory to be used.
     function initialize(address _factory) external initializer {
         if (_factory == address(0)) revert ZeroAddressFactory();
 
-        __Ownable_init();
+        __CarrotUpgradeable_init();
         factory = _factory;
     }
-
-    function _authorizeUpgrade(address _newImplementation) internal override onlyOwner {}
 
     /// @dev Adds a template to the registry. This function can only be called
     /// by the contract owner (governance).
