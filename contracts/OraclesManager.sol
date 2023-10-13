@@ -18,6 +18,8 @@ import {IOraclesManager} from "./interfaces/IOraclesManager.sol";
 /// governance contract must be the owner of the oracles manager.
 /// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract OraclesManager is BaseTemplatesManager, IOraclesManager {
+    error Forbidden();
+
     /// @dev Calculates the salt value used in CREATE2 when
     /// instantiating new templates.
     /// @param _creator The KPI token creator.
