@@ -13,21 +13,27 @@ import {CarrotUpgradeable} from "./CarrotUpgradeable.sol";
 /// the storage of the contract.
 /// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract KPITokensFactory is CarrotUpgradeable, IKPITokensFactory {
-    address public kpiTokensManager;
-    address public oraclesManager;
-    address public feeReceiver;
-    mapping(address => bool) public allowOraclesCreation;
+    bool public override permissionless;
+    address public override kpiTokensManager;
+    address public override oraclesManager;
+    address public override feeReceiver;
+    mapping(address => bool) public override allowOraclesCreation;
+    mapping(address => bool) public override creatorAllowed;
     address[] internal kpiTokens;
 
     error ZeroAddressKpiTokensManager();
     error ZeroAddressOraclesManager();
     error ZeroAddressFeeReceiver();
     error InvalidIndices();
+    error ZeroAddressCreator();
+    error Forbidden();
 
     event CreateToken(address token);
     event SetKpiTokensManager(address kpiTokensManager);
     event SetOraclesManager(address oraclesManager);
     event SetFeeReceiver(address feeReceiver);
+    event SetPermissionless(bool permissionless);
+    event UpdateCreatorAllowance(address creator, bool allowance);
 
     /// @dev Initializes and sets up the KPI tokens factory with the input data.
     /// @param _kpiTokensManager The address of the KPI tokens manager to be used.
@@ -64,6 +70,7 @@ contract KPITokensFactory is CarrotUpgradeable, IKPITokensFactory {
         bytes calldata _initializationData,
         bytes calldata _oraclesInitializationData
     ) external payable override returns (address) {
+        if (!permissionless && !creatorAllowed[msg.sender]) revert Forbidden();
         (address _instance, uint128 _templateVersion) = IKPITokensManager(kpiTokensManager).instantiate(
             msg.sender, _id, _description, _expiration, _initializationData, _oraclesInitializationData
         );
@@ -88,6 +95,39 @@ contract KPITokensFactory is CarrotUpgradeable, IKPITokensFactory {
         emit CreateToken(_instance);
 
         return _instance;
+    }
+
+    /// @dev Permissionless flag setter. The flag dictates if the contract allows
+    /// anyone to create KPI tokens or only a pre-allowed list of creators.
+    /// Can only be called by the contract owner.
+    /// @param _permissionless The new flag value.
+    function setPermissionless(bool _permissionless) external override onlyOwner {
+        permissionless = _permissionless;
+        emit SetPermissionless(_permissionless);
+    }
+
+    /// @dev Allows a specific address to create Carrot campaigns when not in
+    /// permissionless mode.
+    /// @param _creator The address to allow.
+    function allowCreator(address _creator) external override onlyOwner {
+        _updateCreatorAllowance(_creator, true);
+    }
+
+    /// @dev Disallows a specific address to create Carrot campaigns when not in
+    /// permissionless mode.
+    /// @param _creator The address to disallow.
+    function disallowCreator(address _creator) external override onlyOwner {
+        _updateCreatorAllowance(_creator, false);
+    }
+
+    /// @dev Internal function performing the actual update logic for a given
+    /// creator's allowance.
+    /// @param _creator The address to allow.
+    /// @param _allowance The updated allowance state.
+    function _updateCreatorAllowance(address _creator, bool _allowance) internal {
+        if (_creator == address(0)) revert ZeroAddressCreator();
+        creatorAllowed[_creator] = _allowance;
+        emit UpdateCreatorAllowance(_creator, _allowance);
     }
 
     /// @dev KPI tokens manager address setter. Can only be called by the contract owner.

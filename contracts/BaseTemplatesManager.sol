@@ -25,15 +25,10 @@ abstract contract BaseTemplatesManager is CarrotUpgradeable, IBaseTemplatesManag
     mapping(uint256 => mapping(uint128 => Template)) internal templateByIdAndVersion;
 
     error NonExistentTemplate();
-    error ZeroAddressOwner();
     error ZeroAddressFactory();
-    error Forbidden();
     error ZeroAddressTemplate();
     error InvalidSpecification();
-    error NoKeyForTemplate();
-    error InvalidVersionBump();
     error InvalidIndices();
-    error AutomationNotSupported();
 
     event AddTemplate(uint256 indexed id, address indexed template, string specification);
     event RemoveTemplate(uint256 indexed id);

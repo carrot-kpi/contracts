@@ -25,6 +25,7 @@ contract FactoryKpiTokensAmountTest is BaseTestSetup {
 
         factory.setKpiTokensManager(address(kpiTokensManager));
         factory.setOraclesManager(address(oraclesManager));
+        factory.allowCreator(address(this));
         createKpiToken("asd");
         assertEq(factory.kpiTokensAmount(), 1);
     }
