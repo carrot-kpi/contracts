@@ -2,7 +2,7 @@ pragma solidity 0.8.19;
 
 import {BaseTestSetup} from "../../../commons/BaseTestSetup.sol";
 import {MockConstrainedOracle} from "../../../mocks/MockConstrainedOracle.sol";
-import {IOraclesManager1} from "../../../../contracts/interfaces/oracles-managers/IOraclesManager1.sol";
+import {IOraclesManager} from "../../../../contracts/interfaces/IOraclesManager.sol";
 import {Template} from "../../../../contracts/interfaces/IBaseTemplatesManager.sol";
 import {Constraint} from "../../../../contracts/presets/oracles/ConstrainedOracle.sol";
 import {InitializeOracleParams} from "../../../../contracts/commons/Types.sol";
@@ -12,7 +12,7 @@ import {INVALID_ANSWER, UNIT} from "../../../../contracts/commons/Constants.sol"
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Constrained oracle preset to completion percentage test
 /// @dev Tests the to completion percentage function in the constrained oracle preset.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract ConstrainedOracleToCompletionPercentageTest is BaseTestSetup {
     function initializeConstrainedOracle(Constraint _constraint, uint256 _value0, uint256 _value1)
         internal

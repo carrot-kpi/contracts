@@ -7,7 +7,7 @@ import {console2} from "forge-std/console2.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Update template specification.
 /// @dev Updates a template specification on a target network.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract UpdateTemplateSpecification is Script {
     error ZeroAddress();
     error ZeroId();

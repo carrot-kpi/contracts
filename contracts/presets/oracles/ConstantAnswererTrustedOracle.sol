@@ -10,7 +10,7 @@ import {IBaseTemplatesManager, Template} from "../../interfaces/IBaseTemplatesMa
 /// @title Constant answerer trusted oracle
 /// @dev A base oracle template implementation that allows an external predefined and constant
 /// answerer to finalize the oracle when it decides the time has come.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 abstract contract ConstantAnswererTrustedOracle {
     address public immutable answerer;
 

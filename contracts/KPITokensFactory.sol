@@ -1,18 +1,18 @@
 pragma solidity 0.8.19;
 
-import {Ownable} from "oz/access/Ownable.sol";
 import {IKPITokensFactory} from "./interfaces/IKPITokensFactory.sol";
-import {IKPITokensManager1} from "./interfaces/kpi-tokens-managers/IKPITokensManager1.sol";
+import {IKPITokensManager} from "./interfaces/IKPITokensManager.sol";
 import {IKPIToken} from "./interfaces/kpi-tokens/IKPIToken.sol";
 import {InitializeKPITokenParams} from "./commons/Types.sol";
+import {CarrotUpgradeable} from "./CarrotUpgradeable.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI tokens factory
 /// @dev The factory contract acts as an entry point for users wanting to
 /// create a KPI token. Other utility view functions are included to query
 /// the storage of the contract.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
-contract KPITokensFactory is Ownable, IKPITokensFactory {
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
+contract KPITokensFactory is CarrotUpgradeable, IKPITokensFactory {
     address public kpiTokensManager;
     address public oraclesManager;
     address public feeReceiver;
@@ -29,13 +29,21 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
     event SetOraclesManager(address oraclesManager);
     event SetFeeReceiver(address feeReceiver);
 
-    constructor(address _kpiTokensManager, address _oraclesManager, address _feeReceiver) {
+    /// @dev Initializes and sets up the KPI tokens factory with the input data.
+    /// @param _kpiTokensManager The address of the KPI tokens manager to be used.
+    /// @param _oraclesManager The address of the oracles manager to be used.
+    /// @param _feeReceiver The address of the fee receiver to be used.
+    function initialize(address _kpiTokensManager, address _oraclesManager, address _feeReceiver)
+        external
+        initializer
+    {
         if (_kpiTokensManager == address(0)) {
             revert ZeroAddressKpiTokensManager();
         }
         if (_oraclesManager == address(0)) revert ZeroAddressOraclesManager();
         if (_feeReceiver == address(0)) revert ZeroAddressFeeReceiver();
 
+        __CarrotUpgradeable_init();
         kpiTokensManager = _kpiTokensManager;
         oraclesManager = _oraclesManager;
         feeReceiver = _feeReceiver;
@@ -56,7 +64,7 @@ contract KPITokensFactory is Ownable, IKPITokensFactory {
         bytes calldata _initializationData,
         bytes calldata _oraclesInitializationData
     ) external payable override returns (address) {
-        (address _instance, uint128 _templateVersion) = IKPITokensManager1(kpiTokensManager).instantiate(
+        (address _instance, uint128 _templateVersion) = IKPITokensManager(kpiTokensManager).instantiate(
             msg.sender, _id, _description, _expiration, _initializationData, _oraclesInitializationData
         );
         allowOraclesCreation[_instance] = true;

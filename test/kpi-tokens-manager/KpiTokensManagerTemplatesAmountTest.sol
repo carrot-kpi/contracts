@@ -1,18 +1,16 @@
 pragma solidity 0.8.19;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
-import {KPITokensManager1} from "../../contracts/kpi-tokens-managers/KPITokensManager1.sol";
+import {KPITokensManager} from "../../contracts/KPITokensManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI tokens manager templates amount test
 /// @dev Tests templates amount query in KPI tokens manager.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract KpiTokensManagerTemplatesAmountTest is BaseTestSetup {
     function testNoTemplates() external {
-        kpiTokensManager = new KPITokensManager1(
-            address(factory) /* , address(0) */
-        );
+        kpiTokensManager = initializeKPITokensManager(address(factory));
         assertEq(kpiTokensManager.templatesAmount(), 0);
     }
 

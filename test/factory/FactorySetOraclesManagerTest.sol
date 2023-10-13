@@ -5,7 +5,7 @@ import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Factory set oracles manager test
 /// @dev Tests factory setter for oracles manager.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract FactorySetOraclesManagerTest is BaseTestSetup {
     function testNonOwner() external {
         vm.prank(address(1));

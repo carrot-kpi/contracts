@@ -2,7 +2,7 @@ pragma solidity 0.8.19;
 
 import {BaseTestSetup} from "../../../commons/BaseTestSetup.sol";
 import {MockBaseOracle} from "../../../mocks/MockBaseOracle.sol";
-import {IOraclesManager1} from "../../../../contracts/interfaces/oracles-managers/IOraclesManager1.sol";
+import {IOraclesManager} from "../../../../contracts/interfaces/IOraclesManager.sol";
 import {Template} from "../../../../contracts/interfaces/IBaseTemplatesManager.sol";
 import {InitializeOracleParams} from "../../../../contracts/commons/Types.sol";
 import {ClonesUpgradeable} from "oz-upgradeable/proxy/ClonesUpgradeable.sol";
@@ -10,7 +10,7 @@ import {ClonesUpgradeable} from "oz-upgradeable/proxy/ClonesUpgradeable.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Base oracle preset initialize test
 /// @dev Tests initialization in base oracle preset.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract BaseOracleInitializationTest is BaseTestSetup {
     function testZeroAddressKpiToken() external {
         MockBaseOracle oracleInstance = MockBaseOracle(ClonesUpgradeable.clone(address(mockBaseOracleTemplate)));

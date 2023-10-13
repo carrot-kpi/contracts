@@ -1,18 +1,18 @@
 pragma solidity 0.8.19;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
-import {OraclesManager1} from "../../contracts/oracles-managers/OraclesManager1.sol";
-import {IKPITokensManager1} from "../../contracts/interfaces/kpi-tokens-managers/IKPITokensManager1.sol";
+import {OraclesManager} from "../../contracts/OraclesManager.sol";
+import {IKPITokensManager} from "../../contracts/interfaces/IKPITokensManager.sol";
 import {Template} from "../../contracts/interfaces/IBaseTemplatesManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 import {KPITokensFactory} from "../../contracts/KPITokensFactory.sol";
 import {MockKPIToken} from "../mocks/MockKPIToken.sol";
-import {KPITokensManager1} from "../../contracts/kpi-tokens-managers/KPITokensManager1.sol";
+import {KPITokensManager} from "../../contracts/KPITokensManager.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI tokens manager get template test
 /// @dev Tests template query in KPI tokens manager.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract KpiTokensManagerGetTemplateAtVersionTest is BaseTestSetup {
     function testNonExistentTemplate() external {
         vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
@@ -28,15 +28,9 @@ contract KpiTokensManagerGetTemplateAtVersionTest is BaseTestSetup {
     }
 
     function testSuccessOnAdd() external {
-        KPITokensFactory _factory = new KPITokensFactory(
-            address(1),
-            address(1),
-            feeReceiver
-        );
+        KPITokensFactory _factory = initializeKPITokensFactory(address(1), address(1), feeReceiver);
         MockKPIToken _mockKpiTokenTemplate = new MockKPIToken();
-        KPITokensManager1 _kpiTokensManager = new KPITokensManager1(
-            address(_factory)
-        );
+        KPITokensManager _kpiTokensManager = initializeKPITokensManager(address(_factory));
         assertEq(_kpiTokensManager.templatesAmount(), 0);
         vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
         Template memory _template = _kpiTokensManager.template(1);
@@ -53,15 +47,9 @@ contract KpiTokensManagerGetTemplateAtVersionTest is BaseTestSetup {
     }
 
     function testSuccessOnUpgrade() external {
-        KPITokensFactory _factory = new KPITokensFactory(
-            address(1),
-            address(1),
-            feeReceiver
-        );
+        KPITokensFactory _factory = initializeKPITokensFactory(address(1), address(1), feeReceiver);
         MockKPIToken _mockKpiTokenTemplate = new MockKPIToken();
-        KPITokensManager1 _kpiTokensManager = new KPITokensManager1(
-            address(_factory)
-        );
+        KPITokensManager _kpiTokensManager = initializeKPITokensManager(address(_factory));
         assertEq(_kpiTokensManager.templatesAmount(), 0);
         vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
         Template memory _template = _kpiTokensManager.template(1);
@@ -97,15 +85,9 @@ contract KpiTokensManagerGetTemplateAtVersionTest is BaseTestSetup {
     }
 
     function testSuccessOnRemove() external {
-        KPITokensFactory _factory = new KPITokensFactory(
-            address(1),
-            address(1),
-            feeReceiver
-        );
+        KPITokensFactory _factory = initializeKPITokensFactory(address(1), address(1), feeReceiver);
         MockKPIToken _mockKpiTokenTemplate = new MockKPIToken();
-        KPITokensManager1 _kpiTokensManager = new KPITokensManager1(
-            address(_factory)
-        );
+        KPITokensManager _kpiTokensManager = initializeKPITokensManager(address(_factory));
         assertEq(_kpiTokensManager.templatesAmount(), 0);
         vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
         Template memory _template = _kpiTokensManager.template(1);

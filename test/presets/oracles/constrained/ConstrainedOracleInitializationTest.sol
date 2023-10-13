@@ -2,7 +2,7 @@ pragma solidity 0.8.19;
 
 import {BaseTestSetup} from "../../../commons/BaseTestSetup.sol";
 import {MockConstrainedOracle} from "../../../mocks/MockConstrainedOracle.sol";
-import {IOraclesManager1} from "../../../../contracts/interfaces/oracles-managers/IOraclesManager1.sol";
+import {IOraclesManager} from "../../../../contracts/interfaces/IOraclesManager.sol";
 import {Template} from "../../../../contracts/interfaces/IBaseTemplatesManager.sol";
 import {Constraint} from "../../../../contracts/presets/oracles/ConstrainedOracle.sol";
 import {InitializeOracleParams} from "../../../../contracts/commons/Types.sol";
@@ -12,7 +12,7 @@ import {INVALID_ANSWER} from "../../../../contracts/commons/Constants.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Constrained oracle preset initialize test
 /// @dev Tests initialization in constrained oracle preset.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract ConstrainedOracleInitializationTest is BaseTestSetup {
     function testZeroAddressKpiToken() external {
         MockConstrainedOracle oracleInstance =

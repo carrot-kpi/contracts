@@ -1,11 +1,11 @@
 pragma solidity 0.8.19;
 
-import {Ownable} from "oz/access/Ownable.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 import {IKPIToken} from "./interfaces/kpi-tokens/IKPIToken.sol";
 import {IOracle} from "./interfaces/oracles/IOracle.sol";
 import {IBaseTemplatesManager, Template} from "./interfaces/IBaseTemplatesManager.sol";
 import {IKPITokensFactory} from "./interfaces/IKPITokensFactory.sol";
+import {CarrotUpgradeable} from "./CarrotUpgradeable.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Base templates manager
@@ -16,8 +16,8 @@ import {IKPITokensFactory} from "./interfaces/IKPITokensFactory.sol";
 /// governance contract must be the owner of the templates manager.
 /// The contract will keep track of all the versions of every template
 /// and will keep history of even deleted/unactive templates.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
-abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
+abstract contract BaseTemplatesManager is CarrotUpgradeable, IBaseTemplatesManager {
     address public factory;
     uint256 internal templateId;
     Template[] internal latestVersionTemplates;
@@ -25,6 +25,7 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
     mapping(uint256 => mapping(uint128 => Template)) internal templateByIdAndVersion;
 
     error NonExistentTemplate();
+    error ZeroAddressOwner();
     error ZeroAddressFactory();
     error Forbidden();
     error ZeroAddressTemplate();
@@ -39,8 +40,12 @@ abstract contract BaseTemplatesManager is Ownable, IBaseTemplatesManager {
     event UpgradeTemplate(uint256 indexed id, address indexed newTemplate, uint256 newVersion, string newSpecification);
     event UpdateTemplateSpecification(uint256 indexed id, string newSpecification, uint256 version);
 
-    constructor(address _factory) {
+    /// @dev Initializes and sets up the base templates manager with the input data.
+    /// @param _factory The address of the KPI tokens factory to be used.
+    function initialize(address _factory) external initializer {
         if (_factory == address(0)) revert ZeroAddressFactory();
+
+        __CarrotUpgradeable_init();
         factory = _factory;
     }
 

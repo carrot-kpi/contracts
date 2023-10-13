@@ -8,7 +8,7 @@ import {OracleData} from "../mocks/MockKPIToken.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI tokens factory tokens amount test
 /// @dev Tests tokens amount query in KPI tokens factory.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract FactoryTokensAmountTest is BaseTestSetup {
     function testNoToken() external {
         assertEq(factory.kpiTokensAmount(), 0);

@@ -1,13 +1,13 @@
 pragma solidity >=0.8.0;
 
-import {IOraclesManager1} from "../oracles-managers/IOraclesManager1.sol";
+import {IOraclesManager} from "../IOraclesManager.sol";
 import {InitializeOracleParams} from "../../commons/Types.sol";
 import {Template} from "../IBaseTemplatesManager.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Oracle interface
 /// @dev Oracle interface.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 interface IOracle {
     function initialize(InitializeOracleParams memory _params) external payable;
 

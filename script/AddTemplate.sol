@@ -7,7 +7,7 @@ import {console2} from "forge-std/console2.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Add template
 /// @dev Adds a template on a target network.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract AddTemplate is Script {
     error ZeroAddress();
     error InvalidSpecification();
