@@ -1,4 +1,4 @@
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 import {KPITokensFactory} from "../../contracts/KPITokensFactory.sol";

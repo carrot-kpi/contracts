@@ -1,4 +1,4 @@
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {IKPITokensFactory} from "./interfaces/IKPITokensFactory.sol";
 import {IKPITokensManager} from "./interfaces/IKPITokensManager.sol";
@@ -39,7 +39,7 @@ contract KPITokensFactory is CarrotUpgradeable, IKPITokensFactory {
     /// @param _kpiTokensManager The address of the KPI tokens manager to be used.
     /// @param _oraclesManager The address of the oracles manager to be used.
     /// @param _feeReceiver The address of the fee receiver to be used.
-    function initialize(address _kpiTokensManager, address _oraclesManager, address _feeReceiver)
+    function initialize(address _owner, address _kpiTokensManager, address _oraclesManager, address _feeReceiver)
         external
         initializer
     {
@@ -49,7 +49,7 @@ contract KPITokensFactory is CarrotUpgradeable, IKPITokensFactory {
         if (_oraclesManager == address(0)) revert ZeroAddressOraclesManager();
         if (_feeReceiver == address(0)) revert ZeroAddressFeeReceiver();
 
-        __CarrotUpgradeable_init();
+        __CarrotUpgradeable_init(_owner);
         kpiTokensManager = _kpiTokensManager;
         oraclesManager = _oraclesManager;
         feeReceiver = _feeReceiver;

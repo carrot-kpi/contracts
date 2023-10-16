@@ -1,4 +1,4 @@
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {IBaseTemplatesManager} from "../contracts/interfaces/IBaseTemplatesManager.sol";
 import {Script} from "forge-std/Script.sol";

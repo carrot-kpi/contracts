@@ -1,4 +1,4 @@
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {Initializable} from "oz-upgradeable/proxy/utils/Initializable.sol";
 import {BaseOracle} from "./BaseOracle.sol";

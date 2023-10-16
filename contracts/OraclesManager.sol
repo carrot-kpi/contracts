@@ -1,4 +1,4 @@
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {Clones} from "oz/proxy/Clones.sol";
 import {IOracle} from "./interfaces/oracles/IOracle.sol";

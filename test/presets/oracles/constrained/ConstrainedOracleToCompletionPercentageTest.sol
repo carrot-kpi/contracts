@@ -1,4 +1,4 @@
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {BaseTestSetup} from "../../../commons/BaseTestSetup.sol";
 import {MockConstrainedOracle} from "../../../mocks/MockConstrainedOracle.sol";
@@ -6,7 +6,7 @@ import {IOraclesManager} from "../../../../contracts/interfaces/IOraclesManager.
 import {Template} from "../../../../contracts/interfaces/IBaseTemplatesManager.sol";
 import {Constraint} from "../../../../contracts/presets/oracles/ConstrainedOracle.sol";
 import {InitializeOracleParams} from "../../../../contracts/commons/Types.sol";
-import {ClonesUpgradeable} from "oz-upgradeable/proxy/ClonesUpgradeable.sol";
+import {Clones} from "oz/proxy/Clones.sol";
 import {INVALID_ANSWER, UNIT} from "../../../../contracts/commons/Constants.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
@@ -19,7 +19,7 @@ contract ConstrainedOracleToCompletionPercentageTest is BaseTestSetup {
         returns (MockConstrainedOracle)
     {
         MockConstrainedOracle oracleInstance =
-            MockConstrainedOracle(ClonesUpgradeable.clone(address(mockConstrainedOracleTemplate)));
+            MockConstrainedOracle(Clones.clone(address(mockConstrainedOracleTemplate)));
         oracleInstance.initialize(
             InitializeOracleParams({
                 creator: address(this),

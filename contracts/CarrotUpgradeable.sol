@@ -1,4 +1,4 @@
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {OwnableUpgradeable} from "oz-upgradeable/access/OwnableUpgradeable.sol";
 import {UUPSUpgradeable} from "oz/proxy/utils/UUPSUpgradeable.sol";
@@ -21,8 +21,8 @@ contract CarrotUpgradeable is Initializable, UUPSUpgradeable, OwnableUpgradeable
 
     /// @dev The function acts as a replacement for constructors in a proxy-based context.
     /// Calling this correctly initializes part of the internal state of the proxy.
-    function __CarrotUpgradeable_init() internal onlyInitializing {
-        __Ownable_init();
+    function __CarrotUpgradeable_init(address _owner) internal onlyInitializing {
+        __Ownable_init(_owner);
     }
 
     /// @dev Makes the contract immutable and not upgradeable anymore. Use with caution.

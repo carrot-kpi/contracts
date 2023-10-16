@@ -1,8 +1,9 @@
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 import {KPITokensManager} from "../../contracts/KPITokensManager.sol";
 import {ERC1967Proxy} from "oz/proxy/ERC1967/ERC1967Proxy.sol";
+import {OwnableUpgradeable} from "oz-upgradeable/access/OwnableUpgradeable.sol";
 
 contract UpgradedKPITokensManager is KPITokensManager {
     function isUpgraded() external pure returns (bool) {
@@ -17,8 +18,9 @@ contract UpgradedKPITokensManager is KPITokensManager {
 contract KPITokensManagerUpgradeTest is BaseTestSetup {
     function testNotOwner() external {
         KPITokensManager _manager = initializeKPITokensManager(address(1));
-        vm.prank(address(999)); // prank to non owner
-        vm.expectRevert("Ownable: caller is not the owner");
+        address _pranked = address(999);
+        vm.prank(_pranked); // prank to non owner
+        vm.expectRevert(abi.encodeWithSelector(OwnableUpgradeable.OwnableUnauthorizedAccount.selector, _pranked));
         _manager.upgradeToAndCall(address(1234), abi.encode());
     }
 
@@ -37,7 +39,7 @@ contract KPITokensManagerUpgradeTest is BaseTestSetup {
         UpgradedKPITokensManager(address(_manager)).isUpgraded();
 
         vm.prank(_manager.owner());
-        _manager.upgradeTo(address(new UpgradedKPITokensManager()));
+        _manager.upgradeToAndCall(address(new UpgradedKPITokensManager()), abi.encode());
         UpgradedKPITokensManager _upgraded = UpgradedKPITokensManager(address(_manager));
         assertTrue(_upgraded.isUpgraded());
     }

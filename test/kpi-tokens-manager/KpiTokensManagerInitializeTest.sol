@@ -1,9 +1,10 @@
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 import {KPITokensManager} from "../../contracts/KPITokensManager.sol";
 import {ERC1967Proxy} from "oz/proxy/ERC1967/ERC1967Proxy.sol";
 import {BaseTemplatesManager} from "../../contracts/BaseTemplatesManager.sol";
+import {Initializable} from "oz/proxy/utils/Initializable.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI tokens manager instantiation test
@@ -12,13 +13,13 @@ import {BaseTemplatesManager} from "../../contracts/BaseTemplatesManager.sol";
 contract KpiTokensManagerInitializeTest is BaseTestSetup {
     function testDisabledInitializerNonProxiedImplementationContract() external {
         KPITokensManager _manager = new KPITokensManager();
-        vm.expectRevert("Initializable: contract is already initialized");
-        _manager.initialize(address(1));
+        vm.expectRevert(abi.encodeWithSelector(Initializable.InvalidInitialization.selector));
+        _manager.initialize(owner, address(1));
     }
 
     function testZeroAddressFactory() external {
         KPITokensManager _manager = new KPITokensManager();
         vm.expectRevert(abi.encodeWithSignature("ZeroAddressFactory()"));
-        new ERC1967Proxy(address(_manager), abi.encodeWithSelector(BaseTemplatesManager.initialize.selector, address(0)));
+        new ERC1967Proxy(address(_manager), abi.encodeWithSelector(BaseTemplatesManager.initialize.selector, owner, address(0)));
     }
 }
