@@ -1,4 +1,4 @@
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 import {OraclesManager} from "../../contracts/OraclesManager.sol";
@@ -8,6 +8,7 @@ import {Template} from "../../contracts/interfaces/IBaseTemplatesManager.sol";
 import {OraclesManagerHarness} from "../harnesses/OraclesManagerHarness.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 import {ERC1967Proxy} from "oz/proxy/ERC1967/ERC1967Proxy.sol";
+import {OwnableUpgradeable} from "oz-upgradeable/access/OwnableUpgradeable.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Oracles manager update template specification test
@@ -15,8 +16,9 @@ import {ERC1967Proxy} from "oz/proxy/ERC1967/ERC1967Proxy.sol";
 /// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract OraclesManagerUpdateTemplateSpecificationTest is BaseTestSetup {
     function testNonOwner() external {
-        vm.prank(address(1));
-        vm.expectRevert("Ownable: caller is not the owner");
+        address _pranked = address(999);
+        vm.prank(_pranked);
+        vm.expectRevert(abi.encodeWithSelector(OwnableUpgradeable.OwnableUnauthorizedAccount.selector, _pranked));
         oraclesManager.updateTemplateSpecification(0, "");
     }
 
@@ -45,8 +47,9 @@ contract OraclesManagerUpdateTemplateSpecificationTest is BaseTestSetup {
     }
 
     function testNonOwnerSpecificVersion() external {
-        vm.prank(address(1));
-        vm.expectRevert("Ownable: caller is not the owner");
+        address _pranked = address(999);
+        vm.prank(_pranked);
+        vm.expectRevert(abi.encodeWithSelector(OwnableUpgradeable.OwnableUnauthorizedAccount.selector, _pranked));
         oraclesManager.updateTemplateSpecification(0, 0, "");
     }
 
@@ -112,7 +115,7 @@ contract OraclesManagerUpdateTemplateSpecificationTest is BaseTestSetup {
 
     function testSuccessExplicitLatestVersion() external {
         ERC1967Proxy _proxy =
-        new ERC1967Proxy(address(new OraclesManagerHarness()), abi.encodeWithSelector(BaseTemplatesManager.initialize.selector, factory));
+        new ERC1967Proxy(address(new OraclesManagerHarness()), abi.encodeWithSelector(BaseTemplatesManager.initialize.selector, owner, factory));
         OraclesManagerHarness oraclesManager = OraclesManagerHarness(address(_proxy));
 
         assertEq(oraclesManager.templatesAmount(), 0);

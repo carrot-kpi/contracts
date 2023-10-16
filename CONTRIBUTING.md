@@ -68,6 +68,7 @@ create a .env.<NETWORK_NAME> file exporting 3 env variables:
 ```
 export PRIVATE_KEY=""
 export RPC_ENDPOINT=""
+export OWNER=""
 export FEE_RECEIVER=""
 ```
 
@@ -77,6 +78,8 @@ brief explainer of the env variables:
   deployment.
 - `RPC_ENDPOINT`: the RPC endpoint that will be used to broadcast transactions.
   This will also determine the network where the deployment will happen.
+- `OWNER`: the address that will own the deployed core protocol contracts and
+  that will be able to set some protocol parameters.
 - `FEE_RECEIVER`: the address of the fee receiver. This address will collect all
   the protocol fees.
 
@@ -87,7 +90,7 @@ doing that, you can finally execute the following command to initiate the
 deployment:
 
 ```
-FOUNDRY_PROFILE=production forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address)' Deploy $FEE_RECEIVER
+FOUNDRY_PROFILE=production forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address)' Deploy $OWNER $FEE_RECEIVER
 ```
 
 Two alternative forms of the command can be used in order for the deployment to
@@ -95,8 +98,8 @@ be completed with either Trezor or Ledger hardware wallets (all the arguments
 remain the same as above):
 
 ```
-FOUNDRY_PROFILE=production forge script --broadcast --slow --ledger --fork-url $RPC_ENDPOINT --sig 'run(address)' Deploy $FEE_RECEIVER
-FOUNDRY_PROFILE=production forge script --broadcast --slow --trezor --fork-url $RPC_ENDPOINT --sig 'run(address)' Deploy $FEE_RECEIVER
+FOUNDRY_PROFILE=production forge script --broadcast --slow --ledger --fork-url $RPC_ENDPOINT --sig 'run(address)' Deploy $OWNER $FEE_RECEIVER
+FOUNDRY_PROFILE=production forge script --broadcast --slow --trezor --fork-url $RPC_ENDPOINT --sig 'run(address)' Deploy $OWNER $FEE_RECEIVER
 ```
 
 ### Adding a template

@@ -1,4 +1,4 @@
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {Clones} from "oz/proxy/Clones.sol";
 import {IKPIToken} from "./interfaces/kpi-tokens/IKPIToken.sol";
@@ -37,10 +37,10 @@ abstract contract BaseTemplatesManager is CarrotUpgradeable, IBaseTemplatesManag
 
     /// @dev Initializes and sets up the base templates manager with the input data.
     /// @param _factory The address of the KPI tokens factory to be used.
-    function initialize(address _factory) external initializer {
+    function initialize(address _owner, address _factory) external initializer {
         if (_factory == address(0)) revert ZeroAddressFactory();
 
-        __CarrotUpgradeable_init();
+        __CarrotUpgradeable_init(_owner);
         factory = _factory;
     }
 

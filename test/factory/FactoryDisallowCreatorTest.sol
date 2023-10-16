@@ -1,4 +1,4 @@
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 import {TokenAmount} from "../../contracts/commons/Types.sol";
@@ -6,6 +6,7 @@ import {KPITokensFactory} from "../../contracts/KPITokensFactory.sol";
 import {OracleData, MockKPIToken} from "../mocks/MockKPIToken.sol";
 import {KPITokensManager} from "../../contracts/KPITokensManager.sol";
 import {OraclesManager} from "../../contracts/OraclesManager.sol";
+import {OwnableUpgradeable} from "oz-upgradeable/access/OwnableUpgradeable.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Factory disallow creator test
@@ -20,8 +21,9 @@ contract FactoryDisallowCreatorTest is BaseTestSetup {
         factory.allowCreator(_creator);
         assertTrue(factory.creatorAllowed(_creator));
 
-        vm.prank(address(12344321));
-        vm.expectRevert("Ownable: caller is not the owner");
+        address _pranked = address(12344321);
+        vm.prank(_pranked);
+        vm.expectRevert(abi.encodeWithSelector(OwnableUpgradeable.OwnableUnauthorizedAccount.selector, _pranked));
         factory.disallowCreator(_creator);
 
         assertTrue(factory.creatorAllowed(_creator));

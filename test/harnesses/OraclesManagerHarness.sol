@@ -1,4 +1,4 @@
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {OraclesManager} from "../../contracts/OraclesManager.sol";
 import {Template} from "../../contracts/interfaces/IBaseTemplatesManager.sol";

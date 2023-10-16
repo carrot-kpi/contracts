@@ -1,4 +1,4 @@
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {Test} from "forge-std/Test.sol";
 import {KPITokensManager} from "../../contracts/KPITokensManager.sol";
@@ -21,6 +21,7 @@ abstract contract BaseTestSetup is Test {
     string internal constant MOCK_ORACLE_SPECIFICATION = "fake-oracle-spec";
     address internal constant MOCK_CONSTANT_TRUSTED_ORACLE_ANSWERER = address(9999119999);
 
+    address internal owner;
     address internal feeReceiver;
     KPITokensFactory internal factory;
     MockKPIToken internal mockKpiTokenTemplate;
@@ -33,6 +34,7 @@ abstract contract BaseTestSetup is Test {
 
     function setUp() external {
         feeReceiver = address(400);
+        owner = address(this);
         factory = initializeKPITokensFactory(address(1), address(1), feeReceiver);
 
         mockKpiTokenTemplate = new MockKPIToken();
@@ -81,21 +83,21 @@ abstract contract BaseTestSetup is Test {
     {
         KPITokensFactory _factory = new KPITokensFactory();
         ERC1967Proxy _proxy =
-        new ERC1967Proxy(address(_factory), abi.encodeWithSelector(KPITokensFactory.initialize.selector, _kpiTokensManager, _oraclesManager, _feeReceiver));
+        new ERC1967Proxy(address(_factory), abi.encodeWithSelector(KPITokensFactory.initialize.selector, owner, _kpiTokensManager, _oraclesManager, _feeReceiver));
         return KPITokensFactory(address(_proxy));
     }
 
     function initializeOraclesManager(address _factory) internal returns (OraclesManager) {
         OraclesManager _manager = new OraclesManager();
         ERC1967Proxy _proxy =
-        new ERC1967Proxy(address(_manager), abi.encodeWithSelector(BaseTemplatesManager.initialize.selector, _factory));
+        new ERC1967Proxy(address(_manager), abi.encodeWithSelector(BaseTemplatesManager.initialize.selector, owner, _factory));
         return OraclesManager(address(_proxy));
     }
 
     function initializeKPITokensManager(address _factory) internal returns (KPITokensManager) {
         KPITokensManager _manager = new KPITokensManager();
         ERC1967Proxy _proxy =
-        new ERC1967Proxy(address(_manager), abi.encodeWithSelector(BaseTemplatesManager.initialize.selector, _factory));
+        new ERC1967Proxy(address(_manager), abi.encodeWithSelector(BaseTemplatesManager.initialize.selector, owner, _factory));
         return KPITokensManager(address(_proxy));
     }
 }

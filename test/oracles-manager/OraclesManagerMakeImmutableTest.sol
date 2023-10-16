@@ -1,8 +1,9 @@
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 import {OraclesManager} from "../../contracts/OraclesManager.sol";
 import {ERC1967Proxy} from "oz/proxy/ERC1967/ERC1967Proxy.sol";
+import {OwnableUpgradeable} from "oz-upgradeable/access/OwnableUpgradeable.sol";
 
 contract UpgradedOraclesManager is OraclesManager {
     function isUpgraded() external pure returns (bool) {
@@ -17,8 +18,9 @@ contract UpgradedOraclesManager is OraclesManager {
 contract OraclesManagerMakeImmutableTest is BaseTestSetup {
     function testNotOwner() external {
         OraclesManager _manager = initializeOraclesManager(address(1));
-        vm.prank(address(999)); // prank to non owner
-        vm.expectRevert("Ownable: caller is not the owner");
+        address _pranked = address(999);
+        vm.prank(_pranked); // prank to non owner
+        vm.expectRevert(abi.encodeWithSelector(OwnableUpgradeable.OwnableUnauthorizedAccount.selector, _pranked));
         _manager.makeImmutable();
     }
 
@@ -30,6 +32,6 @@ contract OraclesManagerMakeImmutableTest is BaseTestSetup {
         assertTrue(_manager.disallowUpgrades());
         UpgradedOraclesManager _upgraded = new UpgradedOraclesManager();
         vm.expectRevert(abi.encodeWithSignature("Immutable()"));
-        _manager.upgradeTo(address(_upgraded));
+        _manager.upgradeToAndCall(address(_upgraded), abi.encode(""));
     }
 }

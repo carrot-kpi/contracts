@@ -1,4 +1,4 @@
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {BaseTestSetup} from "../../../commons/BaseTestSetup.sol";
 import {MockConstrainedOracle} from "../../../mocks/MockConstrainedOracle.sol";
@@ -6,7 +6,7 @@ import {IOraclesManager} from "../../../../contracts/interfaces/IOraclesManager.
 import {Template} from "../../../../contracts/interfaces/IBaseTemplatesManager.sol";
 import {Constraint} from "../../../../contracts/presets/oracles/ConstrainedOracle.sol";
 import {InitializeOracleParams} from "../../../../contracts/commons/Types.sol";
-import {ClonesUpgradeable} from "oz-upgradeable/proxy/ClonesUpgradeable.sol";
+import {Clones} from "oz/proxy/Clones.sol";
 import {INVALID_ANSWER} from "../../../../contracts/commons/Constants.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
@@ -16,7 +16,7 @@ import {INVALID_ANSWER} from "../../../../contracts/commons/Constants.sol";
 contract ConstrainedOracleInitializationTest is BaseTestSetup {
     function testZeroAddressKpiToken() external {
         MockConstrainedOracle oracleInstance =
-            MockConstrainedOracle(ClonesUpgradeable.clone(address(mockConstrainedOracleTemplate)));
+            MockConstrainedOracle(Clones.clone(address(mockConstrainedOracleTemplate)));
         vm.expectRevert(abi.encodeWithSignature("ZeroAddressKPIToken()"));
         vm.prank(address(oraclesManager));
         oracleInstance.initialize(
@@ -32,7 +32,7 @@ contract ConstrainedOracleInitializationTest is BaseTestSetup {
 
     function testZeroTemplateId() external {
         MockConstrainedOracle oracleInstance =
-            MockConstrainedOracle(ClonesUpgradeable.clone(address(mockConstrainedOracleTemplate)));
+            MockConstrainedOracle(Clones.clone(address(mockConstrainedOracleTemplate)));
         vm.expectRevert(abi.encodeWithSignature("InvalidTemplateId()"));
         vm.prank(address(oraclesManager));
         oracleInstance.initialize(
@@ -48,7 +48,7 @@ contract ConstrainedOracleInitializationTest is BaseTestSetup {
 
     function testZeroVersion() external {
         MockConstrainedOracle oracleInstance =
-            MockConstrainedOracle(ClonesUpgradeable.clone(address(mockConstrainedOracleTemplate)));
+            MockConstrainedOracle(Clones.clone(address(mockConstrainedOracleTemplate)));
         vm.expectRevert(abi.encodeWithSignature("InvalidTemplateVersion()"));
         vm.prank(address(oraclesManager));
         oracleInstance.initialize(
@@ -64,7 +64,7 @@ contract ConstrainedOracleInitializationTest is BaseTestSetup {
 
     function testValue0Invalid() external {
         MockConstrainedOracle oracleInstance =
-            MockConstrainedOracle(ClonesUpgradeable.clone(address(mockConstrainedOracleTemplate)));
+            MockConstrainedOracle(Clones.clone(address(mockConstrainedOracleTemplate)));
         vm.expectRevert(abi.encodeWithSignature("InvalidValues()"));
         vm.prank(address(oraclesManager));
         oracleInstance.initialize(
@@ -80,7 +80,7 @@ contract ConstrainedOracleInitializationTest is BaseTestSetup {
 
     function testValue1Invalid() external {
         MockConstrainedOracle oracleInstance =
-            MockConstrainedOracle(ClonesUpgradeable.clone(address(mockConstrainedOracleTemplate)));
+            MockConstrainedOracle(Clones.clone(address(mockConstrainedOracleTemplate)));
         vm.expectRevert(abi.encodeWithSignature("InvalidValues()"));
         vm.prank(address(oraclesManager));
         oracleInstance.initialize(
@@ -96,7 +96,7 @@ contract ConstrainedOracleInitializationTest is BaseTestSetup {
 
     function testBothValuesInvalid() external {
         MockConstrainedOracle oracleInstance =
-            MockConstrainedOracle(ClonesUpgradeable.clone(address(mockConstrainedOracleTemplate)));
+            MockConstrainedOracle(Clones.clone(address(mockConstrainedOracleTemplate)));
         vm.expectRevert(abi.encodeWithSignature("InvalidValues()"));
         vm.prank(address(oraclesManager));
         oracleInstance.initialize(
@@ -112,7 +112,7 @@ contract ConstrainedOracleInitializationTest is BaseTestSetup {
 
     function testInvalidConstraint() external {
         MockConstrainedOracle oracleInstance =
-            MockConstrainedOracle(ClonesUpgradeable.clone(address(mockConstrainedOracleTemplate)));
+            MockConstrainedOracle(Clones.clone(address(mockConstrainedOracleTemplate)));
         // the error is an enum conversion one, so we do no data matching
         vm.expectRevert();
         vm.prank(address(oraclesManager));
@@ -129,7 +129,7 @@ contract ConstrainedOracleInitializationTest is BaseTestSetup {
 
     function testBetweenConstraintInvalidRange() external {
         MockConstrainedOracle oracleInstance =
-            MockConstrainedOracle(ClonesUpgradeable.clone(address(mockConstrainedOracleTemplate)));
+            MockConstrainedOracle(Clones.clone(address(mockConstrainedOracleTemplate)));
 
         // lower bound == higher bound
         vm.expectRevert(abi.encodeWithSignature("InvalidRangeBounds()"));
@@ -160,7 +160,7 @@ contract ConstrainedOracleInitializationTest is BaseTestSetup {
 
     function testNotBetweenConstraintInvalidRange() external {
         MockConstrainedOracle oracleInstance =
-            MockConstrainedOracle(ClonesUpgradeable.clone(address(mockConstrainedOracleTemplate)));
+            MockConstrainedOracle(Clones.clone(address(mockConstrainedOracleTemplate)));
 
         // lower bound == higher bound
         vm.expectRevert(abi.encodeWithSignature("InvalidRangeBounds()"));
@@ -191,7 +191,7 @@ contract ConstrainedOracleInitializationTest is BaseTestSetup {
 
     function testRangeConstraintInvalidRange() external {
         MockConstrainedOracle oracleInstance =
-            MockConstrainedOracle(ClonesUpgradeable.clone(address(mockConstrainedOracleTemplate)));
+            MockConstrainedOracle(Clones.clone(address(mockConstrainedOracleTemplate)));
 
         // lower bound == higher bound
         vm.expectRevert(abi.encodeWithSignature("InvalidRangeBounds()"));
@@ -222,7 +222,7 @@ contract ConstrainedOracleInitializationTest is BaseTestSetup {
 
     function testGreaterThanConstraintInvalidValue() external {
         MockConstrainedOracle oracleInstance =
-            MockConstrainedOracle(ClonesUpgradeable.clone(address(mockConstrainedOracleTemplate)));
+            MockConstrainedOracle(Clones.clone(address(mockConstrainedOracleTemplate)));
 
         vm.expectRevert(abi.encodeWithSignature("InvalidGreaterThanConstraintValue()"));
         vm.prank(address(oraclesManager));
@@ -239,7 +239,7 @@ contract ConstrainedOracleInitializationTest is BaseTestSetup {
 
     function testLowerThanConstraintInvalidValue() external {
         MockConstrainedOracle oracleInstance =
-            MockConstrainedOracle(ClonesUpgradeable.clone(address(mockConstrainedOracleTemplate)));
+            MockConstrainedOracle(Clones.clone(address(mockConstrainedOracleTemplate)));
 
         vm.expectRevert(abi.encodeWithSignature("InvalidLowerThanConstraintValue()"));
         vm.prank(address(oraclesManager));
@@ -256,7 +256,7 @@ contract ConstrainedOracleInitializationTest is BaseTestSetup {
 
     function testSuccessBetweenConstraint() external {
         MockConstrainedOracle oracleInstance =
-            MockConstrainedOracle(ClonesUpgradeable.clone(address(mockConstrainedOracleTemplate)));
+            MockConstrainedOracle(Clones.clone(address(mockConstrainedOracleTemplate)));
         Template memory _template = oraclesManager.template(1);
         address kpiToken = address(1);
         vm.prank(address(oraclesManager));
@@ -286,7 +286,7 @@ contract ConstrainedOracleInitializationTest is BaseTestSetup {
 
     function testSuccessNotBetweenConstraint() external {
         MockConstrainedOracle oracleInstance =
-            MockConstrainedOracle(ClonesUpgradeable.clone(address(mockConstrainedOracleTemplate)));
+            MockConstrainedOracle(Clones.clone(address(mockConstrainedOracleTemplate)));
         Template memory _template = oraclesManager.template(1);
         address kpiToken = address(1);
         vm.prank(address(oraclesManager));
@@ -316,7 +316,7 @@ contract ConstrainedOracleInitializationTest is BaseTestSetup {
 
     function testSuccessRangeConstraint() external {
         MockConstrainedOracle oracleInstance =
-            MockConstrainedOracle(ClonesUpgradeable.clone(address(mockConstrainedOracleTemplate)));
+            MockConstrainedOracle(Clones.clone(address(mockConstrainedOracleTemplate)));
         Template memory _template = oraclesManager.template(1);
         address kpiToken = address(1);
         vm.prank(address(oraclesManager));
@@ -346,7 +346,7 @@ contract ConstrainedOracleInitializationTest is BaseTestSetup {
 
     function testSuccessGreaterThanConstraint() external {
         MockConstrainedOracle oracleInstance =
-            MockConstrainedOracle(ClonesUpgradeable.clone(address(mockConstrainedOracleTemplate)));
+            MockConstrainedOracle(Clones.clone(address(mockConstrainedOracleTemplate)));
         Template memory _template = oraclesManager.template(1);
         address kpiToken = address(1);
         vm.prank(address(oraclesManager));
@@ -376,7 +376,7 @@ contract ConstrainedOracleInitializationTest is BaseTestSetup {
 
     function testSuccessLowerThanConstraint() external {
         MockConstrainedOracle oracleInstance =
-            MockConstrainedOracle(ClonesUpgradeable.clone(address(mockConstrainedOracleTemplate)));
+            MockConstrainedOracle(Clones.clone(address(mockConstrainedOracleTemplate)));
         Template memory _template = oraclesManager.template(1);
         address kpiToken = address(1);
         vm.prank(address(oraclesManager));
@@ -406,7 +406,7 @@ contract ConstrainedOracleInitializationTest is BaseTestSetup {
 
     function testSuccessEqualConstraint() external {
         MockConstrainedOracle oracleInstance =
-            MockConstrainedOracle(ClonesUpgradeable.clone(address(mockConstrainedOracleTemplate)));
+            MockConstrainedOracle(Clones.clone(address(mockConstrainedOracleTemplate)));
         Template memory _template = oraclesManager.template(1);
         address kpiToken = address(1);
         vm.prank(address(oraclesManager));
@@ -436,7 +436,7 @@ contract ConstrainedOracleInitializationTest is BaseTestSetup {
 
     function testSuccessSingleValueConstraintDoubleValueProvided() external {
         MockConstrainedOracle oracleInstance =
-            MockConstrainedOracle(ClonesUpgradeable.clone(address(mockConstrainedOracleTemplate)));
+            MockConstrainedOracle(Clones.clone(address(mockConstrainedOracleTemplate)));
         Template memory _template = oraclesManager.template(1);
         address kpiToken = address(1);
         vm.prank(address(oraclesManager));
