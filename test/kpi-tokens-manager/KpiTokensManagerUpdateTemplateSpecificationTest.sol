@@ -1,20 +1,24 @@
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
-import {KPITokensManager1} from "../../contracts/kpi-tokens-managers/KPITokensManager1.sol";
+import {KPITokensManager} from "../../contracts/KPITokensManager.sol";
 import {Template} from "../../contracts/BaseTemplatesManager.sol";
-import {IKPITokensManager1} from "../../contracts/interfaces/kpi-tokens-managers/IKPITokensManager1.sol";
-import {KPITokensManager1Harness} from "../harnesses/KPITokensManager1Harness.sol";
+import {IKPITokensManager} from "../../contracts/interfaces/IKPITokensManager.sol";
+import {KPITokensManagerHarness} from "../harnesses/KPITokensManagerHarness.sol";
 import {Clones} from "oz/proxy/Clones.sol";
+import {ERC1967Proxy} from "oz/proxy/ERC1967/ERC1967Proxy.sol";
+import {BaseTemplatesManager} from "../../contracts/BaseTemplatesManager.sol";
+import {OwnableUpgradeable} from "oz-upgradeable/access/OwnableUpgradeable.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI tokens manager update template specification test
 /// @dev Tests template specification update in KPI tokens manager.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract KpiTokensManagerUpdateTemplateSpecificationTest is BaseTestSetup {
     function testNonOwner() external {
-        vm.prank(address(1));
-        vm.expectRevert("Ownable: caller is not the owner");
+        address _pranked = address(999);
+        vm.prank(_pranked);
+        vm.expectRevert(abi.encodeWithSelector(OwnableUpgradeable.OwnableUnauthorizedAccount.selector, _pranked));
         kpiTokensManager.updateTemplateSpecification(0, "");
     }
 
@@ -43,8 +47,9 @@ contract KpiTokensManagerUpdateTemplateSpecificationTest is BaseTestSetup {
     }
 
     function testNonOwnerSpecificVersion() external {
-        vm.prank(address(1));
-        vm.expectRevert("Ownable: caller is not the owner");
+        address _pranked = address(999);
+        vm.prank(_pranked);
+        vm.expectRevert(abi.encodeWithSelector(OwnableUpgradeable.OwnableUnauthorizedAccount.selector, _pranked));
         kpiTokensManager.updateTemplateSpecification(0, 0, "");
     }
 
@@ -106,9 +111,9 @@ contract KpiTokensManagerUpdateTemplateSpecificationTest is BaseTestSetup {
     }
 
     function testSuccessExplicitLatestVersion() external {
-        KPITokensManager1Harness kpiTokensManager = new KPITokensManager1Harness(
-                address(factory)
-            );
+        ERC1967Proxy _proxy =
+        new ERC1967Proxy(address(new KPITokensManagerHarness()), abi.encodeWithSelector(BaseTemplatesManager.initialize.selector, owner, factory));
+        KPITokensManagerHarness kpiTokensManager = KPITokensManagerHarness(address(_proxy));
 
         assertEq(kpiTokensManager.templatesAmount(), 0);
 

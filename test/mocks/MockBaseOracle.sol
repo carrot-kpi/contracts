@@ -1,4 +1,4 @@
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {ConstrainedOracle, Constraint} from "../../contracts/presets/oracles/ConstrainedOracle.sol";
 import {IBaseTemplatesManager, Template} from "../../contracts/interfaces/IBaseTemplatesManager.sol";

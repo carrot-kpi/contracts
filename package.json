@@ -1,8 +1,8 @@
 {
     "name": "@carrot-kpi/contracts",
-    "version": "0.4.0",
+    "version": "0.5.0",
     "description": "A smart contract solution to create efficient KPI tokens.",
-    "author": "Federico Luzzi <federico.luzzi@protonmail.com>",
+    "author": "Federico Luzzi <federico.luzzi@carrot-labs.xyz>",
     "license": "GPL-3.0-or-later",
     "main": "./dist/cjs/index.cjs",
     "module": "./dist/es/index.mjs",

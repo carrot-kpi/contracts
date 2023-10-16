@@ -1,15 +1,17 @@
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
+import {OwnableUpgradeable} from "oz-upgradeable/access/OwnableUpgradeable.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Factory set oracles manager test
 /// @dev Tests factory setter for oracles manager.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract FactorySetOraclesManagerTest is BaseTestSetup {
     function testNonOwner() external {
-        vm.prank(address(1));
-        vm.expectRevert("Ownable: caller is not the owner");
+        address _pranked = address(999);
+        vm.prank(_pranked);
+        vm.expectRevert(abi.encodeWithSelector(OwnableUpgradeable.OwnableUnauthorizedAccount.selector, _pranked));
         factory.setOraclesManager(address(2));
     }
 

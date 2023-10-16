@@ -1,4 +1,4 @@
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {IBaseTemplatesManager} from "../contracts/interfaces/IBaseTemplatesManager.sol";
 import {Script} from "forge-std/Script.sol";
@@ -7,7 +7,7 @@ import {console2} from "forge-std/console2.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Remove template
 /// @dev Removes a template on a target network.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract RemoveTemplate is Script {
     error ZeroAddress();
     error InvalidId();

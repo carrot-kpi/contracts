@@ -1,9 +1,9 @@
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {IKPIToken} from "../../contracts/interfaces/kpi-tokens/IKPIToken.sol";
 import {Template} from "../../contracts/interfaces/IBaseTemplatesManager.sol";
 import {InitializeKPITokenParams} from "../../contracts/commons/Types.sol";
-import {IOraclesManager1} from "../../contracts/interfaces/oracles-managers/IOraclesManager1.sol";
+import {IOraclesManager} from "../../contracts/interfaces/IOraclesManager.sol";
 
 struct OracleData {
     uint256 templateId;
@@ -13,7 +13,7 @@ struct OracleData {
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI token template implementation
 /// @dev A KPI token template implementation
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract MockKPIToken is IKPIToken {
     address[] internal _oracles;
 
@@ -21,7 +21,7 @@ contract MockKPIToken is IKPIToken {
         OracleData[] memory _oracleData = abi.decode(_params.oraclesData, (OracleData[]));
         for (uint8 _i = 0; _i < _oracleData.length; _i++) {
             _oracles.push(
-                IOraclesManager1(_params.oraclesManager).instantiate(
+                IOraclesManager(_params.oraclesManager).instantiate(
                     _params.creator, _oracleData[_i].templateId, _oracleData[_i].data
                 )
             );

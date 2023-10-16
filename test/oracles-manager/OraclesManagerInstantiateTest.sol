@@ -1,13 +1,13 @@
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
-import {OraclesManager1} from "../../contracts/oracles-managers/OraclesManager1.sol";
+import {OraclesManager} from "../../contracts/OraclesManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Oracles manager instantiate template test
 /// @dev Tests template instantiation in oracles manager.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract OraclesManagerInstantiateTest is BaseTestSetup {
     function testNotFromCreatedKpiTokenFail() external {
         vm.expectRevert(abi.encodeWithSignature("Forbidden()"));

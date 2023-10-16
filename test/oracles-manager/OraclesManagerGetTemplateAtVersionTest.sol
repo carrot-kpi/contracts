@@ -1,18 +1,18 @@
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
-import {OraclesManager1} from "../../contracts/oracles-managers/OraclesManager1.sol";
-import {IOraclesManager1} from "../../contracts/interfaces/oracles-managers/IOraclesManager1.sol";
+import {OraclesManager} from "../../contracts/OraclesManager.sol";
+import {IOraclesManager} from "../../contracts/interfaces/IOraclesManager.sol";
 import {Template} from "../../contracts/interfaces/IBaseTemplatesManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 import {KPITokensFactory} from "../../contracts/KPITokensFactory.sol";
-import {OraclesManager1} from "../../contracts/oracles-managers/OraclesManager1.sol";
+import {OraclesManager} from "../../contracts/OraclesManager.sol";
 import {MockOracle} from "../mocks/MockOracle.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Oracles manager get template at version test
 /// @dev Tests template at version query in oracles manager.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract OraclesManagerGetTemplateAtVersionTest is BaseTestSetup {
     function testNonExistentTemplate() external {
         vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
@@ -28,15 +28,9 @@ contract OraclesManagerGetTemplateAtVersionTest is BaseTestSetup {
     }
 
     function testSuccessOnAdd() external {
-        KPITokensFactory _factory = new KPITokensFactory(
-            address(1),
-            address(1),
-            feeReceiver
-        );
+        KPITokensFactory _factory = initializeKPITokensFactory(address(1), address(1), feeReceiver);
         MockOracle _mockOracleTemplate = new MockOracle();
-        OraclesManager1 _oraclesManager = new OraclesManager1(
-            address(_factory)
-        );
+        OraclesManager _oraclesManager = initializeOraclesManager(address(_factory));
         assertEq(_oraclesManager.templatesAmount(), 0);
         vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
         Template memory _template = _oraclesManager.template(1);
@@ -53,15 +47,9 @@ contract OraclesManagerGetTemplateAtVersionTest is BaseTestSetup {
     }
 
     function testSuccessOnUpgrade() external {
-        KPITokensFactory _factory = new KPITokensFactory(
-            address(1),
-            address(1),
-            feeReceiver
-        );
+        KPITokensFactory _factory = initializeKPITokensFactory(address(1), address(1), feeReceiver);
         MockOracle _mockOracleTemplate = new MockOracle();
-        OraclesManager1 _oraclesManager = new OraclesManager1(
-            address(_factory)
-        );
+        OraclesManager _oraclesManager = initializeOraclesManager(address(_factory));
         assertEq(_oraclesManager.templatesAmount(), 0);
         vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
         Template memory _template = _oraclesManager.template(1);
@@ -97,15 +85,9 @@ contract OraclesManagerGetTemplateAtVersionTest is BaseTestSetup {
     }
 
     function testSuccessOnRemove() external {
-        KPITokensFactory _factory = new KPITokensFactory(
-            address(1),
-            address(1),
-            feeReceiver
-        );
+        KPITokensFactory _factory = initializeKPITokensFactory(address(1), address(1), feeReceiver);
         MockOracle _mockOracleTemplate = new MockOracle();
-        OraclesManager1 _oraclesManager = new OraclesManager1(
-            address(_factory)
-        );
+        OraclesManager _oraclesManager = initializeOraclesManager(address(_factory));
         assertEq(_oraclesManager.templatesAmount(), 0);
         vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));
         Template memory _template = _oraclesManager.template(1);

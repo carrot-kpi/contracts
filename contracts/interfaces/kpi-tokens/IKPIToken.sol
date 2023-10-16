@@ -1,13 +1,13 @@
 pragma solidity >=0.8.0;
 
 import {InitializeKPITokenParams} from "../../commons/Types.sol";
-import {IKPITokensManager1} from "../kpi-tokens-managers/IKPITokensManager1.sol";
+import {IKPITokensManager} from "../IKPITokensManager.sol";
 import {Template} from "../IBaseTemplatesManager.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI token interface
 /// @dev KPI token interface.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 interface IKPIToken {
     function initialize(InitializeKPITokenParams memory _params) external payable;
 

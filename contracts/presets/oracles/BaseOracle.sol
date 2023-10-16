@@ -8,7 +8,7 @@ import {IOracle} from "../../interfaces/oracles/IOracle.sol";
 /// @title BaseOracle contract
 /// @dev A base oracle preset that provides basic but functional
 /// implementations for a set of Carrot oracle functions.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 abstract contract BaseOracle is IOracle, Initializable {
     bool public override finalized;
     address public override kpiToken;

@@ -10,7 +10,7 @@ struct Template {
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Base templates manager interface
 /// @dev Interface for the base templates manager contract.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 interface IBaseTemplatesManager {
     function addTemplate(address _template, string calldata _specification) external;
 

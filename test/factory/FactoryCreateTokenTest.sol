@@ -1,4 +1,4 @@
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
 import {TokenAmount} from "../../contracts/commons/Types.sol";
@@ -7,7 +7,7 @@ import {OracleData} from "../mocks/MockKPIToken.sol";
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Factory create token test
 /// @dev Tests KPI token creation.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract FactoryCreateTokenTest is BaseTestSetup {
     function testInvalidTemplateId() external {
         vm.expectRevert(abi.encodeWithSignature("NonExistentTemplate()"));

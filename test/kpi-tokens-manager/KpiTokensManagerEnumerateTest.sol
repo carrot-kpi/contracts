@@ -1,18 +1,16 @@
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
-import {KPITokensManager1} from "../../contracts/kpi-tokens-managers/KPITokensManager1.sol";
+import {KPITokensManager} from "../../contracts/KPITokensManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI tokens manager templates enumeration test
 /// @dev Tests template enumeration in KPI tokens manager.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract KpiTokensManagerEnumerateTest is BaseTestSetup {
     function testNoTemplates() external {
-        kpiTokensManager = new KPITokensManager1(
-            address(factory) /* , address(0) */
-        );
+        kpiTokensManager = initializeKPITokensManager(address(factory));
         vm.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
         kpiTokensManager.enumerate(0, 1);
     }

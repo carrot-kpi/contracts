@@ -1,19 +1,21 @@
-pragma solidity 0.8.19;
+pragma solidity 0.8.21;
 
 import {BaseTestSetup} from "../commons/BaseTestSetup.sol";
-import {OraclesManager1} from "../../contracts/oracles-managers/OraclesManager1.sol";
-import {IOraclesManager1} from "../../contracts/interfaces/oracles-managers/IOraclesManager1.sol";
+import {OraclesManager} from "../../contracts/OraclesManager.sol";
+import {IOraclesManager} from "../../contracts/interfaces/IOraclesManager.sol";
 import {Template} from "../../contracts/interfaces/IBaseTemplatesManager.sol";
 import {Clones} from "oz/proxy/Clones.sol";
+import {OwnableUpgradeable} from "oz-upgradeable/access/OwnableUpgradeable.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Oracles manager template upgrade test
 /// @dev Tests template upgrade in oracles manager.
-/// @author Federico Luzzi - <federico.luzzi@protonmail.com>
+/// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract OraclesManagerUpgradeTemplateTest is BaseTestSetup {
     function testNonOwner() external {
-        vm.prank(address(1));
-        vm.expectRevert("Ownable: caller is not the owner");
+        address _pranked = address(999);
+        vm.prank(_pranked);
+        vm.expectRevert(abi.encodeWithSelector(OwnableUpgradeable.OwnableUnauthorizedAccount.selector, _pranked));
         oraclesManager.upgradeTemplate(1, address(1), "");
     }
 
