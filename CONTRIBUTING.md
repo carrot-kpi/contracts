@@ -62,6 +62,15 @@ out.
 
 ### Deploying
 
+> [!IMPORTANT]  
+> The codebase relies on `solc` v0.8.21. However, note that Solidity v0.8.20
+> introduced a change, making `shanghai` the default EVM version. When deploying
+> on chains that use an older EVM version, ensure you specify the correct EVM
+> version explicitly through the `--evm-version` command flag or the
+> `FOUNDRY_EVM_VERSION` env variable. If you don't do that, there's a high risk
+> that the contracts won't functioning as expected due to the presence of the
+> `push0` opcode in the bytecode.
+
 In order to deploy the whole platform to a given network you can go ahead and
 create a .env.<NETWORK_NAME> file exporting 3 env variables:
 
@@ -90,7 +99,7 @@ doing that, you can finally execute the following command to initiate the
 deployment:
 
 ```
-FOUNDRY_PROFILE=production forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address)' Deploy $OWNER $FEE_RECEIVER
+FOUNDRY_PROFILE=production forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,address)' Deploy $OWNER $FEE_RECEIVER
 ```
 
 Two alternative forms of the command can be used in order for the deployment to
@@ -98,8 +107,8 @@ be completed with either Trezor or Ledger hardware wallets (all the arguments
 remain the same as above):
 
 ```
-FOUNDRY_PROFILE=production forge script --broadcast --slow --ledger --fork-url $RPC_ENDPOINT --sig 'run(address)' Deploy $OWNER $FEE_RECEIVER
-FOUNDRY_PROFILE=production forge script --broadcast --slow --trezor --fork-url $RPC_ENDPOINT --sig 'run(address)' Deploy $OWNER $FEE_RECEIVER
+FOUNDRY_PROFILE=production forge script --broadcast --slow --ledger --fork-url $RPC_ENDPOINT --sig 'run(address,address)' Deploy $OWNER $FEE_RECEIVER
+FOUNDRY_PROFILE=production forge script --broadcast --slow --trezor --fork-url $RPC_ENDPOINT --sig 'run(address,address)' Deploy $OWNER $FEE_RECEIVER
 ```
 
 ### Adding a template

@@ -20,44 +20,44 @@ export interface CarrotContracts {
 export const DEPLOYMENT_ADDRESSES: Record<ChainId, CarrotContracts> = {
     [ChainId.GNOSIS]: {
         factory: {
-            address: "0xD503Bdcc3Cd38D3cEaBa1efA43EFCc03b7Fb1CbA",
-            deploymentBlock: 28_680_516,
+            address: "0xaa86ed8C3360C7Baf3badAED4bF5F092Ce775E59",
+            deploymentBlock: 30_487_127,
         },
         kpiTokensManager: {
-            address: "0xCd85e0690f85A52D260273E5B51336D1151F2832",
-            deploymentBlock: 28_680_518,
+            address: "0x1E067451364b07034646cC03b8bF8e2851C7B84b",
+            deploymentBlock: 30_487_131,
         },
         oraclesManager: {
-            address: "0xc9E426B468d334AF6208ef9b3bA5f599d1417c6e",
-            deploymentBlock: 28_680_520,
+            address: "0xAf7b4F675d980afB65F2Cf4897bf12dCf54D7a03",
+            deploymentBlock: 30_487_135,
         },
     },
     [ChainId.SEPOLIA]: {
         factory: {
-            address: "0x44bBb970E534bCE4B42C5a34b15d5B049704417A",
-            deploymentBlock: 3_784_913,
+            address: "0x5A3B67F89533cB8c54e647fD24413c7AD87fb8D2",
+            deploymentBlock: 4_501_023,
         },
         kpiTokensManager: {
-            address: "0xA4537024597F8B9243AbE105D0Cb297Ea2562ef1",
-            deploymentBlock: 3_784_915,
+            address: "0xCe7DC298A060AD4a51F3D220643F0482D3916Adc",
+            deploymentBlock: 4_501_026,
         },
         oraclesManager: {
-            address: "0x940d1D2F5c5724a37593D323bFde54F81D6f11C0",
-            deploymentBlock: 3_784_917,
+            address: "0xFd6b407B1FBe945977C34842c3745D22e8A57c2E",
+            deploymentBlock: 4_501_028,
         },
     },
     [ChainId.SCROLL_SEPOLIA]: {
         factory: {
-            address: "0x64a0745EF9d3772d9739D9350873eD3703bE45eC",
-            deploymentBlock: 416_670,
+            address: "0xB6044f769f519a634A5150645484b18d0C031ae8",
+            deploymentBlock: 1_643_192,
         },
         kpiTokensManager: {
-            address: "0xD4AC4AaFb81eC774E49AA755A66EfCe4574D6276",
-            deploymentBlock: 416_672,
+            address: "0xEc0B101CDC03ae65F78cF5477F2b9e0FaB9f2b28",
+            deploymentBlock: 1_643_199,
         },
         oraclesManager: {
-            address: "0xD3Fe5d463dD1fd943CCC2271F2ea980B898B5DA3",
-            deploymentBlock: 416_675,
+            address: "0xcA9b84f307c7E7825C6e9B1da732f0a7e953889D",
+            deploymentBlock: 1_643_204,
         },
     },
 };
