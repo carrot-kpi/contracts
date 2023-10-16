@@ -68,7 +68,7 @@ out.
 > on chains that use an older EVM version, ensure you specify the correct EVM
 > version explicitly through the `--evm-version` command flag or the
 > `FOUNDRY_EVM_VERSION` env variable. If you don't do that, there's a high risk
-> that the contracts won't functioning as expected due to the presence of the
+> that the contracts won't function as expected due to the presence of the
 > `push0` opcode in the bytecode.
 
 In order to deploy the whole platform to a given network you can go ahead and
