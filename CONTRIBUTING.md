@@ -105,7 +105,7 @@ doing that, you can finally execute the following command to initiate the
 deployment:
 
 ```
-FOUNDRY_PROFILE=production forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,address)' Deploy $OWNER $FEE_RECEIVER
+FOUNDRY_PROFILE=production forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,address)' --verify Deploy $OWNER $FEE_RECEIVER
 ```
 
 Two alternative forms of the command can be used in order for the deployment to
@@ -116,6 +116,9 @@ remain the same as above):
 FOUNDRY_PROFILE=production forge script --broadcast --slow --ledger --fork-url $RPC_ENDPOINT --sig 'run(address,address)' Deploy $OWNER $FEE_RECEIVER
 FOUNDRY_PROFILE=production forge script --broadcast --slow --trezor --fork-url $RPC_ENDPOINT --sig 'run(address,address)' Deploy $OWNER $FEE_RECEIVER
 ```
+
+Additionally, if you need to verify on Blocscout make sure you add
+`--verifier blockscout` in the command.
 
 ### Adding a template
 
