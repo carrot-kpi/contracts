@@ -79,6 +79,8 @@ export PRIVATE_KEY=""
 export RPC_ENDPOINT=""
 export OWNER=""
 export FEE_RECEIVER=""
+export ETHERSCAN_API_KEY=""
+export VERIFIER_URL=""
 ```
 
 brief explainer of the env variables:
@@ -91,6 +93,10 @@ brief explainer of the env variables:
   that will be able to set some protocol parameters.
 - `FEE_RECEIVER`: the address of the fee receiver. This address will collect all
   the protocol fees.
+- `ETHERSCAN_API_KEY`: the Etherscan (or Blockscout) API key used to verify
+  contracts.
+- `VERIFIER_URL`: the Etherscan pr Blockscout API URL that will be used to
+  verify contracts.
 
 Once you have one instance of this file for each network you're interested in
 (e.g. .`env.goerli`, `.env.gnosis`, `env.mainnet` etc etc), you can go ahead and
