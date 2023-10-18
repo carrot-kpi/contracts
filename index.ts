@@ -20,44 +20,44 @@ export interface CarrotContracts {
 export const DEPLOYMENT_ADDRESSES: Record<ChainId, CarrotContracts> = {
     [ChainId.GNOSIS]: {
         factory: {
-            address: "0x2DeCdbFd3D8bFf96463A31F0E0Cd1CF923bB3624",
-            deploymentBlock: 30520566,
+            address: "0xcfDAFea526Fbd15c7a5f14E7803921D5e68b84a9",
+            deploymentBlock: 30_522_488,
         },
         kpiTokensManager: {
-            address: "0x70196593711Eee2d4253e5E69504032c6bF1A152",
-            deploymentBlock: 30520569,
+            address: "0x36B11a5fBaE8680962E92328183ECc6BB8782C91",
+            deploymentBlock: 30_522_490,
         },
         oraclesManager: {
-            address: "0xfC807e51487fC43466fB8C26Ba2e48113555Ea1b",
-            deploymentBlock: 30520573,
+            address: "0xE38728A6E81a1C6c484d64842042F62eB0769236",
+            deploymentBlock: 30_522_492,
         },
     },
     [ChainId.SEPOLIA]: {
         factory: {
-            address: "0xBb82A54Ef3aFE4219e8b28fD7e304D9644021478",
-            deploymentBlock: 4514303,
+            address: "0xA376b59eF61c945A64c36B662A04EB05FD82575e",
+            deploymentBlock: 4_515_016,
         },
         kpiTokensManager: {
-            address: "0x84Cf8F902c5E1f9de8332a7E5035868C59984687",
-            deploymentBlock: 4514306,
+            address: "0xD7b37f191E9E0481673dcc1D8B4F9d77Cab358e0",
+            deploymentBlock: 4_515_017,
         },
         oraclesManager: {
-            address: "0xCB346f8E8346bdE33Ca2b8979e5cA1891713Dd16",
-            deploymentBlock: 4514308,
+            address: "0x84A0937e57FAd5b3F9C257B7D84527926Ef193E1",
+            deploymentBlock: 4_515_018,
         },
     },
     [ChainId.SCROLL_SEPOLIA]: {
         factory: {
-            address: "0x22d8655b405F6a8D6Bb7c5838AaF187a32158B07",
-            deploymentBlock: 1695804,
+            address: "0x2d2E7dC3c5CAD9020198b5FDDEc548cdBf079F68",
+            deploymentBlock: 1_699_116,
         },
         kpiTokensManager: {
-            address: "0x10E1A22034C5AF1E793c2Ac189b90ca47b252fF9",
-            deploymentBlock: 1695809,
+            address: "0xC1def83E7a2be87f8304d9207cce663159dE775b",
+            deploymentBlock: 1_699_120,
         },
         oraclesManager: {
-            address: "0xd1c1153fd809Aae3bb431b586C032C4856abaeD4",
-            deploymentBlock: 1695813,
+            address: "0x2B428A243Af4ce5fF4E25a4E392708A4A020d28C",
+            deploymentBlock: 1_699_122,
         },
     },
 };

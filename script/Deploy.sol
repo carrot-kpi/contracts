@@ -10,58 +10,68 @@ import {BaseTemplatesManager} from "../contracts/BaseTemplatesManager.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Deploy
-/// @dev Deploys the platform on a target network.
+/// @dev Deploys the protocol on a target network.
 /// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract Deploy is Script {
     function run(address _owner, address _feeReceiver) external {
         vm.startBroadcast();
 
-        KPITokensFactory _factory = KPITokensFactory(
-            address(
-                new ERC1967Proxy(
-                    address(new KPITokensFactory()),
-                    abi.encodeWithSelector(
-                        KPITokensFactory.initialize.selector,
-                        _owner,
-                        address(1),
-                        address(1),
-                        _feeReceiver
-                    )
+        address _kpiTokensManagerImplementationAddress = address(new KPITokensManager());
+        address _oraclesManagerImplementationAddress = address(new OraclesManager());
+        address _factoryImplementationAddress = address(new KPITokensFactory());
+
+        uint256 _initialNonce = vm.getNonce(msg.sender);
+
+        address _predictedKPITokensManagerAddress = computeCreateAddress(msg.sender, _initialNonce + 1);
+        address _predictedOraclesManagerAddress = computeCreateAddress(msg.sender, _initialNonce + 2);
+
+        address _factoryAddress = address(
+            new ERC1967Proxy(
+                _factoryImplementationAddress,
+                abi.encodeWithSelector(
+                    KPITokensFactory.initialize.selector,
+                    _owner,
+                    _predictedKPITokensManagerAddress,
+                    _predictedOraclesManagerAddress,
+                    _feeReceiver
                 )
             )
         );
-        console2.log("Factory deployed at address: ", address(_factory));
 
-        KPITokensManager _kpiTokensManager = KPITokensManager(
-            address(
-                new ERC1967Proxy(
-                    address(new KPITokensManager()),
-                    abi.encodeWithSelector(
-                        BaseTemplatesManager.initialize.selector,
-                        _owner,
-                        address(_factory)
-                    )
+        address _kpiTokensManagerAddress = address(
+            new ERC1967Proxy(
+                _kpiTokensManagerImplementationAddress,
+                abi.encodeWithSelector(
+                    BaseTemplatesManager.initialize.selector,
+                    _owner,
+                    _factoryAddress
                 )
             )
         );
-        console2.log("KPI tokens manager deployed at address: ", address(_kpiTokensManager));
 
-        OraclesManager _oraclesManager = OraclesManager(
-            address(
-                new ERC1967Proxy(
-                    address(new OraclesManager()),
-                    abi.encodeWithSelector(
-                        BaseTemplatesManager.initialize.selector,
-                        _owner,
-                        address(_factory)
-                    )
+        address _oraclesManagerAddress = address(
+            new ERC1967Proxy(
+                _oraclesManagerImplementationAddress,
+                abi.encodeWithSelector(
+                    BaseTemplatesManager.initialize.selector,
+                    _owner,
+                    _factoryAddress
                 )
             )
         );
-        console2.log("Oracles manager deployed at address: ", address(_oraclesManager));
 
-        _factory.setKpiTokensManager(address(_kpiTokensManager));
-        _factory.setOraclesManager(address(_oraclesManager));
+        if (_predictedKPITokensManagerAddress != _kpiTokensManagerAddress) {
+            console2.log("Wrong KPI tokens manager predicted address");
+            revert();
+        }
+        if (_predictedOraclesManagerAddress != _oraclesManagerAddress) {
+            console2.log("Wrong oracles manager predicted address");
+            revert();
+        }
+
+        console2.log("Factory address:", _factoryAddress);
+        console2.log("KPI tokens manager address:", _kpiTokensManagerAddress);
+        console2.log("Oracles manager address:", _oraclesManagerAddress);
 
         vm.stopBroadcast();
     }

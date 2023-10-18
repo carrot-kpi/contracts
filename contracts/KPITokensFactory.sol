@@ -54,6 +54,8 @@ contract KPITokensFactory is CarrotUpgradeable, IKPITokensFactory {
         kpiTokensManager = _kpiTokensManager;
         oraclesManager = _oraclesManager;
         feeReceiver = _feeReceiver;
+
+        emit Initialize(_owner, _kpiTokensManager, _oraclesManager, _feeReceiver);
     }
 
     /// @dev Creates a KPI token with the input data.
