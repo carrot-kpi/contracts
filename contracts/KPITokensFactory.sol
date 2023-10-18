@@ -28,6 +28,7 @@ contract KPITokensFactory is CarrotUpgradeable, IKPITokensFactory {
     error ZeroAddressCreator();
     error Forbidden();
 
+    event Initialize(address owner, address kpiTokensManager, address oraclesManager, address feeReceiver);
     event CreateToken(address token);
     event SetKpiTokensManager(address kpiTokensManager);
     event SetOraclesManager(address oraclesManager);
