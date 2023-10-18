@@ -30,6 +30,7 @@ abstract contract BaseTemplatesManager is CarrotUpgradeable, IBaseTemplatesManag
     error InvalidSpecification();
     error InvalidIndices();
 
+    event Initialize(address owner, address factory);
     event AddTemplate(uint256 indexed id, address indexed template, string specification);
     event RemoveTemplate(uint256 indexed id);
     event UpgradeTemplate(uint256 indexed id, address indexed newTemplate, uint256 newVersion, string newSpecification);
@@ -42,6 +43,8 @@ abstract contract BaseTemplatesManager is CarrotUpgradeable, IBaseTemplatesManag
 
         __CarrotUpgradeable_init(_owner);
         factory = _factory;
+
+        emit Initialize(_owner, _factory);
     }
 
     /// @dev Adds a template to the registry. This function can only be called

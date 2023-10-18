@@ -79,6 +79,8 @@ export PRIVATE_KEY=""
 export RPC_ENDPOINT=""
 export OWNER=""
 export FEE_RECEIVER=""
+export ETHERSCAN_API_KEY=""
+export VERIFIER_URL=""
 ```
 
 brief explainer of the env variables:
@@ -91,6 +93,10 @@ brief explainer of the env variables:
   that will be able to set some protocol parameters.
 - `FEE_RECEIVER`: the address of the fee receiver. This address will collect all
   the protocol fees.
+- `ETHERSCAN_API_KEY`: the Etherscan (or Blockscout) API key used to verify
+  contracts.
+- `VERIFIER_URL`: the Etherscan pr Blockscout API URL that will be used to
+  verify contracts.
 
 Once you have one instance of this file for each network you're interested in
 (e.g. .`env.goerli`, `.env.gnosis`, `env.mainnet` etc etc), you can go ahead and
@@ -99,7 +105,7 @@ doing that, you can finally execute the following command to initiate the
 deployment:
 
 ```
-FOUNDRY_PROFILE=production forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,address)' Deploy $OWNER $FEE_RECEIVER
+FOUNDRY_PROFILE=production forge script --broadcast --slow --private-key $PRIVATE_KEY --fork-url $RPC_ENDPOINT --sig 'run(address,address)' --verify Deploy $OWNER $FEE_RECEIVER
 ```
 
 Two alternative forms of the command can be used in order for the deployment to
@@ -110,6 +116,9 @@ remain the same as above):
 FOUNDRY_PROFILE=production forge script --broadcast --slow --ledger --fork-url $RPC_ENDPOINT --sig 'run(address,address)' Deploy $OWNER $FEE_RECEIVER
 FOUNDRY_PROFILE=production forge script --broadcast --slow --trezor --fork-url $RPC_ENDPOINT --sig 'run(address,address)' Deploy $OWNER $FEE_RECEIVER
 ```
+
+Additionally, if you need to verify on Blocscout make sure you add
+`--verifier blockscout` in the command.
 
 ### Adding a template
 
