@@ -21,7 +21,7 @@ interface IKPIToken {
 
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
 
-    event Finalize(uint256 progress);
+    event Finalize();
 
     function initialize(InitializeKPITokenParams memory _params) external payable;
 
