@@ -9,6 +9,17 @@ import {Template} from "./IBaseTemplatesManager.sol";
 /// @dev KPI token interface.
 /// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 interface IKPIToken {
+    event Initialize(
+        address indexed creator,
+        uint256 creationTimestamp,
+        uint256 indexed templateId,
+        uint128 indexed templateVersion,
+        string description,
+        uint256 expiration
+    );
+
+    event Finalize(address indexed oracle, uint256 result);
+
     function initialize(InitializeKPITokenParams memory _params) external payable;
 
     function finalize(uint256 _result) external;
