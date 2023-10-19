@@ -15,10 +15,13 @@ interface IKPIToken {
         uint256 indexed templateId,
         uint128 indexed templateVersion,
         string description,
-        uint256 expiration
+        uint256 expiration,
+        address[] oracles
     );
 
-    event Finalize(address indexed oracle, uint256 result);
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+
+    event Finalize(uint256 progress);
 
     function initialize(InitializeKPITokenParams memory _params) external payable;
 
