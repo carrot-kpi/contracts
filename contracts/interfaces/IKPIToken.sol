@@ -1,8 +1,8 @@
 pragma solidity >=0.8.0;
 
-import {InitializeKPITokenParams} from "../../commons/Types.sol";
-import {IKPITokensManager} from "../IKPITokensManager.sol";
-import {Template} from "../IBaseTemplatesManager.sol";
+import {InitializeKPITokenParams} from "../commons/Types.sol";
+import {IKPITokensManager} from "./IKPITokensManager.sol";
+import {Template} from "./IBaseTemplatesManager.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title KPI token interface

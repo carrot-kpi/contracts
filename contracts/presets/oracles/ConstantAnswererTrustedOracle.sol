@@ -2,8 +2,8 @@ pragma solidity 0.8.21;
 
 import {Initializable} from "oz-upgradeable/proxy/utils/Initializable.sol";
 import {BaseOracle} from "./BaseOracle.sol";
-import {IOracle} from "../../interfaces/oracles/IOracle.sol";
-import {IKPIToken} from "../../interfaces/kpi-tokens/IKPIToken.sol";
+import {IOracle} from "../../interfaces/IOracle.sol";
+import {IKPIToken} from "../../interfaces/IKPIToken.sol";
 import {IBaseTemplatesManager, Template} from "../../interfaces/IBaseTemplatesManager.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later

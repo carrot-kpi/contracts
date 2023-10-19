@@ -1,8 +1,8 @@
 pragma solidity 0.8.21;
 
 import {Clones} from "oz/proxy/Clones.sol";
-import {IKPIToken} from "./interfaces/kpi-tokens/IKPIToken.sol";
-import {IOracle} from "./interfaces/oracles/IOracle.sol";
+import {IKPIToken} from "./interfaces/IKPIToken.sol";
+import {IOracle} from "./interfaces/IOracle.sol";
 import {IBaseTemplatesManager, Template} from "./interfaces/IBaseTemplatesManager.sol";
 import {IKPITokensFactory} from "./interfaces/IKPITokensFactory.sol";
 import {CarrotUpgradeable} from "./CarrotUpgradeable.sol";

@@ -2,7 +2,7 @@ pragma solidity 0.8.21;
 
 import {IKPITokensFactory} from "./interfaces/IKPITokensFactory.sol";
 import {IKPITokensManager} from "./interfaces/IKPITokensManager.sol";
-import {IKPIToken} from "./interfaces/kpi-tokens/IKPIToken.sol";
+import {IKPIToken} from "./interfaces/IKPIToken.sol";
 import {InitializeKPITokenParams} from "./commons/Types.sol";
 import {CarrotUpgradeable} from "./CarrotUpgradeable.sol";
 

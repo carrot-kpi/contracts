@@ -1,7 +1,7 @@
 pragma solidity 0.8.21;
 
 import {Clones} from "oz/proxy/Clones.sol";
-import {IOracle} from "./interfaces/oracles/IOracle.sol";
+import {IOracle} from "./interfaces/IOracle.sol";
 import {BaseTemplatesManager, Template} from "./BaseTemplatesManager.sol";
 import {IKPITokensFactory} from "./interfaces/IKPITokensFactory.sol";
 import {InitializeOracleParams} from "./commons/Types.sol";

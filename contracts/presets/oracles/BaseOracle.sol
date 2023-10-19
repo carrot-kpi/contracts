@@ -2,7 +2,7 @@ pragma solidity >=0.8.0;
 
 import {IBaseTemplatesManager, Template} from "../../interfaces/IBaseTemplatesManager.sol";
 import {Initializable} from "oz-upgradeable/proxy/utils/Initializable.sol";
-import {IOracle} from "../../interfaces/oracles/IOracle.sol";
+import {IOracle} from "../../interfaces/IOracle.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title BaseOracle contract

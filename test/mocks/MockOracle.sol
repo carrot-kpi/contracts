@@ -1,8 +1,8 @@
 pragma solidity 0.8.21;
 
 import {Initializable} from "oz/proxy/utils/Initializable.sol";
-import {IOracle} from "../../contracts/interfaces/oracles/IOracle.sol";
-import {IKPIToken} from "../../contracts/interfaces/kpi-tokens/IKPIToken.sol";
+import {IOracle} from "../../contracts/interfaces/IOracle.sol";
+import {IKPIToken} from "../../contracts/interfaces/IKPIToken.sol";
 import {IBaseTemplatesManager, Template} from "../../contracts/interfaces/IBaseTemplatesManager.sol";
 import {InitializeOracleParams} from "../../contracts/commons/Types.sol";
 

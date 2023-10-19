@@ -1,8 +1,8 @@
 pragma solidity >=0.8.0;
 
-import {IOraclesManager} from "../IOraclesManager.sol";
-import {InitializeOracleParams} from "../../commons/Types.sol";
-import {Template} from "../IBaseTemplatesManager.sol";
+import {IOraclesManager} from "./IOraclesManager.sol";
+import {InitializeOracleParams} from "../commons/Types.sol";
+import {Template} from "./IBaseTemplatesManager.sol";
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
 /// @title Oracle interface

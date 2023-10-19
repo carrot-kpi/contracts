@@ -3,7 +3,7 @@ pragma solidity >=0.8.0;
 import {Initializable} from "oz-upgradeable/proxy/utils/Initializable.sol";
 import {BaseOracle} from "./BaseOracle.sol";
 import {InitializeOracleParams} from "../../commons/Types.sol";
-import {IKPIToken} from "../../interfaces/kpi-tokens/IKPIToken.sol";
+import {IKPIToken} from "../../interfaces/IKPIToken.sol";
 import {UNIT, INVALID_ANSWER} from "../../commons/Constants.sol";
 
 enum Constraint {

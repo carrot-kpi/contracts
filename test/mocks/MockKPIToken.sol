@@ -1,6 +1,6 @@
 pragma solidity 0.8.21;
 
-import {IKPIToken} from "../../contracts/interfaces/kpi-tokens/IKPIToken.sol";
+import {IKPIToken} from "../../contracts/interfaces/IKPIToken.sol";
 import {Template} from "../../contracts/interfaces/IBaseTemplatesManager.sol";
 import {InitializeKPITokenParams} from "../../contracts/commons/Types.sol";
 import {IOraclesManager} from "../../contracts/interfaces/IOraclesManager.sol";

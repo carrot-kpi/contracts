@@ -1,7 +1,7 @@
 pragma solidity 0.8.21;
 
 import {Clones} from "oz/proxy/Clones.sol";
-import {IKPIToken} from "./interfaces/kpi-tokens/IKPIToken.sol";
+import {IKPIToken} from "./interfaces/IKPIToken.sol";
 import {BaseTemplatesManager} from "./BaseTemplatesManager.sol";
 import {Template} from "./interfaces/IBaseTemplatesManager.sol";
 import {IKPITokensManager} from "./interfaces/IKPITokensManager.sol";
