@@ -41,10 +41,10 @@ abstract contract BaseTemplatesManager is CarrotUpgradeable, IBaseTemplatesManag
     function initialize(address _owner, address _factory) external initializer {
         if (_factory == address(0)) revert ZeroAddressFactory();
 
+        emit Initialize(_owner, _factory);
+
         __CarrotUpgradeable_init(_owner);
         factory = _factory;
-
-        emit Initialize(_owner, _factory);
     }
 
     /// @dev Adds a template to the registry. This function can only be called

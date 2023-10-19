@@ -15,6 +15,8 @@ contract CarrotUpgradeable is Initializable, UUPSUpgradeable, OwnableUpgradeable
 
     error Immutable();
 
+    event MakeImmutable();
+
     constructor() {
         _disableInitializers();
     }
@@ -28,6 +30,7 @@ contract CarrotUpgradeable is Initializable, UUPSUpgradeable, OwnableUpgradeable
     /// @dev Makes the contract immutable and not upgradeable anymore. Use with caution.
     function makeImmutable() external override onlyOwner {
         disallowUpgrades = true;
+        emit MakeImmutable();
     }
 
     /// @dev Part of the UUPS pattern, this function authorizes any upgrades to the
