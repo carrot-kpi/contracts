@@ -4,6 +4,7 @@ export enum ChainId {
     GNOSIS = 100,
     SEPOLIA = 11155111,
     SCROLL_SEPOLIA = 534351,
+    POLYGON_MUMBAI = 80001,
 }
 
 export interface CarrotContract {
@@ -58,6 +59,20 @@ export const DEPLOYMENT_ADDRESSES: Record<ChainId, CarrotContracts> = {
         oraclesManager: {
             address: "0xdd6F7A083487d0d86487F7D5E5964110537e5c59",
             deploymentBlock: 1_711_766,
+        },
+    },
+    [ChainId.POLYGON_MUMBAI]: {
+        factory: {
+            address: "0xD6e88c910329fE3597498772eB94991a0630306d",
+            deploymentBlock: 42_107_159,
+        },
+        kpiTokensManager: {
+            address: "0xe3dA4E4b76C4ed3e4227db20F20d1F25A4507f9b",
+            deploymentBlock: 42_107_163,
+        },
+        oraclesManager: {
+            address: "0xe82c4D8b993D613a28600B953e91A3A93Ae69Fd6",
+            deploymentBlock: 42_107_167,
         },
     },
 };
