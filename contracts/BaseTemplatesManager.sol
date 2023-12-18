@@ -3,7 +3,7 @@ pragma solidity 0.8.21;
 import {Clones} from "oz/proxy/Clones.sol";
 import {IKPIToken} from "./interfaces/IKPIToken.sol";
 import {IOracle} from "./interfaces/IOracle.sol";
-import {IBaseTemplatesManager, Template} from "./interfaces/IBaseTemplatesManager.sol";
+import {IBaseTemplatesManager, Template, TemplateFeatureSet} from "./interfaces/IBaseTemplatesManager.sol";
 import {IKPITokensFactory} from "./interfaces/IKPITokensFactory.sol";
 import {CarrotUpgradeable} from "./CarrotUpgradeable.sol";
 
@@ -18,12 +18,14 @@ import {CarrotUpgradeable} from "./CarrotUpgradeable.sol";
 /// and will keep history of even deleted/unactive templates.
 /// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 abstract contract BaseTemplatesManager is CarrotUpgradeable, IBaseTemplatesManager {
-    address public factory;
+    address public override factory;
     uint256 internal templateId;
     Template[] internal latestVersionTemplates;
     mapping(uint256 => uint256) internal templateIdToLatestVersionIndex;
     mapping(uint256 => mapping(uint128 => Template)) internal templateByIdAndVersion;
+    mapping(uint256 _templateId => TemplateFeatureSet) internal featureSet;
 
+    error Forbidden();
     error NonExistentTemplate();
     error ZeroAddressFactory();
     error ZeroAddressTemplate();
@@ -35,6 +37,9 @@ abstract contract BaseTemplatesManager is CarrotUpgradeable, IBaseTemplatesManag
     event RemoveTemplate(uint256 indexed id);
     event UpgradeTemplate(uint256 indexed id, address indexed newTemplate, uint256 newVersion, string newSpecification);
     event UpdateTemplateSpecification(uint256 indexed id, string newSpecification, uint256 version);
+    event SetFeatureSetOwner(uint256 templateId, address owner);
+    event EnableFeatureFor(uint256 templateId, uint256 featureId, address account);
+    event DisableFeatureFor(uint256 templateId, uint256 featureId, address account);
 
     /// @dev Initializes and sets up the base templates manager with the input data.
     /// @param _factory The address of the KPI tokens factory to be used.
@@ -167,6 +172,79 @@ abstract contract BaseTemplatesManager is CarrotUpgradeable, IBaseTemplatesManag
         return _template;
     }
 
+    /// @dev Gives full template features ownership to the target address
+    /// for the given template. The target address will be able to enable and disable
+    /// any one of the targeted template's features for any given address.
+    /// @param _templateId The id of the target template the features of which will be
+    /// under the control of the new owner.
+    /// @param _owner The address that will own the feature set for the specified
+    /// template (this can be the 0 address to give ownership back to the overall
+    /// manager owner).
+    function setTemplateFeaturesOwner(uint256 _templateId, address _owner) external override onlyOwner {
+        featureSet[_templateId].owner = _owner;
+        emit SetFeatureSetOwner(_templateId, _owner);
+    }
+
+    /// @dev Enables a certain template feature for a given account. The caller must
+    /// either be the specific template feature set owner or, if unspecified, the manager
+    /// contract's owner.
+    /// @param _templateId The id of the template on which the new feature allowance
+    /// state will be applied.
+    /// @param _featureId The unique id (internal to the targeted template) of the
+    /// feature to enable for the target account.
+    /// @param _account The account for which the feature should be enabled on the
+    /// targeted template.
+    function enableTemplateFeatureFor(uint256 _templateId, uint256 _featureId, address _account) external {
+        _setFeatureFor(_templateId, _featureId, _account, true);
+        emit EnableFeatureFor(_templateId, _featureId, _account);
+    }
+
+    /// @dev Disables a certain template feature for a given account. The caller must
+    /// either be the specific template feature set owner or, if unspecified, the manager
+    /// contract's owner.
+    /// @param _templateId The id of the template on which the new feature allowance
+    /// state will be applied.
+    /// @param _featureId The unique id (internal to the targeted template) of the
+    /// feature to disable for the target account.
+    /// @param _account The account for which the feature should be disabled on the
+    /// targeted template.
+    function disableTemplateFeatureFor(uint256 _templateId, uint256 _featureId, address _account) external {
+        _setFeatureFor(_templateId, _featureId, _account, false);
+        emit DisableFeatureFor(_templateId, _featureId, _account);
+    }
+
+    /// @dev Internal implementation of the feature allowance update function.
+    /// @param _templateId The id of the template on which the new feature allowance
+    /// state will be applied.
+    /// @param _featureId The unique id (internal to the targeted template) of the
+    /// feature for which to change the allowance state for the target account.
+    /// @param _account The account for which the feature's allowance state should be
+    /// changed on the targeted template.
+    /// @param _allowed The feature allowance state to apply.
+    function _setFeatureFor(uint256 _templateId, uint256 _featureId, address _account, bool _allowed) internal {
+        address _featureSetOwner = featureSet[_templateId].owner;
+        if (_featureSetOwner == address(0)) _featureSetOwner = owner();
+        if (msg.sender != _featureSetOwner) revert Forbidden();
+        featureSet[_templateId].allowed[_featureId][_account] = _allowed;
+    }
+
+    /// @dev Utility function to query the allowance state for a given template feature
+    /// and account that wants to access it.
+    /// @param _templateId The id of the template on which the feature allowance
+    /// state should be queried.
+    /// @param _featureId The unique id (internal to the targeted template) of the
+    /// feature to get the allowance state for.
+    /// @param _account The account for which to query the allowance state of the given
+    /// feature on the given template.
+    function isTemplateFeatureEnabledFor(uint256 _templateId, uint256 _featureId, address _account)
+        external
+        view
+        override
+        returns (bool)
+    {
+        return featureSet[_templateId].allowed[_featureId][_account];
+    }
+
     /// @dev Gets a template by id. This only works on latest-version
     /// templates, so the latest version of the template with id `_id`
     /// will be returned. To check out old versions use
@@ -196,7 +274,7 @@ abstract contract BaseTemplatesManager is CarrotUpgradeable, IBaseTemplatesManag
     /// will return false.
     /// @param _id The id of the template that needs to be checked.
     /// @return True if the template exists, false otherwise.
-    function exists(uint256 _id) external view override returns (bool) {
+    function templateExists(uint256 _id) external view override returns (bool) {
         if (_id == 0) return false;
         uint256 _index = templateIdToLatestVersionIndex[_id];
         if (_index == 0) return false;
@@ -224,7 +302,12 @@ abstract contract BaseTemplatesManager is CarrotUpgradeable, IBaseTemplatesManag
     /// @param _fromIndex The index from which to get templates (inclusive).
     /// @param _toIndex The maximum index to which to get templates (the element at this index won't be included).
     /// @return A templates array representing the slice taken through the given indexes.
-    function enumerate(uint256 _fromIndex, uint256 _toIndex) external view override returns (Template[] memory) {
+    function enumerateTemplates(uint256 _fromIndex, uint256 _toIndex)
+        external
+        view
+        override
+        returns (Template[] memory)
+    {
         if (_toIndex > latestVersionTemplates.length || _fromIndex > _toIndex) {
             revert InvalidIndices();
         }

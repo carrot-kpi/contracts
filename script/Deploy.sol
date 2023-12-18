@@ -41,22 +41,14 @@ contract Deploy is Script {
         address _kpiTokensManagerAddress = address(
             new ERC1967Proxy(
                 _kpiTokensManagerImplementationAddress,
-                abi.encodeWithSelector(
-                    BaseTemplatesManager.initialize.selector,
-                    _owner,
-                    _factoryAddress
-                )
+                abi.encodeWithSelector(BaseTemplatesManager.initialize.selector, _owner, _factoryAddress)
             )
         );
 
         address _oraclesManagerAddress = address(
             new ERC1967Proxy(
                 _oraclesManagerImplementationAddress,
-                abi.encodeWithSelector(
-                    BaseTemplatesManager.initialize.selector,
-                    _owner,
-                    _factoryAddress
-                )
+                abi.encodeWithSelector(BaseTemplatesManager.initialize.selector, _owner, _factoryAddress)
             )
         );
 

@@ -7,4 +7,8 @@ contract OraclesManagerHarness is OraclesManager {
     function exposedLatestVersionStorageTemplate(uint256 _id) external view returns (Template memory) {
         return latestVersionStorageTemplate(_id);
     }
+
+    function exposedFeatureSetOwner(uint256 _templateId) external view returns (address) {
+        return featureSet[_templateId].owner;
+    }
 }
