@@ -7,9 +7,14 @@ struct Template {
     string specification;
 }
 
+struct Feature {
+    bool paused;
+    mapping(address account => bool access) allowed;
+}
+
 struct TemplateFeatureSet {
     address owner;
-    mapping(uint256 featureId => mapping(address account => bool access)) allowed;
+    mapping(uint256 id => Feature) feature;
 }
 
 /// SPDX-License-Identifier: GPL-3.0-or-later
@@ -39,6 +44,10 @@ interface IBaseTemplatesManager {
     function enableTemplateFeatureFor(uint256 _templateId, uint256 _featureId, address _account) external;
 
     function disableTemplateFeatureFor(uint256 _templateId, uint256 _featureId, address _account) external;
+
+    function pauseFeature(uint256 _templateId, uint256 _featureId) external;
+
+    function unpauseFeature(uint256 _templateId, uint256 _featureId) external;
 
     function template(uint256 _id) external view returns (Template memory);
 

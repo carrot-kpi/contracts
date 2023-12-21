@@ -3,7 +3,7 @@ pragma solidity 0.8.21;
 import {Clones} from "oz/proxy/Clones.sol";
 import {IKPIToken} from "./interfaces/IKPIToken.sol";
 import {IOracle} from "./interfaces/IOracle.sol";
-import {IBaseTemplatesManager, Template, TemplateFeatureSet} from "./interfaces/IBaseTemplatesManager.sol";
+import {IBaseTemplatesManager, Template, TemplateFeatureSet, Feature} from "./interfaces/IBaseTemplatesManager.sol";
 import {IKPITokensFactory} from "./interfaces/IKPITokensFactory.sol";
 import {CarrotUpgradeable} from "./CarrotUpgradeable.sol";
 
@@ -23,7 +23,7 @@ abstract contract BaseTemplatesManager is CarrotUpgradeable, IBaseTemplatesManag
     Template[] internal latestVersionTemplates;
     mapping(uint256 => uint256) internal templateIdToLatestVersionIndex;
     mapping(uint256 => mapping(uint128 => Template)) internal templateByIdAndVersion;
-    mapping(uint256 _templateId => TemplateFeatureSet) internal featureSet;
+    mapping(uint256 templateId => TemplateFeatureSet) internal featureSet;
 
     error Forbidden();
     error NonExistentTemplate();
@@ -40,6 +40,8 @@ abstract contract BaseTemplatesManager is CarrotUpgradeable, IBaseTemplatesManag
     event SetFeatureSetOwner(uint256 templateId, address owner);
     event EnableFeatureFor(uint256 templateId, uint256 featureId, address account);
     event DisableFeatureFor(uint256 templateId, uint256 featureId, address account);
+    event PauseFeature(uint256 templateId, uint256 featureId);
+    event UnpauseFeature(uint256 templateId, uint256 featureId);
 
     /// @dev Initializes and sets up the base templates manager with the input data.
     /// @param _factory The address of the KPI tokens factory to be used.
@@ -195,7 +197,7 @@ abstract contract BaseTemplatesManager is CarrotUpgradeable, IBaseTemplatesManag
     /// @param _account The account for which the feature should be enabled on the
     /// targeted template.
     function enableTemplateFeatureFor(uint256 _templateId, uint256 _featureId, address _account) external {
-        _setFeatureFor(_templateId, _featureId, _account, true);
+        _setFeatureAllowanceStateFor(_templateId, _featureId, _account, true);
         emit EnableFeatureFor(_templateId, _featureId, _account);
     }
 
@@ -209,8 +211,39 @@ abstract contract BaseTemplatesManager is CarrotUpgradeable, IBaseTemplatesManag
     /// @param _account The account for which the feature should be disabled on the
     /// targeted template.
     function disableTemplateFeatureFor(uint256 _templateId, uint256 _featureId, address _account) external {
-        _setFeatureFor(_templateId, _featureId, _account, false);
+        _setFeatureAllowanceStateFor(_templateId, _featureId, _account, false);
         emit DisableFeatureFor(_templateId, _featureId, _account);
+    }
+
+    /// @dev Pauses the given feature. When a feature is paused no one can use it until
+    /// it's unpaused (i.e. all the `isTemplateFeatureEnabledFor` calls for the paused
+    /// feature will return `false` for any account).
+    /// @param _templateId The id of the template on which the feature needs to be paused.
+    /// @param _featureId The unique id (internal to the targeted template) of the
+    /// feature to pause.
+    function pauseFeature(uint256 _templateId, uint256 _featureId) external {
+        _setFeaturePausedState(_templateId, _featureId, true);
+        emit PauseFeature(_templateId, _featureId);
+    }
+
+    /// @dev Unpauses the given feature. When a feature is unpaused the standard access
+    /// list mechanism is again applied to it and only allowed accounts can access it.
+    /// @param _templateId The id of the template on which the feature needs to be unpaused.
+    /// @param _featureId The unique id (internal to the targeted template) of the
+    /// feature to unpause.
+    function unpauseFeature(uint256 _templateId, uint256 _featureId) external {
+        _setFeaturePausedState(_templateId, _featureId, false);
+        emit UnpauseFeature(_templateId, _featureId);
+    }
+
+    /// @dev Internal function to resolve the owner of a feature set. The owner can
+    /// either be a zero or non-zero address. If it's a zero address, the manager
+    /// contract's owner is returned, otherwise the output will be the original value.
+    /// @param _templateId The id of the feature set template.
+    /// @return The feature set owner
+    function _featureSetOwner(uint256 _templateId) internal view returns (address) {
+        address _setOwner = featureSet[_templateId].owner;
+        return _setOwner == address(0) ? owner() : _setOwner;
     }
 
     /// @dev Internal implementation of the feature allowance update function.
@@ -221,11 +254,22 @@ abstract contract BaseTemplatesManager is CarrotUpgradeable, IBaseTemplatesManag
     /// @param _account The account for which the feature's allowance state should be
     /// changed on the targeted template.
     /// @param _allowed The feature allowance state to apply.
-    function _setFeatureFor(uint256 _templateId, uint256 _featureId, address _account, bool _allowed) internal {
-        address _featureSetOwner = featureSet[_templateId].owner;
-        if (_featureSetOwner == address(0)) _featureSetOwner = owner();
-        if (msg.sender != _featureSetOwner) revert Forbidden();
-        featureSet[_templateId].allowed[_featureId][_account] = _allowed;
+    function _setFeatureAllowanceStateFor(uint256 _templateId, uint256 _featureId, address _account, bool _allowed)
+        internal
+    {
+        if (msg.sender != _featureSetOwner(_templateId)) revert Forbidden();
+        featureSet[_templateId].feature[_featureId].allowed[_account] = _allowed;
+    }
+
+    /// @dev Internal implementation of the feature paused state update function.
+    /// @param _templateId The id of the template on which the new feature paused
+    /// state will be applied.
+    /// @param _featureId The unique id (internal to the targeted template) of the
+    /// feature for which to change the paused state.
+    /// @param _paused The feature paused state to apply.
+    function _setFeaturePausedState(uint256 _templateId, uint256 _featureId, bool _paused) internal {
+        if (msg.sender != _featureSetOwner(_templateId)) revert Forbidden();
+        featureSet[_templateId].feature[_featureId].paused = _paused;
     }
 
     /// @dev Utility function to query the allowance state for a given template feature
@@ -242,7 +286,8 @@ abstract contract BaseTemplatesManager is CarrotUpgradeable, IBaseTemplatesManag
         override
         returns (bool)
     {
-        return featureSet[_templateId].allowed[_featureId][_account];
+        Feature storage _feature = featureSet[_templateId].feature[_featureId];
+        return !_feature.paused && _feature.allowed[_account];
     }
 
     /// @dev Gets a template by id. This only works on latest-version

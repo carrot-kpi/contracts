@@ -102,4 +102,196 @@ contract OraclesManagerFeaturesRegistryTest is BaseTestSetup {
         oraclesManager.disableTemplateFeatureFor(_templateId, 1, _targetAccount);
         assertFalse(oraclesManager.isTemplateFeatureEnabledFor(_templateId, 1, _targetAccount));
     }
+
+    function testPauseFeatureFailureNoSpecificFeatureSetOwner() external {
+        uint256 _templateId = 1;
+        uint256 _featureId = 1;
+
+        OraclesManagerHarness _oraclesManagerHarness = initializeOraclesManagerHarness(owner, address(factory));
+
+        assertFalse(_oraclesManagerHarness.exposedFeaturePaused(_templateId, _featureId));
+
+        vm.prank(address(123));
+        vm.expectRevert(abi.encodeWithSelector(BaseTemplatesManager.Forbidden.selector));
+        _oraclesManagerHarness.pauseFeature(_templateId, _featureId);
+
+        assertFalse(_oraclesManagerHarness.exposedFeaturePaused(_templateId, _featureId));
+    }
+
+    function testPauseFeatureFailureWithSpecificFeatureSetOwner() external {
+        uint256 _templateId = 1;
+        uint256 _featureId = 1;
+
+        OraclesManagerHarness _oraclesManagerHarness = initializeOraclesManagerHarness(owner, address(factory));
+        address _newOwner = address(3);
+        _oraclesManagerHarness.setTemplateFeaturesOwner(_templateId, _newOwner);
+
+        assertFalse(_oraclesManagerHarness.exposedFeaturePaused(_templateId, _featureId));
+
+        vm.expectRevert(abi.encodeWithSelector(BaseTemplatesManager.Forbidden.selector));
+        _oraclesManagerHarness.pauseFeature(_templateId, _featureId);
+
+        assertFalse(_oraclesManagerHarness.exposedFeaturePaused(_templateId, _featureId));
+    }
+
+    function testPauseFeatureSuccessNoSpecificFeatureSetOwner() external {
+        uint256 _templateId = 1;
+        uint256 _featureId = 1;
+
+        OraclesManagerHarness _oraclesManagerHarness = initializeOraclesManagerHarness(owner, address(factory));
+
+        assertFalse(_oraclesManagerHarness.exposedFeaturePaused(_templateId, _featureId));
+        _oraclesManagerHarness.pauseFeature(_templateId, _featureId);
+        assertTrue(_oraclesManagerHarness.exposedFeaturePaused(_templateId, _featureId));
+    }
+
+    function testPauseFeatureSuccessWithSpecificFeatureSetOwner() external {
+        uint256 _templateId = 1;
+        uint256 _featureId = 1;
+
+        OraclesManagerHarness _oraclesManagerHarness = initializeOraclesManagerHarness(owner, address(factory));
+        address _newOwner = address(3);
+        _oraclesManagerHarness.setTemplateFeaturesOwner(_templateId, _newOwner);
+
+        assertFalse(_oraclesManagerHarness.exposedFeaturePaused(_templateId, _featureId));
+
+        vm.prank(_newOwner);
+        _oraclesManagerHarness.pauseFeature(_templateId, _featureId);
+
+        assertTrue(_oraclesManagerHarness.exposedFeaturePaused(_templateId, _featureId));
+    }
+
+    function testUnpauseFeatureFailureNoSpecificFeatureSetOwner() external {
+        uint256 _templateId = 1;
+        uint256 _featureId = 1;
+
+        OraclesManagerHarness _oraclesManagerHarness = initializeOraclesManagerHarness(owner, address(factory));
+        _oraclesManagerHarness.pauseFeature(_templateId, _featureId);
+        assertTrue(_oraclesManagerHarness.exposedFeaturePaused(_templateId, _featureId));
+
+        vm.prank(address(123));
+        vm.expectRevert(abi.encodeWithSelector(BaseTemplatesManager.Forbidden.selector));
+        _oraclesManagerHarness.unpauseFeature(_templateId, _featureId);
+
+        assertTrue(_oraclesManagerHarness.exposedFeaturePaused(_templateId, _featureId));
+    }
+
+    function testUnpauseFeatureFailureWithSpecificFeatureSetOwner() external {
+        uint256 _templateId = 1;
+        uint256 _featureId = 1;
+
+        OraclesManagerHarness _oraclesManagerHarness = initializeOraclesManagerHarness(owner, address(factory));
+        address _newOwner = address(3);
+        _oraclesManagerHarness.setTemplateFeaturesOwner(_templateId, _newOwner);
+        vm.prank(_newOwner);
+        _oraclesManagerHarness.pauseFeature(_templateId, _featureId);
+
+        assertTrue(_oraclesManagerHarness.exposedFeaturePaused(_templateId, _featureId));
+
+        vm.expectRevert(abi.encodeWithSelector(BaseTemplatesManager.Forbidden.selector));
+        _oraclesManagerHarness.unpauseFeature(_templateId, _featureId);
+
+        assertTrue(_oraclesManagerHarness.exposedFeaturePaused(_templateId, _featureId));
+    }
+
+    function testUnpauseFeatureSuccessNoSpecificFeatureSetOwner() external {
+        uint256 _templateId = 1;
+        uint256 _featureId = 1;
+
+        OraclesManagerHarness _oraclesManagerHarness = initializeOraclesManagerHarness(owner, address(factory));
+        _oraclesManagerHarness.pauseFeature(_templateId, _featureId);
+
+        assertTrue(_oraclesManagerHarness.exposedFeaturePaused(_templateId, _featureId));
+        _oraclesManagerHarness.unpauseFeature(_templateId, _featureId);
+        assertFalse(_oraclesManagerHarness.exposedFeaturePaused(_templateId, _featureId));
+    }
+
+    function testUnpauseFeatureSuccessWithSpecificFeatureSetOwner() external {
+        uint256 _templateId = 1;
+        uint256 _featureId = 1;
+
+        OraclesManagerHarness _oraclesManagerHarness = initializeOraclesManagerHarness(owner, address(factory));
+        address _newOwner = address(3);
+        _oraclesManagerHarness.setTemplateFeaturesOwner(_templateId, _newOwner);
+        vm.prank(_newOwner);
+        _oraclesManagerHarness.pauseFeature(_templateId, _featureId);
+
+        assertTrue(_oraclesManagerHarness.exposedFeaturePaused(_templateId, _featureId));
+
+        vm.prank(_newOwner);
+        _oraclesManagerHarness.unpauseFeature(_templateId, _featureId);
+
+        assertFalse(_oraclesManagerHarness.exposedFeaturePaused(_templateId, _featureId));
+    }
+
+    function testDisabledFeatureWhenPausedWithoutSpecificFeatureSetOwner() external {
+        uint256 _templateId = 1;
+        uint256 _featureId = 1;
+        address _account = address(1991);
+
+        OraclesManagerHarness _oraclesManagerHarness = initializeOraclesManagerHarness(owner, address(factory));
+
+        // start by enabling the feature for the target account
+        assertFalse(_oraclesManagerHarness.isTemplateFeatureEnabledFor(_templateId, _featureId, _account));
+        _oraclesManagerHarness.enableTemplateFeatureFor(_templateId, _featureId, _account);
+        assertTrue(_oraclesManagerHarness.isTemplateFeatureEnabledFor(_templateId, _featureId, _account));
+
+        // then pause the feature
+        _oraclesManagerHarness.pauseFeature(_templateId, _featureId);
+
+        // the allowance for the target user is still there, but when the feature is paused
+        // isTemplateFeatureEnabledFor must return false
+        assertFalse(_oraclesManagerHarness.isTemplateFeatureEnabledFor(_templateId, _featureId, _account));
+
+        // now unpause the feature
+        _oraclesManagerHarness.unpauseFeature(_templateId, _featureId);
+
+        // check that the allowance mapping state has always been there because the target
+        // account should now be enabled again
+        assertTrue(_oraclesManagerHarness.isTemplateFeatureEnabledFor(_templateId, _featureId, _account));
+    }
+
+    function testDisabledFeatureWhenPausedWithSpecificFeatureSetOwner() external {
+        // this test is the same as the above except for the fact that the
+        // target feature set will have a specific owner
+
+        uint256 _templateId = 1;
+        uint256 _featureId = 1;
+        address _account = address(1991);
+        address _featureOwner = address(1997);
+
+        OraclesManagerHarness _oraclesManagerHarness = initializeOraclesManagerHarness(owner, address(factory));
+
+        // give ownership of the feature to the feature owner
+        _oraclesManagerHarness.setTemplateFeaturesOwner(_templateId, _featureOwner);
+
+        // start by enabling the feature for the target account (we do this in 2 steps,
+        // with the first failing because of the fact that we're calling the function
+        // using the manager's owner instead of the feature owner).
+        assertFalse(_oraclesManagerHarness.isTemplateFeatureEnabledFor(_templateId, _featureId, _account));
+        vm.expectRevert(abi.encodeWithSelector(BaseTemplatesManager.Forbidden.selector));
+        _oraclesManagerHarness.enableTemplateFeatureFor(_templateId, _featureId, _account);
+        assertFalse(_oraclesManagerHarness.isTemplateFeatureEnabledFor(_templateId, _featureId, _account));
+
+        assertFalse(_oraclesManagerHarness.isTemplateFeatureEnabledFor(_templateId, _featureId, _account));
+        vm.prank(_featureOwner);
+        _oraclesManagerHarness.enableTemplateFeatureFor(_templateId, _featureId, _account);
+        assertTrue(_oraclesManagerHarness.isTemplateFeatureEnabledFor(_templateId, _featureId, _account));
+
+        // then pause the feature
+        vm.prank(_featureOwner);
+        _oraclesManagerHarness.pauseFeature(_templateId, _featureId);
+
+        // the allowance for the target user is still there, but when the feature is paused
+        // isTemplateFeatureEnabledFor must return false
+        assertFalse(_oraclesManagerHarness.isTemplateFeatureEnabledFor(_templateId, _featureId, _account));
+
+        // now unpause the feature
+        vm.prank(_featureOwner);
+        _oraclesManagerHarness.unpauseFeature(_templateId, _featureId);
+
+        // check that the allowance mapping state has always been there because the target
+        // account should now be enabled again
+        assertTrue(_oraclesManagerHarness.isTemplateFeatureEnabledFor(_templateId, _featureId, _account));
+    }
 }

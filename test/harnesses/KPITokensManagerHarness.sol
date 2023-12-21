@@ -11,4 +11,8 @@ contract KPITokensManagerHarness is KPITokensManager {
     function exposedFeatureSetOwner(uint256 _templateId) external view returns (address) {
         return featureSet[_templateId].owner;
     }
+
+    function exposedFeaturePaused(uint256 _templateId, uint256 _featureId) external view returns (bool) {
+        return featureSet[_templateId].feature[_featureId].paused;
+    }
 }
