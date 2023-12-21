@@ -17,8 +17,6 @@ import {IKPITokensManager} from "./interfaces/IKPITokensManager.sol";
 /// governance contract must be the owner of the KPI tokens manager.
 /// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract KPITokensManager is BaseTemplatesManager, IKPITokensManager {
-    error Forbidden();
-
     /// @dev Calculates the salt value used in CREATE2 when
     /// instantiating new templates.
     /// @param _creator The KPI token creator address.
