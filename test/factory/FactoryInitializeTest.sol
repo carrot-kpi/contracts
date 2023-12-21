@@ -21,13 +21,7 @@ contract FactoryInitializeTest is BaseTestSetup {
         vm.expectRevert(abi.encodeWithSignature("ZeroAddressKpiTokensManager()"));
         new ERC1967Proxy(
             address(_factory),
-            abi.encodeWithSelector(
-                KPITokensFactory.initialize.selector,
-                owner,
-                address(0),
-                address(1),
-                address(2)
-            )
+            abi.encodeWithSelector(KPITokensFactory.initialize.selector, owner, address(0), address(1), address(2))
         );
     }
 
@@ -36,13 +30,7 @@ contract FactoryInitializeTest is BaseTestSetup {
         vm.expectRevert(abi.encodeWithSignature("ZeroAddressOraclesManager()"));
         new ERC1967Proxy(
             address(_factory),
-            abi.encodeWithSelector(
-                KPITokensFactory.initialize.selector,
-                owner,
-                address(1),
-                address(0),
-                address(2)
-            )
+            abi.encodeWithSelector(KPITokensFactory.initialize.selector, owner, address(1), address(0), address(2))
         );
     }
 
@@ -51,13 +39,7 @@ contract FactoryInitializeTest is BaseTestSetup {
         vm.expectRevert(abi.encodeWithSignature("ZeroAddressFeeReceiver()"));
         new ERC1967Proxy(
             address(_factory),
-            abi.encodeWithSelector(
-                KPITokensFactory.initialize.selector,
-                owner,
-                address(1),
-                address(2),
-                address(0)
-            )
+            abi.encodeWithSelector(KPITokensFactory.initialize.selector, owner, address(1), address(2), address(0))
         );
     }
 
