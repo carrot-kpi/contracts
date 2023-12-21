@@ -50,4 +50,14 @@ abstract contract BaseOracle is IOracle, Initializable {
     function template() external view override returns (Template memory) {
         return IBaseTemplatesManager(oraclesManager).template(templateId, templateVersion);
     }
+
+    /// @dev Queries the oracles template manager's feature registry to know if a custom feature
+    /// of this oracle is enabled for a target account or not.
+    /// @param _featureId The identifier of the queried custom feature.
+    /// @param _account The target account.
+    /// @return Whether the feature with the given identifier is enabled for the given account
+    /// or not.
+    function isFeatureEnabledFor(uint256 _featureId, address _account) internal view returns (bool) {
+        return IBaseTemplatesManager(oraclesManager).isTemplateFeatureEnabledFor(templateId, _featureId, _account);
+    }
 }
