@@ -172,9 +172,9 @@ abstract contract BaseTemplatesManager is CarrotUpgradeable, IBaseTemplatesManag
         return _template;
     }
 
-    /// @dev Gives full template features ownership to the target address
-    /// for the given template. The target address will be able to enable and disable
-    /// any one of the targeted template's features for any given address.
+    /// @dev Gives full features ownership to the target address for the given
+    /// template. The target address will be able to enable and disable any
+    /// of the targeted template's features for any given address.
     /// @param _templateId The id of the target template the features of which will be
     /// under the control of the new owner.
     /// @param _owner The address that will own the feature set for the specified
