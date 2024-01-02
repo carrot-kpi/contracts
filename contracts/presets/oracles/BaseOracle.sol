@@ -10,7 +10,6 @@ import {IOracle} from "../../interfaces/IOracle.sol";
 /// implementations for a set of Carrot oracle functions.
 /// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 abstract contract BaseOracle is IOracle, Initializable {
-    bool public override finalized;
     address public override kpiToken;
     address internal oraclesManager;
     uint128 internal templateVersion;

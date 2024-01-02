@@ -6,6 +6,8 @@ import {InitializeOracleParams} from "../../contracts/commons/Types.sol";
 import {BaseOracle} from "../../contracts/presets/oracles/BaseOracle.sol";
 
 contract MockBaseOracle is BaseOracle {
+    bool public override finalized;
+
     function initialize(InitializeOracleParams memory _params) external payable override initializer {
         __BaseOracle_init(_params.kpiToken, _params.templateId, _params.templateVersion);
     }

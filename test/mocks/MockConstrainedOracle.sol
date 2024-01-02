@@ -6,6 +6,8 @@ import {IBaseTemplatesManager, Template} from "../../contracts/interfaces/IBaseT
 import {InitializeOracleParams} from "../../contracts/commons/Types.sol";
 
 contract MockConstrainedOracle is BaseOracle, ConstrainedOracle {
+    bool public override finalized;
+
     function initialize(InitializeOracleParams memory _params) external payable override initializer {
         (Constraint _constraint, uint256 _value0, uint256 _value1) =
             abi.decode(_params.data, (Constraint, uint256, uint256));

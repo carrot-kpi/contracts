@@ -16,6 +16,7 @@ struct OracleData {
 /// @dev A KPI token template implementation
 /// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 contract MockKPIToken is BaseKPIToken {
+    bool public override finalized;
     address[] internal _oracles;
 
     function initialize(InitializeKPITokenParams memory _params) external payable override initializer {
