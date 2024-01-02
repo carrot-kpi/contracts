@@ -13,11 +13,11 @@ contract OraclesManagerEnumerateTest is BaseTestSetup {
     function testNoTemplates() external {
         oraclesManager = initializeOraclesManager(address(factory));
         vm.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
-        oraclesManager.enumerate(0, 1);
+        oraclesManager.enumerateTemplates(0, 1);
     }
 
     function testOneTemplateSuccess() external {
-        assertEq(oraclesManager.enumerate(0, 1).length, 1);
+        assertEq(oraclesManager.enumerateTemplates(0, 1).length, 1);
     }
 
     function testMultipleTemplatesSuccess() external {
@@ -30,16 +30,16 @@ contract OraclesManagerEnumerateTest is BaseTestSetup {
         oraclesManager.addTemplate(address(12), "g");
         oraclesManager.addTemplate(address(12), "h");
         oraclesManager.addTemplate(address(12), "i");
-        assertEq(oraclesManager.enumerate(0, 10).length, 10);
+        assertEq(oraclesManager.enumerateTemplates(0, 10).length, 10);
     }
 
     function testInconsistentIndices() external {
         vm.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
-        oraclesManager.enumerate(10, 5);
+        oraclesManager.enumerateTemplates(10, 5);
     }
 
     function testOneTemplateFail() external {
         vm.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
-        oraclesManager.enumerate(0, 10);
+        oraclesManager.enumerateTemplates(0, 10);
     }
 }

@@ -13,11 +13,11 @@ contract KpiTokensManagerEnumerateTest is BaseTestSetup {
     function testNoTemplates() external {
         kpiTokensManager = initializeKPITokensManager(address(factory));
         vm.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
-        kpiTokensManager.enumerate(0, 1);
+        kpiTokensManager.enumerateTemplates(0, 1);
     }
 
     function testOneTemplateSuccess() external {
-        assertEq(kpiTokensManager.enumerate(0, 1).length, 1);
+        assertEq(kpiTokensManager.enumerateTemplates(0, 1).length, 1);
     }
 
     function testMultipleTemplatesSuccess() external {
@@ -30,16 +30,16 @@ contract KpiTokensManagerEnumerateTest is BaseTestSetup {
         kpiTokensManager.addTemplate(address(12), "g");
         kpiTokensManager.addTemplate(address(12), "h");
         kpiTokensManager.addTemplate(address(12), "i");
-        assertEq(kpiTokensManager.enumerate(0, 10).length, 10);
+        assertEq(kpiTokensManager.enumerateTemplates(0, 10).length, 10);
     }
 
     function testInconsistentIndices() external {
         vm.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
-        kpiTokensManager.enumerate(10, 5);
+        kpiTokensManager.enumerateTemplates(10, 5);
     }
 
     function testOneTemplateFail() external {
         vm.expectRevert(abi.encodeWithSignature("InvalidIndices()"));
-        kpiTokensManager.enumerate(0, 10);
+        kpiTokensManager.enumerateTemplates(0, 10);
     }
 }
