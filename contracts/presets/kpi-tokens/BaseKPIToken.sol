@@ -10,11 +10,10 @@ import {IKPIToken} from "../../interfaces/IKPIToken.sol";
 /// implementations for a set of Carrot KPI token functions.
 /// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
 abstract contract BaseKPIToken is IKPIToken, Initializable {
-    address public override owner;
-    string public override description;
-    bool public override finalized;
-    uint256 public override expiration;
-    uint256 public override creationTimestamp;
+    address internal internalOwner;
+    string internal internalDescription;
+    uint256 internal internalExpiration;
+    uint256 internal internalCreationTimestamp;
     address internal kpiTokensManager;
     uint128 internal templateVersion;
     uint256 internal templateId;
@@ -53,10 +52,10 @@ abstract contract BaseKPIToken is IKPIToken, Initializable {
         if (_templateId == 0) revert InvalidTemplateId();
         if (_templateVersion == 0) revert InvalidTemplateVersion();
 
-        owner = _owner;
-        description = _description;
-        expiration = _expiration;
-        creationTimestamp = block.timestamp;
+        internalOwner = _owner;
+        internalDescription = _description;
+        internalExpiration = _expiration;
+        internalCreationTimestamp = block.timestamp;
         kpiTokensManager = _kpiTokensManager;
         templateId = _templateId;
         templateVersion = _templateVersion;
@@ -67,10 +66,30 @@ abstract contract BaseKPIToken is IKPIToken, Initializable {
     /// @param _newOwner The new owner.
     function transferOwnership(address _newOwner) external override {
         if (_newOwner == address(0)) revert InvalidOwner();
-        address _owner = owner;
+        address _owner = internalOwner;
         if (msg.sender != _owner) revert Forbidden();
-        owner = _newOwner;
+        internalOwner = _newOwner;
         emit OwnershipTransferred(_owner, _newOwner);
+    }
+
+    /// @dev Returns the KPI token's owner.
+    function owner() external view virtual override returns (address) {
+        return internalOwner;
+    }
+
+    /// @dev Returns the KPI token's description.
+    function description() external view virtual override returns (string memory) {
+        return internalDescription;
+    }
+
+    /// @dev Returns the KPI token's expiration.
+    function expiration() external view virtual override returns (uint256) {
+        return internalExpiration;
+    }
+
+    /// @dev Returns the KPI token's creation timestamp.
+    function creationTimestamp() external view virtual override returns (uint256) {
+        return internalCreationTimestamp;
     }
 
     /// @dev Returns the KPI token's template as fetched from Carrot's KPI tokens manager,

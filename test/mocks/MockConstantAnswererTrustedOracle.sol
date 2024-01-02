@@ -5,6 +5,8 @@ import {BaseOracle} from "../../contracts/presets/oracles/BaseOracle.sol";
 import {InitializeOracleParams} from "../../contracts/commons/Types.sol";
 
 contract MockConstantAnswererTrustedOracle is BaseOracle, ConstantAnswererTrustedOracle {
+    bool public override finalized;
+
     constructor(address _answerer) ConstantAnswererTrustedOracle(_answerer) {}
 
     function initialize(InitializeOracleParams memory _params) external payable override initializer {

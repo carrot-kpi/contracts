@@ -9,7 +9,7 @@ import {InitializeOracleParams} from "../../contracts/commons/Types.sol";
 contract MockOracle is IOracle, Initializable {
     address public constant RESULT_GETTER = address(4321);
 
-    bool public finalized;
+    bool public override finalized;
     address public kpiToken;
     address internal oraclesManager;
     uint128 internal templateVersion;
