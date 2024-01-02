@@ -4,6 +4,7 @@ import {IKPIToken} from "../../contracts/interfaces/IKPIToken.sol";
 import {Template} from "../../contracts/interfaces/IBaseTemplatesManager.sol";
 import {InitializeKPITokenParams} from "../../contracts/commons/Types.sol";
 import {IOraclesManager} from "../../contracts/interfaces/IOraclesManager.sol";
+import {BaseKPIToken} from "../../contracts/presets/kpi-tokens/BaseKPIToken.sol";
 
 struct OracleData {
     uint256 templateId;
@@ -14,10 +15,19 @@ struct OracleData {
 /// @title KPI token template implementation
 /// @dev A KPI token template implementation
 /// @author Federico Luzzi - <federico.luzzi@carrot-labs.xyz>
-contract MockKPIToken is IKPIToken {
+contract MockKPIToken is BaseKPIToken {
     address[] internal _oracles;
 
-    function initialize(InitializeKPITokenParams memory _params) external payable override {
+    function initialize(InitializeKPITokenParams memory _params) external payable override initializer {
+        __BaseKPIToken_init(
+            _params.creator,
+            _params.description,
+            _params.expiration,
+            _params.kpiTokensManager,
+            _params.kpiTokenTemplateId,
+            _params.kpiTokenTemplateVersion
+        );
+
         OracleData[] memory _oracleData = abi.decode(_params.oraclesData, (OracleData[]));
         for (uint8 _i = 0; _i < _oracleData.length; _i++) {
             _oracles.push(
@@ -33,33 +43,6 @@ contract MockKPIToken is IKPIToken {
 
     // solhint-disable-next-line no-empty-blocks
     function redeem(bytes memory _data) external override {}
-
-    function owner() external pure override returns (address) {
-        return address(0);
-    }
-
-    // solhint-disable-next-line no-empty-blocks
-    function transferOwnership(address _newOwner) external override {}
-
-    function template() external pure override returns (Template memory) {
-        return Template({id: 1, addrezz: address(0), version: 1, specification: "foo"});
-    }
-
-    function description() external pure override returns (string memory) {
-        return "foo";
-    }
-
-    function finalized() external pure override returns (bool) {
-        return true;
-    }
-
-    function expiration() external view override returns (uint256) {
-        return block.timestamp;
-    }
-
-    function creationTimestamp() external view returns (uint256) {
-        return block.timestamp;
-    }
 
     function data() external pure override returns (bytes memory) {
         return abi.encode();
