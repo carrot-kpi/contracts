@@ -111,8 +111,10 @@ contract KpiTokensManagerUpdateTemplateSpecificationTest is BaseTestSetup {
     }
 
     function testSuccessExplicitLatestVersion() external {
-        ERC1967Proxy _proxy =
-        new ERC1967Proxy(address(new KPITokensManagerHarness()), abi.encodeWithSelector(BaseTemplatesManager.initialize.selector, owner, factory));
+        ERC1967Proxy _proxy = new ERC1967Proxy(
+            address(new KPITokensManagerHarness()),
+            abi.encodeWithSelector(BaseTemplatesManager.initialize.selector, owner, factory)
+        );
         KPITokensManagerHarness kpiTokensManager = KPITokensManagerHarness(address(_proxy));
 
         assertEq(kpiTokensManager.templatesAmount(), 0);

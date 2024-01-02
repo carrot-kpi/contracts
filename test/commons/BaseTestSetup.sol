@@ -82,22 +82,28 @@ abstract contract BaseTestSetup is Test {
         returns (KPITokensFactory)
     {
         KPITokensFactory _factory = new KPITokensFactory();
-        ERC1967Proxy _proxy =
-        new ERC1967Proxy(address(_factory), abi.encodeWithSelector(KPITokensFactory.initialize.selector, owner, _kpiTokensManager, _oraclesManager, _feeReceiver));
+        ERC1967Proxy _proxy = new ERC1967Proxy(
+            address(_factory),
+            abi.encodeWithSelector(
+                KPITokensFactory.initialize.selector, owner, _kpiTokensManager, _oraclesManager, _feeReceiver
+            )
+        );
         return KPITokensFactory(address(_proxy));
     }
 
     function initializeOraclesManager(address _factory) internal returns (OraclesManager) {
         OraclesManager _manager = new OraclesManager();
-        ERC1967Proxy _proxy =
-        new ERC1967Proxy(address(_manager), abi.encodeWithSelector(BaseTemplatesManager.initialize.selector, owner, _factory));
+        ERC1967Proxy _proxy = new ERC1967Proxy(
+            address(_manager), abi.encodeWithSelector(BaseTemplatesManager.initialize.selector, owner, _factory)
+        );
         return OraclesManager(address(_proxy));
     }
 
     function initializeKPITokensManager(address _factory) internal returns (KPITokensManager) {
         KPITokensManager _manager = new KPITokensManager();
-        ERC1967Proxy _proxy =
-        new ERC1967Proxy(address(_manager), abi.encodeWithSelector(BaseTemplatesManager.initialize.selector, owner, _factory));
+        ERC1967Proxy _proxy = new ERC1967Proxy(
+            address(_manager), abi.encodeWithSelector(BaseTemplatesManager.initialize.selector, owner, _factory)
+        );
         return KPITokensManager(address(_proxy));
     }
 }

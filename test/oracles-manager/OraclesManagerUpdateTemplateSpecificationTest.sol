@@ -114,8 +114,10 @@ contract OraclesManagerUpdateTemplateSpecificationTest is BaseTestSetup {
     }
 
     function testSuccessExplicitLatestVersion() external {
-        ERC1967Proxy _proxy =
-        new ERC1967Proxy(address(new OraclesManagerHarness()), abi.encodeWithSelector(BaseTemplatesManager.initialize.selector, owner, factory));
+        ERC1967Proxy _proxy = new ERC1967Proxy(
+            address(new OraclesManagerHarness()),
+            abi.encodeWithSelector(BaseTemplatesManager.initialize.selector, owner, factory)
+        );
         OraclesManagerHarness oraclesManager = OraclesManagerHarness(address(_proxy));
 
         assertEq(oraclesManager.templatesAmount(), 0);

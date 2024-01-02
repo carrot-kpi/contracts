@@ -20,6 +20,8 @@ contract KpiTokensManagerInitializeTest is BaseTestSetup {
     function testZeroAddressFactory() external {
         KPITokensManager _manager = new KPITokensManager();
         vm.expectRevert(abi.encodeWithSignature("ZeroAddressFactory()"));
-        new ERC1967Proxy(address(_manager), abi.encodeWithSelector(BaseTemplatesManager.initialize.selector, owner, address(0)));
+        new ERC1967Proxy(
+            address(_manager), abi.encodeWithSelector(BaseTemplatesManager.initialize.selector, owner, address(0))
+        );
     }
 }

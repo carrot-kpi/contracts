@@ -20,6 +20,8 @@ contract OraclesManagerInitializeTest is BaseTestSetup {
     function testZeroAddressFactory() external {
         OraclesManager _manager = new OraclesManager();
         vm.expectRevert(abi.encodeWithSignature("ZeroAddressFactory()"));
-        new ERC1967Proxy(address(_manager), abi.encodeWithSelector(BaseTemplatesManager.initialize.selector, owner, address(0)));
+        new ERC1967Proxy(
+            address(_manager), abi.encodeWithSelector(BaseTemplatesManager.initialize.selector, owner, address(0))
+        );
     }
 }
