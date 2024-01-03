@@ -1,4 +1,4 @@
-pragma solidity 0.8.21;
+pragma solidity 0.8.23;
 
 import {Initializable} from "oz/proxy/utils/Initializable.sol";
 import {IOracle} from "../../contracts/interfaces/IOracle.sol";
