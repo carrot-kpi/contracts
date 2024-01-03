@@ -1,4 +1,4 @@
-pragma solidity 0.8.21;
+pragma solidity 0.8.23;
 
 import {OwnableUpgradeable} from "oz-upgradeable/access/OwnableUpgradeable.sol";
 import {UUPSUpgradeable} from "oz/proxy/utils/UUPSUpgradeable.sol";

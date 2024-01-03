@@ -1,4 +1,4 @@
-pragma solidity 0.8.21;
+pragma solidity 0.8.23;
 
 import {Test} from "forge-std/Test.sol";
 import {KPITokensManager} from "../../contracts/KPITokensManager.sol";

@@ -1,4 +1,4 @@
-pragma solidity 0.8.21;
+pragma solidity 0.8.23;
 
 import {ConstantAnswererTrustedOracle} from "../../contracts/presets/oracles/ConstantAnswererTrustedOracle.sol";
 import {BaseOracle} from "../../contracts/presets/oracles/BaseOracle.sol";
