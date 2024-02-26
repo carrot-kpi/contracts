@@ -1,4 +1,4 @@
-import { defineConfig } from "vite"
+import { defineConfig } from "vite";
 
 export default defineConfig({
     build: {
@@ -6,7 +6,7 @@ export default defineConfig({
         lib: {
             entry: "index.ts",
             fileName: "index",
-            formats: ["es"]
-        }
-    }
-})
+            formats: ["es"],
+        },
+    },
+});

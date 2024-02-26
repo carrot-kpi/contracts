@@ -3,7 +3,7 @@ import { sepolia, arbitrumSepolia } from "viem/chains";
 
 export enum ChainId {
     Sepolia = sepolia.id,
-    ArbitrumSepolia = arbitrumSepolia.id
+    ArbitrumSepolia = arbitrumSepolia.id,
 }
 
 export interface CarrotContracts {
