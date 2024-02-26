@@ -39,10 +39,8 @@ contract MockKPIToken is BaseKPIToken {
         }
     }
 
-    // solhint-disable-next-line no-empty-blocks
     function finalize(uint256 _result) external override {}
 
-    // solhint-disable-next-line no-empty-blocks
     function redeem(bytes memory _data) external override {}
 
     function data() external pure override returns (bytes memory) {

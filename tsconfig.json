@@ -20,6 +20,6 @@
         "verbatimModuleSyntax": true,
         "declaration": true,
         "emitDeclarationOnly": true,
-        "declarationDir": "./dist/types"
+        "declarationDir": "./dist"
     }
 }
